@@ -1,0 +1,429 @@
+
+digitaltest.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         0000026a  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .debug_aranges 00000020  00000000  00000000  000002be  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  2 .debug_pubnames 0000001b  00000000  00000000  000002de  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  3 .debug_info   00000304  00000000  00000000  000002f9  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .debug_abbrev 00000157  00000000  00000000  000005fd  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_line   000001ff  00000000  00000000  00000754  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_frame  00000040  00000000  00000000  00000954  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_str    00000178  00000000  00000000  00000994  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_loc    000000ad  00000000  00000000  00000b0c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 46 00 	jmp	0x8c	; 0x8c <__ctors_end>
+   4:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+   8:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+   c:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  10:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  14:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  18:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  1c:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  20:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  24:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  28:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  2c:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  30:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  34:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  38:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  3c:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  40:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  44:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  48:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  4c:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  50:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  54:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  58:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  5c:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  60:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  64:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  68:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  6c:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  70:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  74:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  78:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  7c:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  80:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  84:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+  88:	0c 94 5d 00 	jmp	0xba	; 0xba <__bad_interrupt>
+
+0000008c <__ctors_end>:
+  8c:	11 24       	eor	r1, r1
+  8e:	1f be       	out	0x3f, r1	; 63
+  90:	cf ef       	ldi	r28, 0xFF	; 255
+  92:	d0 e4       	ldi	r29, 0x40	; 64
+  94:	de bf       	out	0x3e, r29	; 62
+  96:	cd bf       	out	0x3d, r28	; 61
+
+00000098 <__do_copy_data>:
+  98:	11 e0       	ldi	r17, 0x01	; 1
+  9a:	a0 e0       	ldi	r26, 0x00	; 0
+  9c:	b1 e0       	ldi	r27, 0x01	; 1
+  9e:	ea e6       	ldi	r30, 0x6A	; 106
+  a0:	f2 e0       	ldi	r31, 0x02	; 2
+  a2:	00 e0       	ldi	r16, 0x00	; 0
+  a4:	0b bf       	out	0x3b, r16	; 59
+  a6:	02 c0       	rjmp	.+4      	; 0xac <__do_copy_data+0x14>
+  a8:	07 90       	elpm	r0, Z+
+  aa:	0d 92       	st	X+, r0
+  ac:	a0 30       	cpi	r26, 0x00	; 0
+  ae:	b1 07       	cpc	r27, r17
+  b0:	d9 f7       	brne	.-10     	; 0xa8 <__do_copy_data+0x10>
+  b2:	0e 94 fd 00 	call	0x1fa	; 0x1fa <main>
+  b6:	0c 94 33 01 	jmp	0x266	; 0x266 <_exit>
+
+000000ba <__bad_interrupt>:
+  ba:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+000000be <get_io_registers>:
+	
+// gets a structure with pointers to the three digital I/O registers associated
+// with the specified pin (DDR, PORT, and PIN) along with a bitmask with a
+// 1 in the position of the specified pin and 0s everywhere else.
+static inline void get_io_registers(struct IOStruct* io, unsigned char pin)
+{
+  be:	fc 01       	movw	r30, r24
+	io->pinRegister = 0;
+  c0:	11 82       	std	Z+1, r1	; 0x01
+  c2:	10 82       	st	Z, r1
+	io->portRegister = 0;
+  c4:	13 82       	std	Z+3, r1	; 0x03
+  c6:	12 82       	std	Z+2, r1	; 0x02
+	io->ddrRegister = 0;
+  c8:	15 82       	std	Z+5, r1	; 0x05
+  ca:	14 82       	std	Z+4, r1	; 0x04
+	io->bitmask = 0;
+  cc:	16 82       	std	Z+6, r1	; 0x06
+
+	if (pin < 8)			// pin 0 = PD0, ..., 7 = PD7
+  ce:	68 30       	cpi	r22, 0x08	; 8
+  d0:	a0 f4       	brcc	.+40     	; 0xfa <get_io_registers+0x3c>
+	{
+		io->pinRegister = (unsigned char*)&PIND;
+  d2:	89 e2       	ldi	r24, 0x29	; 41
+  d4:	90 e0       	ldi	r25, 0x00	; 0
+  d6:	91 83       	std	Z+1, r25	; 0x01
+  d8:	80 83       	st	Z, r24
+		io->portRegister = (unsigned char*)&PORTD;
+  da:	8b e2       	ldi	r24, 0x2B	; 43
+  dc:	90 e0       	ldi	r25, 0x00	; 0
+  de:	93 83       	std	Z+3, r25	; 0x03
+  e0:	82 83       	std	Z+2, r24	; 0x02
+		io->ddrRegister = (unsigned char*)&DDRD;
+  e2:	8a e2       	ldi	r24, 0x2A	; 42
+  e4:	90 e0       	ldi	r25, 0x00	; 0
+  e6:	95 83       	std	Z+5, r25	; 0x05
+  e8:	84 83       	std	Z+4, r24	; 0x04
+		io->bitmask = 1 << pin;
+  ea:	81 e0       	ldi	r24, 0x01	; 1
+  ec:	90 e0       	ldi	r25, 0x00	; 0
+  ee:	02 c0       	rjmp	.+4      	; 0xf4 <get_io_registers+0x36>
+  f0:	88 0f       	add	r24, r24
+  f2:	99 1f       	adc	r25, r25
+  f4:	6a 95       	dec	r22
+  f6:	e2 f7       	brpl	.-8      	; 0xf0 <get_io_registers+0x32>
+  f8:	2c c0       	rjmp	.+88     	; 0x152 <get_io_registers+0x94>
+	}
+
+#if defined(_ORANGUTAN_SVP) || defined(_ORANGUTAN_X2)
+	else if (pin < 16)		// pin 8 = PB0, ..., 15 = PB7
+  fa:	60 31       	cpi	r22, 0x10	; 16
+  fc:	88 f4       	brcc	.+34     	; 0x120 <get_io_registers+0x62>
+	{
+		io->pinRegister = (unsigned char*)&PINB;
+  fe:	83 e2       	ldi	r24, 0x23	; 35
+ 100:	90 e0       	ldi	r25, 0x00	; 0
+ 102:	91 83       	std	Z+1, r25	; 0x01
+ 104:	80 83       	st	Z, r24
+		io->portRegister = (unsigned char*)&PORTB;
+ 106:	85 e2       	ldi	r24, 0x25	; 37
+ 108:	90 e0       	ldi	r25, 0x00	; 0
+ 10a:	93 83       	std	Z+3, r25	; 0x03
+ 10c:	82 83       	std	Z+2, r24	; 0x02
+		io->ddrRegister = (unsigned char*)&DDRB;
+ 10e:	84 e2       	ldi	r24, 0x24	; 36
+ 110:	90 e0       	ldi	r25, 0x00	; 0
+ 112:	95 83       	std	Z+5, r25	; 0x05
+ 114:	84 83       	std	Z+4, r24	; 0x04
+		io->bitmask = 1 << (pin - 8);
+ 116:	26 2f       	mov	r18, r22
+ 118:	30 e0       	ldi	r19, 0x00	; 0
+ 11a:	28 50       	subi	r18, 0x08	; 8
+ 11c:	30 40       	sbci	r19, 0x00	; 0
+ 11e:	12 c0       	rjmp	.+36     	; 0x144 <get_io_registers+0x86>
+	}
+	else if (pin < 24)		// pin 16 = PC0, ..., 23 = PC7
+ 120:	68 31       	cpi	r22, 0x18	; 24
+ 122:	c8 f4       	brcc	.+50     	; 0x156 <get_io_registers+0x98>
+	{
+		io->pinRegister = (unsigned char*)&PINC;
+ 124:	86 e2       	ldi	r24, 0x26	; 38
+ 126:	90 e0       	ldi	r25, 0x00	; 0
+ 128:	91 83       	std	Z+1, r25	; 0x01
+ 12a:	80 83       	st	Z, r24
+		io->portRegister = (unsigned char*)&PORTC;
+ 12c:	88 e2       	ldi	r24, 0x28	; 40
+ 12e:	90 e0       	ldi	r25, 0x00	; 0
+ 130:	93 83       	std	Z+3, r25	; 0x03
+ 132:	82 83       	std	Z+2, r24	; 0x02
+		io->ddrRegister = (unsigned char*)&DDRC;
+ 134:	87 e2       	ldi	r24, 0x27	; 39
+ 136:	90 e0       	ldi	r25, 0x00	; 0
+ 138:	95 83       	std	Z+5, r25	; 0x05
+ 13a:	84 83       	std	Z+4, r24	; 0x04
+		io->bitmask = 1 << (pin - 16);
+ 13c:	26 2f       	mov	r18, r22
+ 13e:	30 e0       	ldi	r19, 0x00	; 0
+ 140:	20 51       	subi	r18, 0x10	; 16
+ 142:	30 40       	sbci	r19, 0x00	; 0
+ 144:	81 e0       	ldi	r24, 0x01	; 1
+ 146:	90 e0       	ldi	r25, 0x00	; 0
+ 148:	02 c0       	rjmp	.+4      	; 0x14e <get_io_registers+0x90>
+ 14a:	88 0f       	add	r24, r24
+ 14c:	99 1f       	adc	r25, r25
+ 14e:	2a 95       	dec	r18
+ 150:	e2 f7       	brpl	.-8      	; 0x14a <get_io_registers+0x8c>
+ 152:	86 83       	std	Z+6, r24	; 0x06
+ 154:	08 95       	ret
+	}
+	else if (pin < 32)		// pin 24 = PA7, ..., 31 = PA0
+ 156:	60 32       	cpi	r22, 0x20	; 32
+ 158:	c0 f4       	brcc	.+48     	; 0x18a <get_io_registers+0xcc>
+	{
+		io->pinRegister = (unsigned char*)&PINA;
+ 15a:	80 e2       	ldi	r24, 0x20	; 32
+ 15c:	90 e0       	ldi	r25, 0x00	; 0
+ 15e:	91 83       	std	Z+1, r25	; 0x01
+ 160:	80 83       	st	Z, r24
+		io->portRegister = (unsigned char*)&PORTA;
+ 162:	82 e2       	ldi	r24, 0x22	; 34
+ 164:	90 e0       	ldi	r25, 0x00	; 0
+ 166:	93 83       	std	Z+3, r25	; 0x03
+ 168:	82 83       	std	Z+2, r24	; 0x02
+		io->ddrRegister = (unsigned char*)&DDRA;
+ 16a:	81 e2       	ldi	r24, 0x21	; 33
+ 16c:	90 e0       	ldi	r25, 0x00	; 0
+ 16e:	95 83       	std	Z+5, r25	; 0x05
+ 170:	84 83       	std	Z+4, r24	; 0x04
+		io->bitmask = 1 << (31 - pin);
+ 172:	2f e1       	ldi	r18, 0x1F	; 31
+ 174:	30 e0       	ldi	r19, 0x00	; 0
+ 176:	26 1b       	sub	r18, r22
+ 178:	31 09       	sbc	r19, r1
+ 17a:	81 e0       	ldi	r24, 0x01	; 1
+ 17c:	90 e0       	ldi	r25, 0x00	; 0
+ 17e:	02 c0       	rjmp	.+4      	; 0x184 <get_io_registers+0xc6>
+ 180:	88 0f       	add	r24, r24
+ 182:	99 1f       	adc	r25, r25
+ 184:	2a 95       	dec	r18
+ 186:	e2 f7       	brpl	.-8      	; 0x180 <get_io_registers+0xc2>
+ 188:	86 83       	std	Z+6, r24	; 0x06
+ 18a:	08 95       	ret
+
+0000018c <set_digital_output>:
+// high-level method for setting the specified pin as an output with the specified output state.
+// An outputState value of 0 will cause the pin to drive low; a value of 1 will cause the pin to 
+// drive high.  A value of 0xFF (255) will toggle the output state of the pin (i.e. high -> low and
+// low -> high).
+static inline void set_digital_output(unsigned char pin, unsigned char outputState)
+{
+ 18c:	1f 93       	push	r17
+ 18e:	df 93       	push	r29
+ 190:	cf 93       	push	r28
+ 192:	cd b7       	in	r28, 0x3d	; 61
+ 194:	de b7       	in	r29, 0x3e	; 62
+ 196:	27 97       	sbiw	r28, 0x07	; 7
+ 198:	0f b6       	in	r0, 0x3f	; 63
+ 19a:	f8 94       	cli
+ 19c:	de bf       	out	0x3e, r29	; 62
+ 19e:	0f be       	out	0x3f, r0	; 63
+ 1a0:	cd bf       	out	0x3d, r28	; 61
+ 1a2:	28 2f       	mov	r18, r24
+ 1a4:	16 2f       	mov	r17, r22
+	struct IOStruct registers;
+	get_io_registers(&registers, pin);
+ 1a6:	ce 01       	movw	r24, r28
+ 1a8:	01 96       	adiw	r24, 0x01	; 1
+ 1aa:	62 2f       	mov	r22, r18
+ 1ac:	0e 94 5f 00 	call	0xbe	; 0xbe <get_io_registers>
+// setting it as high-impedance (val = 0) or enabling the internal pull-up (val = 1).  If the pin is an
+// output, this lets you choose between driving low (val = 0) and driving high (val = 1).
+// NOTE: if val is 0xFF (255), this method will toggle the PORT register pin(s).
+static inline void set_digital_output_value(struct IOStruct* ioPin, unsigned char val)
+{
+	if (val == 0xFF)
+ 1b0:	1f 3f       	cpi	r17, 0xFF	; 255
+ 1b2:	31 f4       	brne	.+12     	; 0x1c0 <set_digital_output+0x34>
+		*(ioPin->portRegister) ^= ioPin->bitmask;
+ 1b4:	eb 81       	ldd	r30, Y+3	; 0x03
+ 1b6:	fc 81       	ldd	r31, Y+4	; 0x04
+ 1b8:	80 81       	ld	r24, Z
+ 1ba:	9f 81       	ldd	r25, Y+7	; 0x07
+ 1bc:	89 27       	eor	r24, r25
+ 1be:	07 c0       	rjmp	.+14     	; 0x1ce <set_digital_output+0x42>
+ 1c0:	eb 81       	ldd	r30, Y+3	; 0x03
+ 1c2:	fc 81       	ldd	r31, Y+4	; 0x04
+ 1c4:	9f 81       	ldd	r25, Y+7	; 0x07
+	else if (val)
+ 1c6:	11 23       	and	r17, r17
+ 1c8:	21 f0       	breq	.+8      	; 0x1d2 <set_digital_output+0x46>
+		*(ioPin->portRegister) |= ioPin->bitmask;
+ 1ca:	80 81       	ld	r24, Z
+ 1cc:	89 2b       	or	r24, r25
+ 1ce:	80 83       	st	Z, r24
+ 1d0:	04 c0       	rjmp	.+8      	; 0x1da <set_digital_output+0x4e>
+	else
+		*(ioPin->portRegister) &= ~ioPin->bitmask;
+ 1d2:	80 81       	ld	r24, Z
+ 1d4:	90 95       	com	r25
+ 1d6:	98 23       	and	r25, r24
+ 1d8:	90 83       	st	Z, r25
+// low-level method for setting the data direction (i.e. input or output) of an pin or set of pins
+// described by an IOStruct pointer.
+static inline void set_data_direction(struct IOStruct* ioPin, unsigned char val)
+{
+	if (val)
+		*(ioPin->ddrRegister) |= ioPin->bitmask;
+ 1da:	ed 81       	ldd	r30, Y+5	; 0x05
+ 1dc:	fe 81       	ldd	r31, Y+6	; 0x06
+ 1de:	80 81       	ld	r24, Z
+ 1e0:	9f 81       	ldd	r25, Y+7	; 0x07
+ 1e2:	89 2b       	or	r24, r25
+ 1e4:	80 83       	st	Z, r24
+{
+	struct IOStruct registers;
+	get_io_registers(&registers, pin);
+	set_digital_output_value(&registers, outputState);
+	set_data_direction(&registers, 1);
+}
+ 1e6:	27 96       	adiw	r28, 0x07	; 7
+ 1e8:	0f b6       	in	r0, 0x3f	; 63
+ 1ea:	f8 94       	cli
+ 1ec:	de bf       	out	0x3e, r29	; 62
+ 1ee:	0f be       	out	0x3f, r0	; 63
+ 1f0:	cd bf       	out	0x3d, r28	; 61
+ 1f2:	cf 91       	pop	r28
+ 1f4:	df 91       	pop	r29
+ 1f6:	1f 91       	pop	r17
+ 1f8:	08 95       	ret
+
+000001fa <main>:
+ * http://www.pololu.com  
+ * http://forum.pololu.com  
+ */   
+  
+int main()  
+{  
+ 1fa:	ff 92       	push	r15
+ 1fc:	0f 93       	push	r16
+ 1fe:	1f 93       	push	r17
+ 200:	df 93       	push	r29
+ 202:	cf 93       	push	r28
+ 204:	cd b7       	in	r28, 0x3d	; 61
+ 206:	de b7       	in	r29, 0x3e	; 62
+ 208:	27 97       	sbiw	r28, 0x07	; 7
+ 20a:	0f b6       	in	r0, 0x3f	; 63
+ 20c:	f8 94       	cli
+ 20e:	de bf       	out	0x3e, r29	; 62
+ 210:	0f be       	out	0x3f, r0	; 63
+ 212:	cd bf       	out	0x3d, r28	; 61
+// pin's internal pull-up resistor, which weakly pulls it to Vcc.  A value of 0xFF (255) will toggle the
+// input state.
+static inline void set_digital_input(unsigned char pin, unsigned char inputState)
+{
+	struct IOStruct registers;
+	get_io_registers(&registers, pin);
+ 214:	8e 01       	movw	r16, r28
+ 216:	0f 5f       	subi	r16, 0xFF	; 255
+ 218:	1f 4f       	sbci	r17, 0xFF	; 255
+ 21a:	c8 01       	movw	r24, r16
+ 21c:	61 e1       	ldi	r22, 0x11	; 17
+ 21e:	0e 94 5f 00 	call	0xbe	; 0xbe <get_io_registers>
+static inline void set_data_direction(struct IOStruct* ioPin, unsigned char val)
+{
+	if (val)
+		*(ioPin->ddrRegister) |= ioPin->bitmask;
+	else
+		*(ioPin->ddrRegister) &= ~ioPin->bitmask;
+ 222:	ed 81       	ldd	r30, Y+5	; 0x05
+ 224:	fe 81       	ldd	r31, Y+6	; 0x06
+ 226:	90 81       	ld	r25, Z
+ 228:	8f 81       	ldd	r24, Y+7	; 0x07
+ 22a:	80 95       	com	r24
+ 22c:	89 23       	and	r24, r25
+ 22e:	80 83       	st	Z, r24
+static inline void set_digital_output_value(struct IOStruct* ioPin, unsigned char val)
+{
+	if (val == 0xFF)
+		*(ioPin->portRegister) ^= ioPin->bitmask;
+	else if (val)
+		*(ioPin->portRegister) |= ioPin->bitmask;
+ 230:	eb 81       	ldd	r30, Y+3	; 0x03
+ 232:	fc 81       	ldd	r31, Y+4	; 0x04
+ 234:	80 81       	ld	r24, Z
+ 236:	9f 81       	ldd	r25, Y+7	; 0x07
+ 238:	89 2b       	or	r24, r25
+ 23a:	80 83       	st	Z, r24
+// this method will return 0.  Otherwise, it will return a non-zero result that depends on the value of
+// the pin.
+static inline unsigned char is_digital_input_high(unsigned char pin)
+{
+	struct IOStruct registers;
+	get_io_registers(&registers, pin);
+ 23c:	f0 2e       	mov	r15, r16
+ 23e:	01 2f       	mov	r16, r17
+ 240:	8f 2d       	mov	r24, r15
+ 242:	90 2f       	mov	r25, r16
+ 244:	61 e1       	ldi	r22, 0x11	; 17
+ 246:	0e 94 5f 00 	call	0xbe	; 0xbe <get_io_registers>
+
+// low-level method for reading the value of the PIN register for an pin or set of pins
+// described by an IOStruct pointer.
+static inline unsigned char get_digital_input_value(struct IOStruct* ioPin)
+{
+	return *(ioPin->pinRegister) & ioPin->bitmask;
+ 24a:	e9 81       	ldd	r30, Y+1	; 0x01
+ 24c:	fa 81       	ldd	r31, Y+2	; 0x02
+ 24e:	80 81       	ld	r24, Z
+    // It will read high when nothing is connected to it.  
+    set_digital_input(IO_C1, PULL_UP_ENABLED);  
+  
+    while(1)  
+    {  
+        if(is_digital_input_high(IO_C1))     // Take digital reading of PC1.  
+ 250:	9f 81       	ldd	r25, Y+7	; 0x07
+ 252:	89 23       	and	r24, r25
+ 254:	19 f0       	breq	.+6      	; 0x25c <main+0x62>
+        {  
+            set_digital_output(IO_D1, HIGH); // PC1 is high, so drive PD1 high.  
+ 256:	81 e0       	ldi	r24, 0x01	; 1
+ 258:	61 e0       	ldi	r22, 0x01	; 1
+ 25a:	02 c0       	rjmp	.+4      	; 0x260 <main+0x66>
+        }  
+        else  
+        {  
+            set_digital_output(IO_D1, LOW);  // PC1 is low, so drive PD1 low.  
+ 25c:	81 e0       	ldi	r24, 0x01	; 1
+ 25e:	60 e0       	ldi	r22, 0x00	; 0
+ 260:	0e 94 c6 00 	call	0x18c	; 0x18c <set_digital_output>
+ 264:	ed cf       	rjmp	.-38     	; 0x240 <main+0x46>
+
+00000266 <_exit>:
+ 266:	f8 94       	cli
+
+00000268 <__stop_program>:
+ 268:	ff cf       	rjmp	.-2      	; 0x268 <__stop_program>
