@@ -42,7 +42,7 @@ I2C_Test.o: ../I2C_Test.c \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanX2/OrangutanX2.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanX2/../OrangutanResources/include/OrangutanModel.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanSPIMaster/OrangutanSPIMaster.h \
-  C:\Users\Bianca\Documents\Directory\ for\ SVN\I2C_Test\..\..\libpololu-avr-100326[1]\libpololu-avr\src\i2cmaster/i2cmaster.h \
+  C:\Users\Bianca\Documents\DASCH\ SVN\I2C_Test\i2cmaster/i2cmaster.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/stdlib.h \
   c:\winavr-20100110\bin\../lib/gcc/avr/4.3.3/include/stddef.h
 
@@ -132,7 +132,7 @@ c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanX2/../OrangutanReso
 
 c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanSPIMaster/OrangutanSPIMaster.h:
 
-C:\Users\Bianca\Documents\Directory\ for\ SVN\I2C_Test\..\..\libpololu-avr-100326[1]\libpololu-avr\src\i2cmaster/i2cmaster.h:
+C:\Users\Bianca\Documents\DASCH\ SVN\I2C_Test\i2cmaster/i2cmaster.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/stdlib.h:
 

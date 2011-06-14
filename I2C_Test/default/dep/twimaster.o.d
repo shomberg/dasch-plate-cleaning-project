@@ -1,5 +1,4 @@
-twimaster.o:  \
- ../../../libpololu-avr-100326[1]/libpololu-avr/src/i2cmaster/twimaster.c \
+twimaster.o: ../i2cmaster/twimaster.c \
   c:/winavr-20100110/lib/gcc/../../avr/include/inttypes.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/stdint.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/compat/twi.h \
@@ -12,7 +11,7 @@ twimaster.o:  \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/version.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/fuse.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/lock.h \
-  C:\Users\Bianca\Documents\Directory\ for\ SVN\I2C_Test\..\..\libpololu-avr-100326[1]\libpololu-avr\src\i2cmaster/i2cmaster.h
+  C:\Users\Bianca\Documents\DASCH\ SVN\I2C_Test\i2cmaster/i2cmaster.h
 
 c:/winavr-20100110/lib/gcc/../../avr/include/inttypes.h:
 
@@ -38,4 +37,4 @@ c:/winavr-20100110/lib/gcc/../../avr/include/avr/fuse.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/avr/lock.h:
 
-C:\Users\Bianca\Documents\Directory\ for\ SVN\I2C_Test\..\..\libpololu-avr-100326[1]\libpololu-avr\src\i2cmaster/i2cmaster.h:
+C:\Users\Bianca\Documents\DASCH\ SVN\I2C_Test\i2cmaster/i2cmaster.h:

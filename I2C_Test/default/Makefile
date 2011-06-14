@@ -37,7 +37,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Include Directories
-INCLUDES = -I"C:\Users\Bianca\Documents\Directory for SVN\I2C_Test\..\..\libpololu-avr-100326[1]\libpololu-avr\src\i2cmaster" 
+INCLUDES = -I"C:\Users\Bianca\Documents\DASCH SVN\I2C_Test\i2cmaster" 
 
 ## Libraries
 LIBS = -lpololu_atmega1284p 
@@ -55,7 +55,7 @@ all: $(TARGET) I2C_Test.hex I2C_Test.eep I2C_Test.lss size
 I2C_Test.o: ../I2C_Test.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
-twimaster.o: ../../../libpololu-avr-100326[1]/libpololu-avr/src/i2cmaster/twimaster.c
+twimaster.o: ../i2cmaster/twimaster.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link

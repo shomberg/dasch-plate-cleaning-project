@@ -655,22 +655,22 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a
  .debug_abbrev  0x00000000      0x178 I2C_Test.o
  .debug_abbrev  0x00000178       0xc2 twimaster.o
 
-.debug_line     0x00000000      0x4b2
+.debug_line     0x00000000      0x482
  *(.debug_line)
  .debug_line    0x00000000      0x245 I2C_Test.o
- .debug_line    0x00000245      0x26d twimaster.o
+ .debug_line    0x00000245      0x23d twimaster.o
 
 .debug_frame    0x00000000      0x110
  *(.debug_frame)
  .debug_frame   0x00000000       0x80 I2C_Test.o
  .debug_frame   0x00000080       0x90 twimaster.o
 
-.debug_str      0x00000000      0x2f9
+.debug_str      0x00000000      0x2c1
  *(.debug_str)
- .debug_str     0x00000000      0x1bc I2C_Test.o
-                                0x1f5 (size before relaxing)
- .debug_str     0x000001bc      0x13d twimaster.o
-                                0x1ef (size before relaxing)
+ .debug_str     0x00000000      0x1b4 I2C_Test.o
+                                0x1ed (size before relaxing)
+ .debug_str     0x000001b4      0x10d twimaster.o
+                                0x1b7 (size before relaxing)
 
 .debug_loc      0x00000000      0x13f
  *(.debug_loc)
