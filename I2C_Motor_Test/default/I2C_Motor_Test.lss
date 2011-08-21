@@ -409,7 +409,7 @@ inline void delay_ms(unsigned int milliseconds) { OrangutanTime::delayMillisecon
 			//OrangutanLCD::print( (int) u_byte0.byte0);
 			//OrangutanLCD::print(" ");
 
-			if( (j % (totallength0/delaytime) ) < (steplength0/delaytime) )
+			if( (j % (totallength0/delaytime) ) < (steplength0/delaytime) )  //check if it is in the right period of the loop to send high
      25c:	ce 01       	movw	r24, r28
      25e:	65 e0       	ldi	r22, 0x05	; 5
      260:	70 e0       	ldi	r23, 0x00	; 0
@@ -454,10 +454,10 @@ inline void delay_ms(unsigned int milliseconds) { OrangutanTime::delayMillisecon
      292:	20 93 38 01 	sts	0x0138, r18
 			}
 
-			i2c_write(u_byte0.byte0);                       // write address = 5
+			i2c_write(u_byte0.byte0);                       // write first byte of output
      296:	80 91 38 01 	lds	r24, 0x0138
      29a:	0e 94 cd 01 	call	0x39a	; 0x39a <_Z9i2c_writeh>
-        	i2c_write(u_byte1.byte1);                       // ret=0 -> Ok, ret=1 -> no ACK 
+        	i2c_write(u_byte1.byte1);                       // write second byte of output
      29e:	80 91 39 01 	lds	r24, 0x0139
      2a2:	0e 94 cd 01 	call	0x39a	; 0x39a <_Z9i2c_writeh>
         	i2c_stop();                            // set stop conditon = release bus
@@ -465,8 +465,8 @@ inline void delay_ms(unsigned int milliseconds) { OrangutanTime::delayMillisecon
      2aa:	81 e0       	ldi	r24, 0x01	; 1
      2ac:	90 e0       	ldi	r25, 0x00	; 0
      2ae:	0e 94 b4 06 	call	0xd68	; 0xd68 <_ZN13OrangutanTime17delayMillisecondsEj>
-			delay_ms(delaytime); 
-			i2c_start(PCF8575+I2C_WRITE);
+			delay_ms(delaytime);
+			i2c_start(PCF8575+I2C_WRITE);	//start up for next write
      2b2:	80 e4       	ldi	r24, 0x40	; 64
      2b4:	0e 94 74 01 	call	0x2e8	; 0x2e8 <_Z9i2c_starth>
 		OrangutanLCD::print("ACK ");
@@ -480,12 +480,12 @@ inline void delay_ms(unsigned int milliseconds) { OrangutanTime::delayMillisecon
      2bc:	c0 32       	cpi	r28, 0x20	; 32
      2be:	d8 07       	cpc	r29, r24
      2c0:	69 f6       	brne	.-102    	; 0x25c <main+0x7c>
-        	i2c_write(u_byte1.byte1);                       // ret=0 -> Ok, ret=1 -> no ACK 
+        	i2c_write(u_byte1.byte1);                       // write second byte of output
         	i2c_stop();                            // set stop conditon = release bus
-			delay_ms(delaytime); 
-			i2c_start(PCF8575+I2C_WRITE);
+			delay_ms(delaytime);
+			i2c_start(PCF8575+I2C_WRITE);	//start up for next write
     	}
-		i2c_stop();
+		i2c_stop();			//final stop
      2c2:	0e 94 c5 01 	call	0x38a	; 0x38a <_Z8i2c_stopv>
 	}
 	OrangutanLCD::print("END");

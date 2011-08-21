@@ -142,7 +142,7 @@ int main()
 			//OrangutanLCD::print( (int) u_byte0.byte0);
 			//OrangutanLCD::print(" ");
 
-			if( (j % (totallength0/delaytime) ) < (steplength0/delaytime) )
+			if( (j % (totallength0/delaytime) ) < (steplength0/delaytime) )  //check if it is in the right period of the loop to send high
 			{
 				//motorouts[0] = 1;
 				u_byte0.bits_in_byte0.bit_0 = 1; // set bit 0
@@ -164,13 +164,13 @@ int main()
 				u_byte0.bits_in_byte0.bit_1 = 0; // set bit 0
 			}
 
-			i2c_write(u_byte0.byte0);                       // write address = 5
-        	i2c_write(u_byte1.byte1);                       // ret=0 -> Ok, ret=1 -> no ACK 
+			i2c_write(u_byte0.byte0);                       // write first byte of output
+        	i2c_write(u_byte1.byte1);                       // write second byte of output
         	i2c_stop();                            // set stop conditon = release bus
-			delay_ms(delaytime); 
-			i2c_start(PCF8575+I2C_WRITE);
+			delay_ms(delaytime);
+			i2c_start(PCF8575+I2C_WRITE);	//start up for next write
     	}
-		i2c_stop();
+		i2c_stop();			//final stop
 	}
 	OrangutanLCD::print("END");
     for(;;);	 
