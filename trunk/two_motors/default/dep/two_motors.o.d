@@ -27,6 +27,7 @@ two_motors.o: ../two_motors.c \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanPushbuttons/OrangutanPushbuttons.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanPushbuttons/../OrangutanResources/include/OrangutanModel.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/PololuQTRSensors/PololuQTRSensors.h \
+  c:/winavr-20100110/lib/gcc/../../avr/include/pololu/PololuQTRSensors/../OrangutanResources/include/OrangutanModel.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/PololuWheelEncoders/PololuWheelEncoders.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/interrupt.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanResources/OrangutanResources.h \
@@ -42,7 +43,6 @@ two_motors.o: ../two_motors.c \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanX2/OrangutanX2.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanX2/../OrangutanResources/include/OrangutanModel.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanSPIMaster/OrangutanSPIMaster.h \
-  c:/winavr-20100110/lib/gcc/../../avr/include/pololu/PololuQTRSensors.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/stdlib.h \
   c:\winavr-20100110\bin\../lib/gcc/avr/4.3.3/include/stddef.h
 
@@ -102,6 +102,8 @@ c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanPushbuttons/../Oran
 
 c:/winavr-20100110/lib/gcc/../../avr/include/pololu/PololuQTRSensors/PololuQTRSensors.h:
 
+c:/winavr-20100110/lib/gcc/../../avr/include/pololu/PololuQTRSensors/../OrangutanResources/include/OrangutanModel.h:
+
 c:/winavr-20100110/lib/gcc/../../avr/include/pololu/PololuWheelEncoders/PololuWheelEncoders.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/avr/interrupt.h:
@@ -131,8 +133,6 @@ c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanX2/OrangutanX2.h:
 c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanX2/../OrangutanResources/include/OrangutanModel.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanSPIMaster/OrangutanSPIMaster.h:
-
-c:/winavr-20100110/lib/gcc/../../avr/include/pololu/PololuQTRSensors.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/stdlib.h:
 

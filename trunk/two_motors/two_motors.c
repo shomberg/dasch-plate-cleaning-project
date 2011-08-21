@@ -1,5 +1,4 @@
 #include <pololu/orangutan>
-#include <pololu/PololuQTRSensors.h>
 
 
 #include <stdlib.h> 
@@ -51,30 +50,57 @@ int gcf(int in1, int in2, int in3) //int
 	return gcf;
 }
 
+union {
+	struct {
+		unsigned int bit_7 : 1;
+		unsigned int bit_6 : 1;
+		unsigned int bit_5 : 1;
+		unsigned int bit_4 : 1;
+		unsigned int bit_3 : 1;
+		unsigned int bit_2 : 1;
+		unsigned int bit_1 : 1;
+		unsigned int bit_0 : 1;
+	} bits_in_byte1;
+	char byte1;
+} u_byte1;
+
 int main()
 {
 	int runtime = 8000, steplength = 2, totallength0 = 5, totallength1 = 6;
-	//get inputs for runtime and steplength and totallength1 and totallength2
-	
+	//get inputs for runtime and steplength and totallength1 and totallength2\
+
+OrangutanLCD::print("Hi");
+
+u_byte1.byte1 = 0;  // initialize byte
+
+u_byte1.bits_in_byte1.bit_6 = 1; // set bit 6
+
+u_byte1.bits_in_byte1.bit_3 = 1; // set bit 3
+OrangutanLCD::print(runtime);
+//OrangutanLCD::print(steven);
+OrangutanLCD::print( (int) u_byte1.byte1);	
 	int delaytime = gcf(totallength0, totallength1, steplength)/100;
 	for(int j = 0; j < (runtime)/(delaytime); j ++)
 	{
 		if(j % (totallength0)/(delaytime) < (steplength)/(delaytime))
 		{
-			OrangutanDigital::setOutput(IO_C0, HIGH);
+			OrangutanDigital::setOutput(IO_D0, HIGH);
 		}
 		else
 		{
-			OrangutanDigital::setOutput(IO_C0, LOW);
+			OrangutanDigital::setOutput(IO_D0, LOW);
 		}
 		if(j % (totallength1)/(delaytime) < (steplength)/(delaytime))
 		{
-			OrangutanDigital::setOutput(IO_C1, HIGH);   //this is the same output!
+			OrangutanDigital::setOutput(IO_D1, HIGH);   //this is the same output!
 		}
 		else
 		{
-			OrangutanDigital::setOutput(IO_C1, LOW);
+			OrangutanDigital::setOutput(IO_D1, LOW);
 		}
+
+
+		
 		delay_ms(delaytime);
 	}
 }

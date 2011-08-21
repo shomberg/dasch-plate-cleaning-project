@@ -37,7 +37,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Include Directories
-INCLUDES = -I"C:\Users\Bianca\Documents\DASCH SVN\I2C_Test\i2cmaster" 
+INCLUDES = -I"C:\Documents and Settings\Bianca\My Documents\Steven\DASCH\SVN Directory\I2C_Test\i2cmaster" 
 
 ## Libraries
 LIBS = -lpololu_atmega1284p 
