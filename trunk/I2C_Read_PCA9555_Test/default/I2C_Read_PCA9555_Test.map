@@ -667,12 +667,12 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a
  .debug_frame   0x00000000       0x80 I2C_Read_PCA9555_Test.o
  .debug_frame   0x00000080       0x90 twimaster.o
 
-.debug_str      0x00000000      0x3bf
+.debug_str      0x00000000      0x3a4
  *(.debug_str)
- .debug_str     0x00000000      0x2b2 I2C_Read_PCA9555_Test.o
-                                0x2f7 (size before relaxing)
- .debug_str     0x000002b2      0x10d twimaster.o
-                                0x1e9 (size before relaxing)
+ .debug_str     0x00000000      0x297 I2C_Read_PCA9555_Test.o
+                                0x2dc (size before relaxing)
+ .debug_str     0x00000297      0x10d twimaster.o
+                                0x1ce (size before relaxing)
 
 .debug_loc      0x00000000      0x13f
  *(.debug_loc)

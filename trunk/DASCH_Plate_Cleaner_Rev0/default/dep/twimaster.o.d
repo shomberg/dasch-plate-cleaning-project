@@ -11,7 +11,7 @@ twimaster.o: ../i2cmaster/twimaster.c \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/version.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/fuse.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/lock.h \
-  C:\Users\Steven\Documents\DASCH\SVN\ Directory\I2C_Read_PCA9555_Test\i2cmaster/i2cmaster.h
+  C:\Documents\ and\ Settings\Bianca\My\ Documents\Steven\DASCH\SVN\ Directory\DASCH_Plate_Cleaner_Rev0\i2cmaster/i2cmaster.h
 
 c:/winavr-20100110/lib/gcc/../../avr/include/inttypes.h:
 
@@ -37,4 +37,4 @@ c:/winavr-20100110/lib/gcc/../../avr/include/avr/fuse.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/avr/lock.h:
 
-C:\Users\Steven\Documents\DASCH\SVN\ Directory\I2C_Read_PCA9555_Test\i2cmaster/i2cmaster.h:
+C:\Documents\ and\ Settings\Bianca\My\ Documents\Steven\DASCH\SVN\ Directory\DASCH_Plate_Cleaner_Rev0\i2cmaster/i2cmaster.h:

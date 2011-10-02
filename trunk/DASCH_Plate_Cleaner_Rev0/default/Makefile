@@ -1,11 +1,11 @@
 ###############################################################################
-# Makefile for the project Button_Test
+# Makefile for the project DASCH_Plate_Cleaner_Rev0
 ###############################################################################
 
 ## General Flags
-PROJECT = Button_Test
+PROJECT = DASCH_Plate_Cleaner_Rev0
 MCU = atmega1284p
-TARGET = Button_Test.elf
+TARGET = DASCH_Plate_Cleaner_Rev0.elf
 CC = avr-c++
 
 CPP = avr-g++
@@ -15,7 +15,7 @@ COMMON = -mmcu=$(MCU)
 
 ## Compile options common for all C compilation units.
 CFLAGS = $(COMMON)
-CFLAGS += -Wall -gdwarf-2 -Os -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
+CFLAGS += -Wall -gdwarf-2  -Os -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 CFLAGS += -MD -MP -MT $(*F).o -MF dep/$(@F).d 
 
 ## Assembly specific flags
@@ -25,7 +25,7 @@ ASMFLAGS += -x assembler-with-cpp -Wa,-gdwarf2
 
 ## Linker flags
 LDFLAGS = $(COMMON)
-LDFLAGS +=  -Wl,-Map=Button_Test.map
+LDFLAGS +=  -Wl,-Map=DASCH_Plate_Cleaner_Rev0.map
 
 
 ## Intel Hex file production flags
@@ -36,21 +36,26 @@ HEX_EEPROM_FLAGS += --set-section-flags=.eeprom="alloc,load"
 HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
-## Library Directories
-LIBDIRS = -L"C:\libpololu-avr" 
+## Include Directories
+INCLUDES = -I"C:\Documents and Settings\Bianca\My Documents\Steven\DASCH\SVN Directory\DASCH_Plate_Cleaner_Rev0\i2cmaster" 
 
 ## Libraries
 LIBS = -lpololu_atmega1284p 
 
 ## Objects that must be built in order to link
-OBJECTS = Button_Test.o 
+OBJECTS = DASCH_Plate_Cleaner_Rev0.o twimaster.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
 
 ## Build
-all: $(TARGET) Button_Test.hex Button_Test.eep Button_Test.lss## Compile
-Button_Test.o: ../Button_Test.c
+all: $(TARGET) DASCH_Plate_Cleaner_Rev0.hex DASCH_Plate_Cleaner_Rev0.eep DASCH_Plate_Cleaner_Rev0.lss size
+
+## Compile
+DASCH_Plate_Cleaner_Rev0.o: ../DASCH_Plate_Cleaner_Rev0.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+twimaster.o: ../i2cmaster/twimaster.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link
@@ -66,12 +71,16 @@ $(TARGET): $(OBJECTS)
 %.lss: $(TARGET)
 	avr-objdump -h -S $< > $@
 
+size: ${TARGET}
+	@echo
+	@avr-size -C --mcu=${MCU} ${TARGET}
+
 ## Clean target
 .PHONY: clean
 clean:
-	-rm -rf $(OBJECTS) Button_Test.elf dep/* Button_Test.hex Button_Test.eep Button_Test.lss Button_Test.map
+	-rm -rf $(OBJECTS) DASCH_Plate_Cleaner_Rev0.elf dep/* DASCH_Plate_Cleaner_Rev0.hex DASCH_Plate_Cleaner_Rev0.eep DASCH_Plate_Cleaner_Rev0.lss DASCH_Plate_Cleaner_Rev0.map
 
 
 ## Other dependencies
--include $(shell mkdir dep 2>NUL) $(wildcard dep/*)
+-include $(shell mkdir dep 2>/dev/null) $(wildcard dep/*)
 

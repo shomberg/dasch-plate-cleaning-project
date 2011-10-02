@@ -1,4 +1,4 @@
-I2C_Read_PCA9555_Test.o: ../I2C_Read_PCA9555_Test.c \
+DASCH_Plate_Cleaner_Rev0.o: ../DASCH_Plate_Cleaner_Rev0.c \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/orangutan \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanAnalog/OrangutanAnalog.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/io.h \
@@ -40,8 +40,10 @@ I2C_Read_PCA9555_Test.o: ../I2C_Read_PCA9555_Test.c \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanPulseIn/OrangutanPulseIn.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanPulseIn/../OrangutanTime/OrangutanTime.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanSVP/OrangutanSVP.h \
+  c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanX2/OrangutanX2.h \
+  c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanX2/../OrangutanResources/include/OrangutanModel.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanSPIMaster/OrangutanSPIMaster.h \
-  C:\Users\Steven\Documents\DASCH\SVN\ Directory\I2C_Read_PCA9555_Test\i2cmaster/i2cmaster.h \
+  C:\Documents\ and\ Settings\Bianca\My\ Documents\Steven\DASCH\SVN\ Directory\DASCH_Plate_Cleaner_Rev0\i2cmaster/i2cmaster.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/stdlib.h \
   c:\winavr-20100110\bin\../lib/gcc/avr/4.3.3/include/stddef.h
 
@@ -127,9 +129,13 @@ c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanPulseIn/../Oranguta
 
 c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanSVP/OrangutanSVP.h:
 
+c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanX2/OrangutanX2.h:
+
+c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanX2/../OrangutanResources/include/OrangutanModel.h:
+
 c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanSPIMaster/OrangutanSPIMaster.h:
 
-C:\Users\Steven\Documents\DASCH\SVN\ Directory\I2C_Read_PCA9555_Test\i2cmaster/i2cmaster.h:
+C:\Documents\ and\ Settings\Bianca\My\ Documents\Steven\DASCH\SVN\ Directory\DASCH_Plate_Cleaner_Rev0\i2cmaster/i2cmaster.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/stdlib.h:
 

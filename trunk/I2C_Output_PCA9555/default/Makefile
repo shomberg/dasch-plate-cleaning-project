@@ -1,11 +1,11 @@
 ###############################################################################
-# Makefile for the project Button_Test
+# Makefile for the project I2C_Output_PCA9555
 ###############################################################################
 
 ## General Flags
-PROJECT = Button_Test
+PROJECT = I2C_Output_PCA9555
 MCU = atmega1284p
-TARGET = Button_Test.elf
+TARGET = I2C_Output_PCA9555.elf
 CC = avr-c++
 
 CPP = avr-g++
@@ -15,7 +15,7 @@ COMMON = -mmcu=$(MCU)
 
 ## Compile options common for all C compilation units.
 CFLAGS = $(COMMON)
-CFLAGS += -Wall -gdwarf-2 -Os -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
+CFLAGS += -Wall -gdwarf-2 -Os -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums 
 CFLAGS += -MD -MP -MT $(*F).o -MF dep/$(@F).d 
 
 ## Assembly specific flags
@@ -25,7 +25,7 @@ ASMFLAGS += -x assembler-with-cpp -Wa,-gdwarf2
 
 ## Linker flags
 LDFLAGS = $(COMMON)
-LDFLAGS +=  -Wl,-Map=Button_Test.map
+LDFLAGS +=  -Wl,-Map=I2C_Output_PCA9555.map
 
 
 ## Intel Hex file production flags
@@ -36,21 +36,26 @@ HEX_EEPROM_FLAGS += --set-section-flags=.eeprom="alloc,load"
 HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
-## Library Directories
-LIBDIRS = -L"C:\libpololu-avr" 
+## Include Directories
+INCLUDES = -I"C:\Documents and Settings\Bianca\My Documents\Steven\DASCH\SVN Directory\I2C_Output_PCA9555\i2cmaster" 
 
 ## Libraries
 LIBS = -lpololu_atmega1284p 
 
 ## Objects that must be built in order to link
-OBJECTS = Button_Test.o 
+OBJECTS = I2C_Output_PCA9555.o twimaster.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
 
 ## Build
-all: $(TARGET) Button_Test.hex Button_Test.eep Button_Test.lss## Compile
-Button_Test.o: ../Button_Test.c
+all: $(TARGET) I2C_Output_PCA9555.hex I2C_Output_PCA9555.eep I2C_Output_PCA9555.lss size
+
+## Compile
+I2C_Output_PCA9555.o: ../I2C_Output_PCA9555.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+twimaster.o: ../i2cmaster/twimaster.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link
@@ -66,12 +71,16 @@ $(TARGET): $(OBJECTS)
 %.lss: $(TARGET)
 	avr-objdump -h -S $< > $@
 
+size: ${TARGET}
+	@echo
+	@avr-size -C --mcu=${MCU} ${TARGET}
+
 ## Clean target
 .PHONY: clean
 clean:
-	-rm -rf $(OBJECTS) Button_Test.elf dep/* Button_Test.hex Button_Test.eep Button_Test.lss Button_Test.map
+	-rm -rf $(OBJECTS) I2C_Output_PCA9555.elf dep/* I2C_Output_PCA9555.hex I2C_Output_PCA9555.eep I2C_Output_PCA9555.lss I2C_Output_PCA9555.map
 
 
 ## Other dependencies
--include $(shell mkdir dep 2>NUL) $(wildcard dep/*)
+-include $(shell mkdir dep 2>/dev/null) $(wildcard dep/*)
 
