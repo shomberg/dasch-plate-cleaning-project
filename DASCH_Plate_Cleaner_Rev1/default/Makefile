@@ -1,11 +1,11 @@
 ###############################################################################
-# Makefile for the project Button_Test
+# Makefile for the project DASCH_Plate_Cleaner_Rev1
 ###############################################################################
 
 ## General Flags
-PROJECT = Button_Test
+PROJECT = DASCH_Plate_Cleaner_Rev1
 MCU = atmega1284p
-TARGET = Button_Test.elf
+TARGET = DASCH_Plate_Cleaner_Rev1.elf
 CC = avr-c++
 
 CPP = avr-g++
@@ -25,7 +25,7 @@ ASMFLAGS += -x assembler-with-cpp -Wa,-gdwarf2
 
 ## Linker flags
 LDFLAGS = $(COMMON)
-LDFLAGS +=  -Wl,-Map=Button_Test.map
+LDFLAGS +=  -Wl,-Map=DASCH_Plate_Cleaner_Rev1.map
 
 
 ## Intel Hex file production flags
@@ -36,21 +36,24 @@ HEX_EEPROM_FLAGS += --set-section-flags=.eeprom="alloc,load"
 HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
-## Library Directories
-LIBDIRS = -L"C:\libpololu-avr" 
+## Include Directories
+INCLUDES = -I"C:\Users\Steven\Documents\DASCH\SVN Directory\DASCH_Plate_Cleaner_Rev1\i2cmaster" 
 
 ## Libraries
 LIBS = -lpololu_atmega1284p 
 
 ## Objects that must be built in order to link
-OBJECTS = Button_Test.o 
+OBJECTS = DASCH_Plate_Cleaner_Rev1.o twimaster.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
 
 ## Build
-all: $(TARGET) Button_Test.hex Button_Test.eep Button_Test.lss## Compile
-Button_Test.o: ../Button_Test.c
+all: $(TARGET) DASCH_Plate_Cleaner_Rev1.hex DASCH_Plate_Cleaner_Rev1.eep DASCH_Plate_Cleaner_Rev1.lss## Compile
+DASCH_Plate_Cleaner_Rev1.o: ../DASCH_Plate_Cleaner_Rev1.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+twimaster.o: ../i2cmaster/twimaster.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link
@@ -69,7 +72,7 @@ $(TARGET): $(OBJECTS)
 ## Clean target
 .PHONY: clean
 clean:
-	-rm -rf $(OBJECTS) Button_Test.elf dep/* Button_Test.hex Button_Test.eep Button_Test.lss Button_Test.map
+	-rm -rf $(OBJECTS) DASCH_Plate_Cleaner_Rev1.elf dep/* DASCH_Plate_Cleaner_Rev1.hex DASCH_Plate_Cleaner_Rev1.eep DASCH_Plate_Cleaner_Rev1.lss DASCH_Plate_Cleaner_Rev1.map
 
 
 ## Other dependencies
