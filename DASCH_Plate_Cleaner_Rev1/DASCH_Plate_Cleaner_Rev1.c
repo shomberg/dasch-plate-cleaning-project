@@ -135,6 +135,7 @@ int main()
 	int m2Brush1Step = 2000, m2Brush2Step = 2000, m2Dry1Step = 2000, m2Dry2Step = 2000;
 	int m2LoadBack = 2000, m2Dry1StepWhole = 2000, m2Brush2StepWhole = 2000;
     
+	while(1){
 	u_motorByte0.motorByte0 = 0;  // initialize motorByte0
 	u_motorByte1.motorByte1 = 0;  // initialize motorByte1
 	u_outputByte0.outputByte0 = 255;  // initialize outputByte0
@@ -197,12 +198,56 @@ int main()
 
 		if(OrangutanDigital::isInputHigh(IO_D3))
 		{
-			OrangutanLCD::print("CHECK");
+			OrangutanLCD::print("MAINTENANCE");
 			delay_ms(1000);
 			//initialize
 			int button = 1, counterRefPush = 0, counterRefRel = 0, stateButton = 0;
 			int print = 0;
+			int mode = 3;
 
+			OrangutanLCD::clear();
+			OrangutanLCD::print("SELECT MODE");
+			while(button != 0){
+				if(stateButton == 0 && OrangutanDigital::isInputHigh(IO_D0)){
+					counterRefPush = counter;
+					stateButton = 1;
+				}
+				if(stateButton == 1){
+					if(counter - counterRefPush > 15){
+						if(!OrangutanDigital::isInputHigh(IO_D0)){
+							counterRefRel = counter;
+							stateButton = 2;
+						}
+					}
+					else if(!OrangutanDigital::isInputHigh(IO_D0)){
+						stateButton = 0;
+					}
+				}
+				if(stateButton == 2){
+					if(OrangutanDigital::isInputHigh(IO_D0)){
+						stateButton = 1;
+						counterRefPush = counter;
+					}
+					else if(counter - counterRefRel > 15){
+						button = 0;
+						stateButton = 0;
+					}
+				}
+				counter++;
+				delay_ms(1);
+			}
+			button = 1;
+			counter = 0;
+			OrangutanLCD::clear();
+			if(OrangutanDigital::isInputHigh(IO_D1) && OrangutanDigital::isInputHigh(IO_D2)){
+				state = 0;
+				mode = 3;
+				OrangutanLCD::clear();
+				OrangutanLCD::print("INPUTS ");
+				OrangutanLCD::gotoXY(0,1);
+				print = 0;
+			}
+			
 			while(state != -1){
 
 				i2c_start(I2C3+I2C_WRITE);						// first start condition (write)
@@ -238,52 +283,86 @@ int main()
 					}
 				}
 
+				
+				if(!OrangutanDigital::isInputHigh(IO_D1) && !OrangutanDigital::isInputHigh(IO_D2) && mode != 0){
+					state = 0;
+					mode = 0;
+					OrangutanLCD::clear();
+					OrangutanLCD::print("INPUTS ");
+					OrangutanLCD::gotoXY(0,1);
+					print = 0;
+				}
+				if(OrangutanDigital::isInputHigh(IO_D1) && !OrangutanDigital::isInputHigh(IO_D2) && mode != 1){
+					state = 8;
+					mode = 1;
+					OrangutanLCD::clear();
+					OrangutanLCD::print("OUTPUTS");
+					OrangutanLCD::gotoXY(0,1);
+					print = 0;
+				}
+				if(!OrangutanDigital::isInputHigh(IO_D1) && OrangutanDigital::isInputHigh(IO_D2) && mode != 2){
+					state = 32;
+					mode = 2;
+					OrangutanLCD::clear();
+					OrangutanLCD::print("MOTORS ");
+					OrangutanLCD::gotoXY(0,1);
+					print = 0;
+				}
+				if(OrangutanDigital::isInputHigh(IO_D1) && OrangutanDigital::isInputHigh(IO_D2) && mode != 3){
+					state = 0;
+					mode = 3;
+					OrangutanLCD::clear();
+					OrangutanLCD::print("INPUTS ");
+					OrangutanLCD::gotoXY(0,1);
+					print = 0;
+				}
+
 				//state conversions
 
 				if(state == 0 && button == 0){
-					OrangutanLCD::clear();
+					OrangutanLCD::gotoXY(0,1);
 					button = 1;
 					state = 1;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 1 && button == 0){
-					OrangutanLCD::clear();
+					OrangutanLCD::gotoXY(0,1);
 					button = 1;
 					state = 2;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 2 && button == 0){
-					OrangutanLCD::clear();
+					OrangutanLCD::gotoXY(0,1);
 					button = 1;
 					state = 3;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 3 && button == 0){
-					OrangutanLCD::clear();
+					OrangutanLCD::gotoXY(0,1);
 					button = 1;
 					state = 4;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 4 && button == 0){
-					OrangutanLCD::clear();
+					OrangutanLCD::gotoXY(0,1);
 					button = 1;
 					state = 5;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 5 && button == 0){
-					OrangutanLCD::clear();
+					OrangutanLCD::gotoXY(0,1);
 					button = 1;
 					state = 6;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 6 && button == 0){
-					OrangutanLCD::clear();
+					OrangutanLCD::gotoXY(0,1);
 					button = 1;
 					state = 7;
 					counterRef = counter;
@@ -292,153 +371,185 @@ int main()
 				if(state == 7 && button == 0){
 					OrangutanLCD::clear();
 					button = 1;
-					state = 8;
+					if(mode == 0){
+						state = -1;
+					}
+					else{
+						state = 8;
+						OrangutanLCD::print("OUTPUTS");
+						OrangutanLCD::gotoXY(0,1);
+					}
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 8 && button == 0){
+					OrangutanLCD::gotoXY(13,1);
+					OrangutanLCD::print("OFF");
 					state = 9;
+					button = 1;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 9 && button == 0){
-					OrangutanLCD::clear();
+					OrangutanLCD::gotoXY(0,1);
 					button = 1;
 					state = 10;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 10 && button == 0){
+					OrangutanLCD::gotoXY(13,1);
+					OrangutanLCD::print("OFF");
 					button = 1;
 					state = 11;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 11 && button == 0){
-					OrangutanLCD::clear();
+					OrangutanLCD::gotoXY(0,1);
 					button = 1;
 					state = 12;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 12 && button == 0){
+					OrangutanLCD::gotoXY(13,1);
+					OrangutanLCD::print("OFF");
 					button = 1;
 					state = 13;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 13 && button == 0){
-					OrangutanLCD::clear();
+					OrangutanLCD::gotoXY(0,1);
 					button = 1;
 					state = 14;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 14 && button == 0){
+					OrangutanLCD::gotoXY(13,1);
+					OrangutanLCD::print("OFF");
 					button = 1;
 					state = 15;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 15 && button == 0){
-					OrangutanLCD::clear();
+					OrangutanLCD::gotoXY(0,1);
 					button = 1;
 					state = 16;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 16 && button == 0){
+					OrangutanLCD::gotoXY(13,1);
+					OrangutanLCD::print("OFF");
 					button = 1;
 					state = 17;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 17 && button == 0){
-					OrangutanLCD::clear();
+					OrangutanLCD::gotoXY(0,1);
 					button = 1;
 					state = 18;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 18 && button == 0){
+					OrangutanLCD::gotoXY(13,1);
+					OrangutanLCD::print("OFF");
 					button = 1;
 					state = 19;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 19 && button == 0){
-					OrangutanLCD::clear();
+					OrangutanLCD::gotoXY(0,1);
 					button = 1;
 					state = 20;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 20 && button == 0){
+					OrangutanLCD::gotoXY(13,1);
+					OrangutanLCD::print("OFF");
 					button = 1;
 					state = 21;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 21 && button == 0){
-					OrangutanLCD::clear();
+					OrangutanLCD::gotoXY(0,1);
 					button = 1;
 					state = 22;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 22 && button == 0){
+					OrangutanLCD::gotoXY(13,1);
+					OrangutanLCD::print("OFF");
 					button = 1;
 					state = 23;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 23 && button == 0){
-					OrangutanLCD::clear();
+					OrangutanLCD::gotoXY(0,1);
 					button = 1;
 					state = 24;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 24 && button == 0){
+					OrangutanLCD::gotoXY(13,1);
+					OrangutanLCD::print("OFF");
 					button = 1;
 					state = 25;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 25 && button == 0){
-					OrangutanLCD::clear();
+					OrangutanLCD::gotoXY(0,1);
 					button = 1;
 					state = 26;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 26 && button == 0){
+					OrangutanLCD::gotoXY(13,1);
+					OrangutanLCD::print("OFF");
 					button = 1;
 					state = 27;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 27 && button == 0){
-					OrangutanLCD::clear();
+					OrangutanLCD::gotoXY(0,1);
 					button = 1;
 					state = 28;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 28 && button == 0){
+					OrangutanLCD::gotoXY(13,1);
+					OrangutanLCD::print("OFF");
 					button = 1;
 					state = 29;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 29 && button == 0){
-					OrangutanLCD::clear();
+					OrangutanLCD::gotoXY(0,1);
 					button = 1;
 					state = 30;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 30 && button == 0){
+					OrangutanLCD::gotoXY(13,1);
+					OrangutanLCD::print("OFF");
 					button = 1;
 					state = 31;
 					counterRef = counter;
@@ -448,18 +559,27 @@ int main()
 					OrangutanLCD::clear();
 					u_motorByte0.bits_in_motorByte0.m1Drop = 1;
 					button = 1;
-					state = 32;
+					if(mode == 1){
+						state = -1;
+					}
+					else{
+						state = 32;
+						OrangutanLCD::print("MOTORS");
+						OrangutanLCD::gotoXY(0,1);
+					}
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 32 && button == 0){
+					OrangutanLCD::gotoXY(11,1);
+					OrangutanLCD::print("BACK ");
 					button = 1;
 					state = 33;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 33 && button == 0){
-					OrangutanLCD::clear();
+					OrangutanLCD::gotoXY(0,1);
 					u_motorByte0.bits_in_motorByte0.m1Drop = 0;
 					u_motorByte0.bits_in_motorByte0.m2Drop = 1;
 					button = 1;
@@ -468,13 +588,15 @@ int main()
 					print = 0;
 				}
 				if(state == 34 && button == 0){
+					OrangutanLCD::gotoXY(11,1);
+					OrangutanLCD::print("BACK ");
 					button = 1;
 					state = 35;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 35 && button == 0){
-					OrangutanLCD::clear();
+					OrangutanLCD::gotoXY(0,1);
 					u_motorByte0.bits_in_motorByte0.m2Drop = 0;
 					u_motorByte1.bits_in_motorByte1.m3Drop = 1;
 					button = 1;
@@ -483,13 +605,15 @@ int main()
 					print = 0;
 				}
 				if(state == 36 && button == 0){
+					OrangutanLCD::gotoXY(11,1);
+					OrangutanLCD::print("BACK ");
 					button = 1;
 					state = 37;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 37 && button == 0){
-					OrangutanLCD::clear();
+					OrangutanLCD::gotoXY(0,1);
 					u_motorByte1.bits_in_motorByte1.m3Drop = 0;
 					u_motorByte1.bits_in_motorByte1.m4Drop = 1;
 					button = 1;
@@ -498,13 +622,15 @@ int main()
 					print = 0;
 				}
 				if(state == 38 && button == 0){
+					OrangutanLCD::gotoXY(11,1);
+					OrangutanLCD::print("BACK ");
 					button = 1;
 					state = 39;
 					counterRef = counter;
 					print = 0;
 				}
 				if(state == 39 && button == 0){
-					OrangutanLCD::clear();
+					OrangutanLCD::gotoXY(0,1);
 					u_motorByte1.bits_in_motorByte1.m4Drop = 0;
 					u_motorByte1.bits_in_motorByte1.m5Drop = 1;
 					button = 1;
@@ -513,6 +639,8 @@ int main()
 					print = 0;
 				}
 				if(state == 40 && button == 0){
+					OrangutanLCD::gotoXY(11,1);
+					OrangutanLCD::print("BACK ");
 					button = 1;
 					state = 41;
 					counterRef = counter;
@@ -530,72 +658,71 @@ int main()
 				//state actions
 				if(state == 0){
 					if(print == 0){
-						OrangutanLCD::clear();
-						OrangutanLCD::print("SENSOR 0 PLATE");
+						OrangutanLCD::print("SENSOR 0");
 						print = 1;
 					}
-					OrangutanLCD::gotoXY(0,1);
+					OrangutanLCD::gotoXY(15,1);
 					OrangutanLCD::print(u_inputByte0.bits_in_inputByte0.plate);
 				}
 				if(state == 1){
 					if(print == 0){
-						OrangutanLCD::print("SENSOR 1 ON LIFT");
+						OrangutanLCD::print("SENSOR 1");
 						print = 1;
 					}
-					OrangutanLCD::gotoXY(0,1);
+					OrangutanLCD::gotoXY(15,1);
 					OrangutanLCD::print(u_inputByte0.bits_in_inputByte0.fixtureLift);
 				}
 				if(state == 2){
 					if(print == 0){
-						OrangutanLCD::print("SENSOR 2 HOMED");
+						OrangutanLCD::print("SENSOR 2");
 						print = 1;
 					}
-					OrangutanLCD::gotoXY(0,1);
+					OrangutanLCD::gotoXY(15,1);
 					OrangutanLCD::print(u_inputByte0.bits_in_inputByte0.fixtureHome);
 				}
 				if(state == 3){
 					if(print == 0){
-						OrangutanLCD::print("SENSOR 3 ON PLATE");
+						OrangutanLCD::print("SENSOR 3");
 						print = 1;
 					}
-					OrangutanLCD::gotoXY(0,1);
+					OrangutanLCD::gotoXY(15,1);
 					OrangutanLCD::print(u_inputByte0.bits_in_inputByte0.fixturePlate);
 				}
 				if(state == 4){
 					if(print == 0){
-						OrangutanLCD::print("SENSOR 4 BRUSH1");
+						OrangutanLCD::print("SENSOR 4");
 						print = 1;
 					}
-					OrangutanLCD::gotoXY(0,1);
+					OrangutanLCD::gotoXY(15,1);
 					OrangutanLCD::print(u_inputByte0.bits_in_inputByte0.fixtureBrush1);
 				}
 				if(state == 5){
 					if(print == 0){
-						OrangutanLCD::print("SENSOR 5 BRUSH2");
+						OrangutanLCD::print("SENSOR 5");
 						print = 1;
 					}
-					OrangutanLCD::gotoXY(0,1);
+					OrangutanLCD::gotoXY(15,1);
 					OrangutanLCD::print(u_inputByte0.bits_in_inputByte0.fixtureBrush2);
 				}
 				if(state == 6){
 					if(print == 0){
-						OrangutanLCD::print("SENSOR 6 DRY1");
+						OrangutanLCD::print("SENSOR 6");
 						print = 1;
 					}
-					OrangutanLCD::gotoXY(0,1);
+					OrangutanLCD::gotoXY(15,1);
 					OrangutanLCD::print(u_inputByte0.bits_in_inputByte0.fixtureDry1);
 				}
 				if(state == 7){
 					if(print == 0){
-						OrangutanLCD::print("SENSOR 7 DRY2");
+						OrangutanLCD::print("SENSOR 7");
 						print = 1;
 					}
-					OrangutanLCD::gotoXY(0,1);
+					OrangutanLCD::gotoXY(15,1);
 					OrangutanLCD::print(u_inputByte0.bits_in_inputByte0.fixtureDry2);
 				}
 				if(state == 8){
 					if(print == 0){
-						OrangutanLCD::print("OUT 0 AC POWER");
+						OrangutanLCD::print("AC POWER     ON ");
 						print = 1;
 					}
 					u_outputByte0.bits_in_outputByte0.ACPower = 0;
@@ -605,7 +732,7 @@ int main()
 				}
 				if(state == 10){
 					if(print == 0){
-						OrangutanLCD::print("OUT 1 BLOWER");
+						OrangutanLCD::print("BLOWER       ON  ");
 						print = 1;
 					}
 					u_outputByte0.bits_in_outputByte0.blowerPulse = 0;
@@ -615,7 +742,7 @@ int main()
 				}
 				if(state == 12){
 					if(print == 0){
-						OrangutanLCD::print("OUT 2 STOP");
+						OrangutanLCD::print("PLATE STOP   ON ");
 						print = 1;
 					}
 					u_outputByte0.bits_in_outputByte0.plateStop = 0;
@@ -625,7 +752,7 @@ int main()
 				}
 				if(state == 14){
 					if(print == 0){
-						OrangutanLCD::print("OUT 3 FIXTURE RAISE");
+						OrangutanLCD::print("PLATE RAISE  ON ");
 						print = 1;
 					}
 					u_outputByte0.bits_in_outputByte0.raiseFixture = 0;
@@ -637,7 +764,7 @@ int main()
 				}
 				if(state == 16){
 					if(print == 0){
-						OrangutanLCD::print("OUT 4 FIXTURE LOWER");
+						OrangutanLCD::print("PLATE LOWER  ON ");
 						print = 1;
 					}
 					u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
@@ -648,7 +775,7 @@ int main()
 				}
 				if(state == 18){
 					if(print == 0){
-						OrangutanLCD::print("OUT 5 BRUSH1 RAISE");
+						OrangutanLCD::print("BRUSH1 RAISE ON ");
 						print = 1;
 					}
 					u_outputByte0.bits_in_outputByte0.brush1Raise = 0;
@@ -660,7 +787,7 @@ int main()
 				}
 				if(state == 20){
 					if(print == 0){
-						OrangutanLCD::print("OUT 6 BRUSH1 LOWER");
+						OrangutanLCD::print("BRUSH1 LOWER ON ");
 						print = 1;
 					}
 					u_outputByte0.bits_in_outputByte0.brush1Lower = 0;
@@ -671,7 +798,7 @@ int main()
 				}
 				if(state == 22){
 					if(print == 0){
-						OrangutanLCD::print("OUT 7 BRUSH2 RAISE");
+						OrangutanLCD::print("BRUSH2 RAISE ON ");
 						print = 1;
 					}
 					u_outputByte0.bits_in_outputByte0.brush2Raise = 0;
@@ -683,7 +810,7 @@ int main()
 				}
 				if(state == 24){
 					if(print == 0){
-						OrangutanLCD::print("OUT 8 BRUSH2 LOWER");
+						OrangutanLCD::print("BRUSH2 LOWER ON ");
 						print = 1;
 					}
 					u_outputByte1.bits_in_outputByte1.brush2Lower = 0;
@@ -694,7 +821,7 @@ int main()
 				}
 				if(state == 26){
 					if(print == 0){
-						OrangutanLCD::print("OUT 9 PT RAISE");
+						OrangutanLCD::print("PAPER RAISE  ON ");
 						print = 1;
 					}
 					u_outputByte1.bits_in_outputByte1.ptRaise = 0;
@@ -706,7 +833,7 @@ int main()
 				}
 				if(state == 28){
 					if(print == 0){
-						OrangutanLCD::print("OUT 10 PT LOWER");
+						OrangutanLCD::print("PAPER LOWER  ON ");
 						print = 1;
 					}
 					u_outputByte1.bits_in_outputByte1.ptLower = 0;
@@ -717,7 +844,7 @@ int main()
 				}
 				if(state == 30){
 					if(print == 0){
-						OrangutanLCD::print("OUT 11 AIR KNIFE");
+						OrangutanLCD::print("AIR KNIFE    ON ");
 						print = 1;
 					}
 					u_outputByte1.bits_in_outputByte1.airKnife = 0;
@@ -727,7 +854,7 @@ int main()
 				}
 				if(state == 32){
 					if(print == 0){
-						OrangutanLCD::print("M1 PLATE");
+						OrangutanLCD::print("LOADING    FRONT");
 						print = 1;
 					}
 					u_motorByte0.bits_in_motorByte0.m1Dir = 0;
@@ -739,7 +866,7 @@ int main()
 				}
 				if(state == 34){
 					if(print == 0){
-						OrangutanLCD::print("M2 FIXTURE");
+						OrangutanLCD::print("DRIVE      FRONT");
 						print = 1;
 					}
 					u_motorByte0.bits_in_motorByte0.m2Dir = 0;
@@ -752,7 +879,7 @@ int main()
 				}
 				if(state == 36){
 					if(print == 0){
-						OrangutanLCD::print("M3 BRUSH1");
+						OrangutanLCD::print("BRUSH1     FRONT");
 						print = 1;
 					}
 					u_motorByte0.bits_in_motorByte0.m3Dir = 0;
@@ -765,7 +892,7 @@ int main()
 				}
 				if(state == 38){
 					if(print == 0){
-						OrangutanLCD::print("M4 BRUSH2");
+						OrangutanLCD::print("BRUSH2     FRONT");
 						print = 1;
 					}
 					u_motorByte1.bits_in_motorByte1.m4Dir = 0;
@@ -778,7 +905,7 @@ int main()
 				}
 				if(state == 40){
 					if(print == 0){
-						OrangutanLCD::print("M5 PTOWEL");
+						OrangutanLCD::print("PAPER      FRONT");
 						print = 1;
 					}
 					u_motorByte1.bits_in_motorByte1.m5Dir = 0;
@@ -857,6 +984,42 @@ int main()
 		delay_ms(1000);
 
 		int button = 1, counterRefPush = 0, counterRefRel = 0, stateButton = 0;
+		
+		OrangutanLCD::clear();
+		OrangutanLCD::print("SELECT CYCLE");
+		while(button != 0){
+			if(stateButton == 0 && OrangutanDigital::isInputHigh(IO_D0)){
+				counterRefPush = counter;
+				stateButton = 1;
+			}
+			if(stateButton == 1){
+				if(counter - counterRefPush > 15){
+					if(!OrangutanDigital::isInputHigh(IO_D0)){
+						counterRefRel = counter;
+						stateButton = 2;
+					}
+				}
+				else if(!OrangutanDigital::isInputHigh(IO_D0)){
+					stateButton = 0;
+				}
+			}
+			if(stateButton == 2){
+				if(OrangutanDigital::isInputHigh(IO_D0)){
+					stateButton = 1;
+					counterRefPush = counter;
+				}
+				else if(counter - counterRefRel > 15){
+					button = 0;
+					stateButton = 0;
+				}
+			}
+			counter++;
+			delay_ms(1);
+		}
+		button = 1;
+		counter = 0;
+		OrangutanLCD::clear();
+		OrangutanLCD::print("CYCLE:");
 
 		//u_motorByte0.bits_in_motorByte0.m1Drop = 1;
 		u_motorByte0.bits_in_motorByte0.m2Drop = 1;
@@ -865,7 +1028,7 @@ int main()
 		u_motorByte1.bits_in_motorByte1.m5Drop = 1;*/
 
 		if(!OrangutanDigital::isInputHigh(IO_D1) && !OrangutanDigital::isInputHigh(IO_D2)){
-			OrangutanLCD::gotoXY(0,1);
+			OrangutanLCD::gotoXY(7,0);
 			OrangutanLCD::print("FIRST B");
 			while(state != -1)
 			{
@@ -875,9 +1038,11 @@ int main()
 				u_inputByte0.inputByte0 = i2c_readAck();				// read first byte and send Ack, requesting more
    		     	u_inputByte1.inputByte1 = i2c_readNak();				// read second byte and send stop condition
   	 	     	i2c_stop();								// set stop conditon = release bus 		
-				OrangutanLCD::gotoXY(0,1);
-				OrangutanLCD::print("STATE ");
-				OrangutanLCD::print(state);
+				if(state != 0){
+					OrangutanLCD::gotoXY(0,1);
+					OrangutanLCD::print("STATE ");
+					OrangutanLCD::print(state);
+				}
 
 				if(stateButton == 0 && OrangutanDigital::isInputHigh(IO_D0)){
 					counterRefPush = counter;
@@ -1034,14 +1199,14 @@ int main()
 						u_outputByte0.bits_in_outputByte0.lowerFixture = 0;
 						u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
 						if(print0 == 1){
-							OrangutanLCD::clear();
+							OrangutanLCD::gotoXY(0,1);
 							OrangutanLCD::print("PUSH TO START");
 							print0 = 0;
 						}
 					}
 				}
 				if(state == 1){
-					OrangutanLCD::clear();
+					//OrangutanLCD::clear();
 					u_outputByte0.bits_in_outputByte0.ACPower = 0;
 					if((counter % 200) < 100){
 						u_outputByte0.bits_in_outputByte0.blowerPulse = 0;
@@ -1085,11 +1250,11 @@ int main()
 					m2 = 0;
 					u_motorByte1.bits_in_motorByte1.m3Drop = 1;
 					u_motorByte0.bits_in_motorByte0.m3Dir = 0;  // ******* dir3 *******
-					if(print6 == 1){
+					/*if(print6 == 1){
 						OrangutanLCD::clear();
 						OrangutanLCD::print("Clean 1");
 						print6 = 0;
-					}
+					}*/
 				}
 				if(state == 8){
 					m3 = 1;
@@ -1136,11 +1301,11 @@ int main()
 				if(state == 24){
 					m2 = 0;
 					u_outputByte1.bits_in_outputByte1.airKnife = 0;
-						if(print24 == 1){
+						/*if(print24 == 1){
 						OrangutanLCD::clear();
 						OrangutanLCD::print("DRY AIR");
 						print24 = 0;
-					}
+					}*/
 				}
 				if(state == 25){
 					u_motorByte0.bits_in_motorByte0.m2Dir = 0;  // ******* dir2 *******
@@ -1156,11 +1321,11 @@ int main()
 					m5 = 1;
 				}
 				if(state == 28){
-					if(print28 == 1){
+					/*if(print28 == 1){
 							OrangutanLCD::clear();
 						OrangutanLCD::print("FINAL DRY");
 						print28 = 0;
-						}
+						}*/
 					u_outputByte1.bits_in_outputByte1.ptRaise = 0;
 				}
 				if(state == 29){
@@ -1265,11 +1430,11 @@ int main()
 				counter ++;
 				delay_ms(1);
    		 	}
-		}		
+		}
 
 
 		if(OrangutanDigital::isInputHigh(IO_D1) && !OrangutanDigital::isInputHigh(IO_D2)){
-			OrangutanLCD::gotoXY(0,1);
+			OrangutanLCD::gotoXY(7,0);
 			OrangutanLCD::print("SECOND B");
 			while(state != -1)
 			{
@@ -1279,9 +1444,11 @@ int main()
 				u_inputByte0.inputByte0 = i2c_readAck();				// read first byte and send Ack, requesting more
    		     	u_inputByte1.inputByte1 = i2c_readNak();				// read second byte and send stop condition
   	 	     	i2c_stop();								// set stop conditon = release bus 		
-				OrangutanLCD::gotoXY(0,1);
-				OrangutanLCD::print("STATE ");
-				OrangutanLCD::print(state);
+				if(state != 0){
+					OrangutanLCD::gotoXY(0,1);
+					OrangutanLCD::print("STATE ");
+					OrangutanLCD::print(state);
+				}
 
 				if(stateButton == 0 && OrangutanDigital::isInputHigh(IO_D0)){
 					counterRefPush = counter;
@@ -1439,14 +1606,14 @@ int main()
 						u_outputByte0.bits_in_outputByte0.lowerFixture = 0;
 						u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
 						if(print0 == 1){
-							OrangutanLCD::clear();
+							OrangutanLCD::gotoXY(0,1);
 							OrangutanLCD::print("PUSH TO START");
 							print0 = 0;
 						}
 					}
 				}
 				if(state == 1){
-					OrangutanLCD::clear();
+					//OrangutanLCD::clear();
 					u_outputByte0.bits_in_outputByte0.ACPower = 0;
 					if((counter % 200) < 100){
 						u_outputByte0.bits_in_outputByte0.blowerPulse = 0;
@@ -1492,11 +1659,11 @@ int main()
 					m2 = 0;
 					u_motorByte1.bits_in_motorByte1.m4Drop = 1;
 					u_motorByte1.bits_in_motorByte1.m4Dir = 0;  // ******* dir4 *******
-					if(print15 == 1){
+					/*if(print15 == 1){
 						OrangutanLCD::clear();
 						OrangutanLCD::print("Clean 2");
 						print15 = 0;
-					}
+					}*/
 				}
 				if(state == 16){
 					m4 = 1;
@@ -1542,11 +1709,11 @@ int main()
 				if(state == 24){
 					m2 = 0;
 					u_outputByte1.bits_in_outputByte1.airKnife = 0;
-						if(print24 == 1){
+						/*if(print24 == 1){
 						OrangutanLCD::clear();
 						OrangutanLCD::print("DRY AIR");
 						print24 = 0;
-					}
+					}*/
 				}
 				if(state == 25){
 					u_motorByte0.bits_in_motorByte0.m2Dir = 0;  // ******* dir2 *******
@@ -1562,11 +1729,11 @@ int main()
 					m5 = 1;
 				}
 				if(state == 28){
-					if(print28 == 1){
+					/*if(print28 == 1){
 							OrangutanLCD::clear();
 						OrangutanLCD::print("FINAL DRY");
 						print28 = 0;
-						}
+						}*/
 					u_outputByte1.bits_in_outputByte1.ptRaise = 0;
 				}
 				if(state == 29){
@@ -1675,7 +1842,7 @@ int main()
 
 
 		if(!OrangutanDigital::isInputHigh(IO_D1) && OrangutanDigital::isInputHigh(IO_D2)){
-			OrangutanLCD::gotoXY(0,1);
+			OrangutanLCD::gotoXY(7,0);
 			OrangutanLCD::print("BOTH B");
 			while(state != -1)
 			{
@@ -1685,9 +1852,11 @@ int main()
 				u_inputByte0.inputByte0 = i2c_readAck();				// read first byte and send Ack, requesting more
    		     	u_inputByte1.inputByte1 = i2c_readNak();				// read second byte and send stop condition
   	 	     	i2c_stop();								// set stop conditon = release bus 		
-				OrangutanLCD::gotoXY(0,1);
-				OrangutanLCD::print("STATE ");
-				OrangutanLCD::print(state);
+				if(state != 0){
+					OrangutanLCD::gotoXY(0,1);
+					OrangutanLCD::print("STATE ");
+					OrangutanLCD::print(state);
+				}
 
 				if(stateButton == 0 && OrangutanDigital::isInputHigh(IO_D0)){
 					counterRefPush = counter;
@@ -1876,14 +2045,14 @@ int main()
 						u_outputByte0.bits_in_outputByte0.lowerFixture = 0;
 						u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
 						if(print0 == 1){
-							OrangutanLCD::clear();
+							OrangutanLCD::gotoXY(0,1);
 							OrangutanLCD::print("PUSH TO START");
 							print0 = 0;
 						}
 					}
 				}
 				if(state == 1){
-					OrangutanLCD::clear();
+					//OrangutanLCD::clear();
 					u_outputByte0.bits_in_outputByte0.ACPower = 0;
 					if((counter % 200) < 100){
 						u_outputByte0.bits_in_outputByte0.blowerPulse = 0;
@@ -1927,11 +2096,11 @@ int main()
 					m2 = 0;
 					u_motorByte1.bits_in_motorByte1.m3Drop = 1;
 					u_motorByte0.bits_in_motorByte0.m3Dir = 0;  // ******* dir3 *******
-					if(print6 == 1){
+					/*if(print6 == 1){
 						OrangutanLCD::clear();
 						OrangutanLCD::print("Clean 1");
 						print6 = 0;
-					}
+					}*/
 				}
 				if(state == 8){
 					m3 = 1;
@@ -1973,11 +2142,11 @@ int main()
 					m2 = 0;
 					u_motorByte1.bits_in_motorByte1.m4Drop = 1;
 					u_motorByte1.bits_in_motorByte1.m4Dir = 0;  // ******* dir4 *******
-					if(print15 == 1){
+					/*if(print15 == 1){
 						OrangutanLCD::clear();
 						OrangutanLCD::print("Clean 2");
 						print15 = 0;
-					}
+					}*/
 				}
 				if(state == 16){
 					m4 = 1;
@@ -2023,11 +2192,11 @@ int main()
 				if(state == 24){
 					m2 = 0;
 					u_outputByte1.bits_in_outputByte1.airKnife = 0;
-						if(print24 == 1){
+						/*if(print24 == 1){
 						OrangutanLCD::clear();
 						OrangutanLCD::print("DRY AIR");
 						print24 = 0;
-					}
+					}*/
 				}
 				if(state == 25){
 					u_motorByte0.bits_in_motorByte0.m2Dir = 0;  // ******* dir2 *******
@@ -2043,11 +2212,11 @@ int main()
 					m5 = 1;
 				}
 				if(state == 28){
-					if(print28 == 1){
+					/*if(print28 == 1){
 							OrangutanLCD::clear();
 						OrangutanLCD::print("FINAL DRY");
 						print28 = 0;
-						}
+						}*/
 					u_outputByte1.bits_in_outputByte1.ptRaise = 0;
 				}
 				if(state == 29){
@@ -2167,5 +2336,5 @@ int main()
 		i2c_stop();
 	}
 	OrangutanLCD::print("END");
-    for(;;);	 
+	}
 }
