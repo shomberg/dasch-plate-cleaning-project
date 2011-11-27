@@ -17,19 +17,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   6 .debug_pubnames 000001b4  00000000  00000000  000097bd  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_info   00000f48  00000000  00000000  00009971  2**0
+  7 .debug_info   00000f53  00000000  00000000  00009971  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_abbrev 000003af  00000000  00000000  0000a8b9  2**0
+  8 .debug_abbrev 000003af  00000000  00000000  0000a8c4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_line   00002361  00000000  00000000  0000ac68  2**0
+  9 .debug_line   00002362  00000000  00000000  0000ac73  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_frame  00000120  00000000  00000000  0000cfcc  2**2
+ 10 .debug_frame  00000120  00000000  00000000  0000cfd8  2**2
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_str    000008f8  00000000  00000000  0000d0ec  2**0
+ 11 .debug_str    000008f8  00000000  00000000  0000d0f8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_loc    00000739  00000000  00000000  0000d9e4  2**0
+ 12 .debug_loc    00000739  00000000  00000000  0000d9f0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_ranges 00000048  00000000  00000000  0000e11d  2**0
+ 13 .debug_ranges 00000048  00000000  00000000  0000e129  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -275,11 +275,11 @@ void __cxa_pure_virtual(void) {};
      17a:	08 95       	ret
 
 0000017c <main>:
-		unsigned int iNull17 : 1;
-	} bits_in_inputByte1;
-	char inputByte1;
-} u_inputByte1;
-  
+				i2c_start(I2C2+I2C_WRITE);
+				i2c_write(0x2);
+				i2c_write(u_outputByte0.outputByte0);
+				i2c_write(u_outputByte1.outputByte1);*/
+
 int main()   
      17c:	2f 92       	push	r2
      17e:	3f 92       	push	r3
@@ -4211,7 +4211,7 @@ inline void delay_ms(unsigned int milliseconds) { OrangutanTime::delayMillisecon
     1af2:	dd 24       	eor	r13, r13
     1af4:	44 24       	eor	r4, r4
     1af6:	55 24       	eor	r5, r5
-    1af8:	3c c0       	rjmp	.+120    	; 0x1b72 <main+0x19f6>
+    1af8:	37 c0       	rjmp	.+110    	; 0x1b68 <main+0x19ec>
 				}
 				if(state == 11){
     1afa:	8f 89       	ldd	r24, Y+23	; 0x17
@@ -4265,7 +4265,7 @@ inline void delay_ms(unsigned int milliseconds) { OrangutanTime::delayMillisecon
     1b4a:	58 8d       	ldd	r21, Y+24	; 0x18
     1b4c:	4e 30       	cpi	r20, 0x0E	; 14
     1b4e:	51 05       	cpc	r21, r1
-    1b50:	81 f4       	brne	.+32     	; 0x1b72 <main+0x19f6>
+    1b50:	59 f4       	brne	.+22     	; 0x1b68 <main+0x19ec>
 					m3 = 0;
 					m2 = 0;
 					u_outputByte0.bits_in_outputByte0.brush1Lower = 0;
@@ -4274,32 +4274,32 @@ inline void delay_ms(unsigned int milliseconds) { OrangutanTime::delayMillisecon
 					u_outputByte0.bits_in_outputByte0.brush1Raise = 1;
     1b58:	80 62       	ori	r24, 0x20	; 32
     1b5a:	80 93 3a 03 	sts	0x033A, r24
-					u_motorByte1.bits_in_motorByte1.m3Drop = 0;
-    1b5e:	80 91 39 03 	lds	r24, 0x0339
-    1b62:	8e 7f       	andi	r24, 0xFE	; 254
-    1b64:	80 93 39 03 	sts	0x0339, r24
-    1b68:	cc 24       	eor	r12, r12
-    1b6a:	dd 24       	eor	r13, r13
-    1b6c:	44 24       	eor	r4, r4
-    1b6e:	55 24       	eor	r5, r5
-    1b70:	35 c0       	rjmp	.+106    	; 0x1bdc <main+0x1a60>
+    1b5e:	cc 24       	eor	r12, r12
+    1b60:	dd 24       	eor	r13, r13
+    1b62:	44 24       	eor	r4, r4
+    1b64:	55 24       	eor	r5, r5
+    1b66:	3a c0       	rjmp	.+116    	; 0x1bdc <main+0x1a60>
 				}
 				
 				//*************************************************
 				if(state == 23){
-    1b72:	8f 89       	ldd	r24, Y+23	; 0x17
-    1b74:	98 8d       	ldd	r25, Y+24	; 0x18
-    1b76:	47 97       	sbiw	r24, 0x17	; 23
-    1b78:	49 f4       	brne	.+18     	; 0x1b8c <main+0x1a10>
+    1b68:	8f 89       	ldd	r24, Y+23	; 0x17
+    1b6a:	98 8d       	ldd	r25, Y+24	; 0x18
+    1b6c:	47 97       	sbiw	r24, 0x17	; 23
+    1b6e:	71 f4       	brne	.+28     	; 0x1b8c <main+0x1a10>
 					u_motorByte0.bits_in_motorByte0.m2Dir = 1;  // ******* dir2 *******
-    1b7a:	80 91 38 03 	lds	r24, 0x0338
-    1b7e:	80 61       	ori	r24, 0x10	; 16
-    1b80:	80 93 38 03 	sts	0x0338, r24
+    1b70:	80 91 38 03 	lds	r24, 0x0338
+    1b74:	80 61       	ori	r24, 0x10	; 16
+    1b76:	80 93 38 03 	sts	0x0338, r24
+					m2 = 1;
+					u_motorByte1.bits_in_motorByte1.m3Drop = 0;
+    1b7a:	80 91 39 03 	lds	r24, 0x0339
+    1b7e:	8e 7f       	andi	r24, 0xFE	; 254
+    1b80:	80 93 39 03 	sts	0x0339, r24
     1b84:	a1 e0       	ldi	r26, 0x01	; 1
     1b86:	ca 2e       	mov	r12, r26
     1b88:	d1 2c       	mov	r13, r1
     1b8a:	39 c0       	rjmp	.+114    	; 0x1bfe <main+0x1a82>
-					m2 = 1;
 				}
 				if(state == 24){
     1b8c:	ef 89       	ldd	r30, Y+23	; 0x17

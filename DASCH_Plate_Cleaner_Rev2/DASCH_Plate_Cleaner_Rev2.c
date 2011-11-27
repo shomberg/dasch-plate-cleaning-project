@@ -1,12 +1,10 @@
+#include <dasch.h>
 #include <pololu/orangutan>
 #include <i2cmaster.h>
 #include <stdlib.h> 
 
 
 
-#define I2C1  0x40     // device address of First PCA9555 chip (Motors)
-#define I2C2  0x42     // device address of Second PCA9555 chip (Outputs)
-#define I2C3  0x44	   // device address of Third PCA9555 chip (Inputs)
 
 
 
@@ -37,159 +35,15 @@ void __cxa_guard_abort (__guard *) {};
 extern "C" void __cxa_pure_virtual(void); 
 void __cxa_pure_virtual(void) {}; 
 
-union u_motorByte0_tag{
-	struct {
-		unsigned int m1Step : 1;
-		unsigned int m1Dir : 1;
-		unsigned int m1Drop : 1;
-		unsigned int m2Step : 1;
-		unsigned int m2Dir : 1;
-		unsigned int m2Drop : 1;
-		unsigned int m3Step : 1;
-		unsigned int m3Dir : 1;
-	} bits_in_motorByte0;
-	char motorByte0;
-} u_motorByte0;
 
-
-union u_motorByte1_tag{
-	struct {
-		unsigned int m3Drop : 1;
-		unsigned int m4Step : 1;
-		unsigned int m4Dir : 1;
-		unsigned int m4Drop : 1;
-		unsigned int m5Step : 1;
-		unsigned int m5Dir : 1;
-		unsigned int m5Drop : 1;
-		unsigned int mNull17 : 1;
-	} bits_in_motorByte1;
-	char motorByte1;
-} u_motorByte1;
-
-union u_outputByte0_tag{
-	struct {
-		unsigned int ACPower : 1;
-		unsigned int blowerPulse : 1;
-		unsigned int plateStop : 1;
-		unsigned int raiseFixture : 1;
-		unsigned int lowerFixture : 1;
-		unsigned int brush1Raise : 1;
-		unsigned int brush1Lower : 1;
-		unsigned int brush2Raise : 1;
-	} bits_in_outputByte0;
-	char outputByte0;
-} u_outputByte0;
-
-
-union u_outputByte1_tag{
-	struct {
-		unsigned int brush2Lower : 1;
-		unsigned int ptRaise : 1;
-		unsigned int ptLower : 1;
-		unsigned int airKnife : 1;
-		unsigned int oNull14 : 1;
-		unsigned int oNull15 : 1;
-		unsigned int oNull16 : 1;
-		unsigned int oNull17 : 1;
-	} bits_in_outputByte1;
-	char outputByte1;
-} u_outputByte1;
-
-union u_inputByte0_tag{
-	struct {
-		unsigned int plate : 1;
-		unsigned int fixtureLift : 1;
-		unsigned int fixtureHome : 1;
-		unsigned int fixturePlate : 1;
-		unsigned int fixtureBrush1 : 1;
-		unsigned int fixtureBrush2 : 1;
-		unsigned int fixtureDry1 : 1;
-		unsigned int fixtureDry2 : 1;
-	} bits_in_inputByte0;
-	char inputByte0;
-} u_inputByte0;
-
-
-union u_inputByte1_tag{
-	struct {
-		unsigned int iNull10 : 1;
-		unsigned int iNull11 : 1;
-		unsigned int iNull12 : 1;
-		unsigned int iNull13 : 1;
-		unsigned int iNull14 : 1;
-		unsigned int iNull15 : 1;
-		unsigned int iNull16 : 1;
-		unsigned int iNull17 : 1;
-	} bits_in_inputByte1;
-	char inputByte1;
-} u_inputByte1;
   
-/*void motor_and_write(counter, counterRef, m1, m2, m3, m4, m5)
-{
-//motor and write
-				if( ((counter - counterRef) % (totallength1) ) < (steplength1) && m1)  //check if it is in the right period of the loop to send high
-				{
-					u_motorByte0.bits_in_motorByte0.m1Step = 1; // set bit 0
-				}
-				else
-				{
-					u_motorByte0.bits_in_motorByte0.m1Step = 0; // set bit 0
-				}
+void motor_and_write(int counter, int counterRef, int counterRefFive, int m1, int m2, int m3, int m4, int m5);
 
-				if( ((counter - counterRef) % (totallength2) ) < (steplength2) && m2)
-				{
-					u_motorByte0.bits_in_motorByte0.m2Step = 1; // set bit 1
-				}
-				else
-				{
-					u_motorByte0.bits_in_motorByte0.m2Step = 0; // set bit 1
-				}
-
-				if( ((counter - counterRef) % (totallength3) ) < (steplength3) && m3)
-				{
-					u_motorByte0.bits_in_motorByte0.m3Step = 1; // set bit 1
-				}
-				else
-				{
-					u_motorByte0.bits_in_motorByte0.m3Step = 0; // set bit 1
-				}
-
-				if( ((counter - counterRef) % (totallength4) ) < (steplength4) && m4)
-				{
-					u_motorByte1.bits_in_motorByte1.m4Step = 1; // set bit 1
-				}
-				else
-				{
-					u_motorByte1.bits_in_motorByte1.m4Step = 0; // set bit 1
-				}
-
-				if( ((counter - counterRefFive) % (totallength5) ) < (steplength5) && m5)
-				{
-					u_motorByte1.bits_in_motorByte1.m5Step = 1; // set bit 1
-				}
-				else
-				{
-					u_motorByte1.bits_in_motorByte1.m5Step = 0; // set bit 1
-				}
-
-				i2c_start(I2C1+I2C_WRITE);
-				i2c_write(0x2);									// write command byte
-				i2c_write(u_motorByte0.motorByte0);                       // write first byte of output
-       	 		i2c_write(u_motorByte1.motorByte1);                       // write second byte of output
-       		 	i2c_stop();                            // set stop conditon = release bus
-
-				i2c_start(I2C2+I2C_WRITE);
-				i2c_write(0x2);
-				i2c_write(u_outputByte0.outputByte0);
-				i2c_write(u_outputByte1.outputByte1);*/
 
 int main()   
 {
     
     unsigned char ret1, ret2, ret3;
-	int steplength1 = 1, steplength2 = 1, steplength3 = 1, steplength4 = 1, steplength5 = 1;
-	int totallength1 = 2, totallength2 = 2;
-	int totallength3 = 2, totallength4 = 2, totallength5 = 2;
 	int m2HalfPlate = 2000, m2WholePlate = 2000, m1LoadPlate = 2000, m2HomeFix = 2000;
 	int m2Brush1Step = 2000, m2Brush2Step = 2000, m2Dry1Step = 2000, m2Dry2Step = 2000;
 	int m2LoadBack = 2000, m2Dry1StepWhole = 2000, m2Brush2StepWhole = 2000;
@@ -247,15 +101,17 @@ int main()
 
 		delay_ms(1000);
 		OrangutanLCD::clear();
+
+
 		
-		int m1 = 0, m2 = 0, m3 = 0, m4 = 0, m5 = 0;
-		int state = 0;		
-		int counter = 0;
-		int print0 = 1, print6 = 1, print15 = 1, print24 = 1, print28 = 1, print35 = 1;
+		int m1 = 0, m2 = 0, m3 = 0, m4 = 0, m5 = 0; 		//mx holds whether motor x should move: 0 = no, 1 = yes
+		int state = 0;										//Holds program's current state
+		int counter = 0;									//Counts iteration of the loop for timing purposes
 		int counterRef = 0, counterRef14 = 0, counterRef26 = 0, counterRefFive = 0, counterRef30 = 0;
 		int pWait = 100, mWait = 100, kWait = 100;
+		int print0 = 1, print35 = 1;
 
-		if(OrangutanDigital::isInputHigh(IO_D3))
+		if(OrangutanDigital::isInputHigh(IO_D3))							//Tests if the switch is set to Maintenance Mode
 		{
 			OrangutanLCD::print("MAINTENANCE");
 			delay_ms(1000);
@@ -266,6 +122,8 @@ int main()
 
 			OrangutanLCD::clear();
 			OrangutanLCD::print("SELECT MODE");
+			
+			//Wait for button
 			while(button != 0){
 				if(stateButton == 0 && OrangutanDigital::isInputHigh(IO_D0)){
 					counterRefPush = counter;
@@ -298,8 +156,9 @@ int main()
 			button = 1;
 			counter = 0;
 			OrangutanLCD::clear();
+
 			if(OrangutanDigital::isInputHigh(IO_D1) && OrangutanDigital::isInputHigh(IO_D2)){
-				state = 0;
+				state = S0;
 				mode = 3;
 				OrangutanLCD::clear();
 				OrangutanLCD::print("INPUTS ");
@@ -344,7 +203,7 @@ int main()
 
 				
 				if(!OrangutanDigital::isInputHigh(IO_D1) && !OrangutanDigital::isInputHigh(IO_D2) && mode != 0){
-					state = 0;
+					state = S0;
 					mode = 0;
 					OrangutanLCD::clear();
 					OrangutanLCD::print("INPUTS ");
@@ -352,7 +211,7 @@ int main()
 					print = 0;
 				}
 				if(OrangutanDigital::isInputHigh(IO_D1) && !OrangutanDigital::isInputHigh(IO_D2) && mode != 1){
-					state = 8;
+					state = O0_ON;
 					mode = 1;
 					OrangutanLCD::clear();
 					OrangutanLCD::print("OUTPUTS");
@@ -360,7 +219,7 @@ int main()
 					print = 0;
 				}
 				if(!OrangutanDigital::isInputHigh(IO_D1) && OrangutanDigital::isInputHigh(IO_D2) && mode != 2){
-					state = 32;
+					state = M1_F;
 					mode = 2;
 					OrangutanLCD::clear();
 					OrangutanLCD::print("MOTORS ");
@@ -368,7 +227,7 @@ int main()
 					print = 0;
 				}
 				if(OrangutanDigital::isInputHigh(IO_D1) && OrangutanDigital::isInputHigh(IO_D2) && mode != 3){
-					state = 0;
+					state = S0;
 					mode = 3;
 					OrangutanLCD::clear();
 					OrangutanLCD::print("INPUTS ");
@@ -378,7 +237,86 @@ int main()
 
 				//state conversions
 
-				if(state == 0 && button == 0){
+				if(button == 0) {
+					if(state <= S7){
+						OrangutanLCD::gotoXY(0,1);
+						button = 1;
+						state ++;
+						counterRef = counter;
+						print = 0;
+						if(state == S7 + 1){
+							OrangutanLCD::clear();
+							if(mode == 0){
+								state = -1;
+							}
+							else{
+								OrangutanLCD::print("OUTPUTS");
+								OrangutanLCD::gotoXY(0,1);
+							}
+						}
+					}
+					else if(state <= O11_OFF){
+						if(state % 2 == 0){
+							OrangutanLCD::gotoXY(13,1);
+							OrangutanLCD::print("OFF");
+						}
+						else{
+							OrangutanLCD::gotoXY(0,1);
+						}
+						button = 1;
+						state ++;
+						counterRef = counter;
+						print = 0;
+						if(state == O11_OFF + 1){
+							OrangutanLCD::clear();
+							if(mode == 1){
+								state = -1;
+							}
+							else{
+								u_motorByte0.bits_in_motorByte0.m1Drop = 1;
+								OrangutanLCD::print("MOTORS");
+								OrangutanLCD::gotoXY(0,1);
+							}
+						}
+					}
+					else{
+						button = 1;
+						state ++;
+						counterRef = counter;
+						print = 0;
+						if((state - 1) % 2 == 0){
+							OrangutanLCD::gotoXY(11,1);
+							OrangutanLCD::print("BACK ");
+						}
+						else{
+							switch (state) {
+								case M1_B + 1:
+									OrangutanLCD::gotoXY(0,1);
+									u_motorByte0.bits_in_motorByte0.m1Drop = 0;
+									u_motorByte0.bits_in_motorByte0.m2Drop = 1;
+								case M2_B + 1:
+									OrangutanLCD::gotoXY(0,1);
+									u_motorByte0.bits_in_motorByte0.m2Drop = 0;
+									u_motorByte1.bits_in_motorByte1.m3Drop = 1;
+								case M3_B + 1:
+									OrangutanLCD::gotoXY(0,1);
+									u_motorByte1.bits_in_motorByte1.m3Drop = 0;
+									u_motorByte1.bits_in_motorByte1.m4Drop = 1;
+								case M4_B + 1:
+									OrangutanLCD::gotoXY(0,1);
+									u_motorByte1.bits_in_motorByte1.m4Drop = 0;
+									u_motorByte1.bits_in_motorByte1.m5Drop = 1;
+								case M5_B + 1:
+									OrangutanLCD::clear();
+									u_motorByte1.bits_in_motorByte1.m5Drop = 0;
+									state = -1;
+									m5 = 0;
+							}
+						}
+					}
+				}
+				
+				/*if(state == 0 && button == 0){
 					OrangutanLCD::gotoXY(0,1);
 					button = 1;
 					state = 1;
@@ -712,272 +650,236 @@ int main()
 					state = -1;
 					print = 0;
 					m5 = 0;
-				}
+				}*/
 
 				//state actions
-				if(state == 0){
-					if(print == 0){
-						OrangutanLCD::print("SENSOR 0");
-						print = 1;
-					}
-					OrangutanLCD::gotoXY(15,1);
-					OrangutanLCD::print(u_inputByte0.bits_in_inputByte0.plate);
-				}
-				if(state == 1){
-					if(print == 0){
-						OrangutanLCD::print("SENSOR 1");
-						print = 1;
-					}
-					OrangutanLCD::gotoXY(15,1);
-					OrangutanLCD::print(u_inputByte0.bits_in_inputByte0.fixtureLift);
-				}
-				if(state == 2){
-					if(print == 0){
-						OrangutanLCD::print("SENSOR 2");
-						print = 1;
-					}
-					OrangutanLCD::gotoXY(15,1);
-					OrangutanLCD::print(u_inputByte0.bits_in_inputByte0.fixtureHome);
-				}
-				if(state == 3){
-					if(print == 0){
-						OrangutanLCD::print("SENSOR 3");
-						print = 1;
-					}
-					OrangutanLCD::gotoXY(15,1);
-					OrangutanLCD::print(u_inputByte0.bits_in_inputByte0.fixturePlate);
-				}
-				if(state == 4){
-					if(print == 0){
-						OrangutanLCD::print("SENSOR 4");
-						print = 1;
-					}
-					OrangutanLCD::gotoXY(15,1);
-					OrangutanLCD::print(u_inputByte0.bits_in_inputByte0.fixtureBrush1);
-				}
-				if(state == 5){
-					if(print == 0){
-						OrangutanLCD::print("SENSOR 5");
-						print = 1;
-					}
-					OrangutanLCD::gotoXY(15,1);
-					OrangutanLCD::print(u_inputByte0.bits_in_inputByte0.fixtureBrush2);
-				}
-				if(state == 6){
-					if(print == 0){
-						OrangutanLCD::print("SENSOR 6");
-						print = 1;
-					}
-					OrangutanLCD::gotoXY(15,1);
-					OrangutanLCD::print(u_inputByte0.bits_in_inputByte0.fixtureDry1);
-				}
-				if(state == 7){
-					if(print == 0){
-						OrangutanLCD::print("SENSOR 7");
-						print = 1;
-					}
-					OrangutanLCD::gotoXY(15,1);
-					OrangutanLCD::print(u_inputByte0.bits_in_inputByte0.fixtureDry2);
-				}
-				if(state == 8){
-					if(print == 0){
-						OrangutanLCD::print("AC POWER     ON ");
-						print = 1;
-					}
-					u_outputByte0.bits_in_outputByte0.ACPower = 0;
-				}
-				if(state == 9){
-					u_outputByte0.bits_in_outputByte0.ACPower = 1;
-				}
-				if(state == 10){
-					if(print == 0){
-						OrangutanLCD::print("BLOWER       ON  ");
-						print = 1;
-					}
-					u_outputByte0.bits_in_outputByte0.blowerPulse = 0;
-				}
-				if(state == 11){
-					u_outputByte0.bits_in_outputByte0.blowerPulse = 1;
-				}
-				if(state == 12){
-					if(print == 0){
-						OrangutanLCD::print("PLATE STOP   ON ");
-						print = 1;
-					}
-					u_outputByte0.bits_in_outputByte0.plateStop = 0;
-				}
-				if(state == 13){
-					u_outputByte0.bits_in_outputByte0.plateStop = 1;
-				}
-				if(state == 14){
-					if(print == 0){
-						OrangutanLCD::print("PLATE RAISE  ON ");
-						print = 1;
-					}
-					u_outputByte0.bits_in_outputByte0.raiseFixture = 0;
-					u_outputByte0.bits_in_outputByte0.lowerFixture = 1;
-				}
-				if(state == 15){
-					u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
-					//u_outputByte0.bits_in_outputByte0.lowerFixture = 0;
-				}
-				if(state == 16){
-					if(print == 0){
-						OrangutanLCD::print("PLATE LOWER  ON ");
-						print = 1;
-					}
-					u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
-					u_outputByte0.bits_in_outputByte0.lowerFixture = 0;
-				}
-				if(state == 17){
-					u_outputByte0.bits_in_outputByte0.lowerFixture = 1;
-				}
-				if(state == 18){
-					if(print == 0){
-						OrangutanLCD::print("BRUSH1 RAISE ON ");
-						print = 1;
-					}
-					u_outputByte0.bits_in_outputByte0.brush1Raise = 0;
-					u_outputByte0.bits_in_outputByte0.brush1Lower = 1;
-				}
-				if(state == 19){
-					u_outputByte0.bits_in_outputByte0.brush1Raise = 1;
-					//u_outputByte0.bits_in_outputByte0.brush1Lower = 0;
-				}
-				if(state == 20){
-					if(print == 0){
-						OrangutanLCD::print("BRUSH1 LOWER ON ");
-						print = 1;
-					}
-					u_outputByte0.bits_in_outputByte0.brush1Lower = 0;
-					u_outputByte0.bits_in_outputByte0.brush1Raise = 1;
-				}
-				if(state == 21){
-					u_outputByte0.bits_in_outputByte0.brush1Lower = 1;
-				}
-				if(state == 22){
-					if(print == 0){
-						OrangutanLCD::print("BRUSH2 RAISE ON ");
-						print = 1;
-					}
-					u_outputByte0.bits_in_outputByte0.brush2Raise = 0;
-					u_outputByte1.bits_in_outputByte1.brush2Lower = 1;
-				}
-				if(state == 23){
-					u_outputByte0.bits_in_outputByte0.brush2Raise = 1;
-					//u_outputByte0.bits_in_outputByte0.brush2Lower = 0;
-				}
-				if(state == 24){
-					if(print == 0){
-						OrangutanLCD::print("BRUSH2 LOWER ON ");
-						print = 1;
-					}
-					u_outputByte1.bits_in_outputByte1.brush2Lower = 0;
-					u_outputByte0.bits_in_outputByte0.brush2Raise = 1;
-				}
-				if(state == 25){
-					u_outputByte1.bits_in_outputByte1.brush2Lower = 1;
-				}
-				if(state == 26){
-					if(print == 0){
-						OrangutanLCD::print("PAPER RAISE  ON ");
-						print = 1;
-					}
-					u_outputByte1.bits_in_outputByte1.ptRaise = 0;
-					u_outputByte1.bits_in_outputByte1.ptLower = 1;
-				}
-				if(state == 27){
-					u_outputByte1.bits_in_outputByte1.ptRaise = 1;
-					//u_outputByte1.bits_in_outputByte1.ptLower = 0;
-				}
-				if(state == 28){
-					if(print == 0){
-						OrangutanLCD::print("PAPER LOWER  ON ");
-						print = 1;
-					}
-					u_outputByte1.bits_in_outputByte1.ptLower = 0;
-					u_outputByte1.bits_in_outputByte1.ptRaise = 1;
-				}
-				if(state == 29){
-					u_outputByte1.bits_in_outputByte1.ptLower = 1;
-				}
-				if(state == 30){
-					if(print == 0){
-						OrangutanLCD::print("AIR KNIFE    ON ");
-						print = 1;
-					}
-					u_outputByte1.bits_in_outputByte1.airKnife = 0;
-				}
-				if(state == 31){
-					u_outputByte1.bits_in_outputByte1.airKnife = 1;
-				}
-				if(state == 32){
-					if(print == 0){
-						OrangutanLCD::print("LOADING    FRONT");
-						print = 1;
-					}
-					u_motorByte0.bits_in_motorByte0.m1Dir = 0;
-					m1 =  1;
-				}
-				if(state == 33){
-					u_motorByte0.bits_in_motorByte0.m1Dir = 1;
-					m1 =  1;
-				}
-				if(state == 34){
-					if(print == 0){
-						OrangutanLCD::print("DRIVE      FRONT");
-						print = 1;
-					}
-					u_motorByte0.bits_in_motorByte0.m2Dir = 0;
-					m2 =  1;
-					m1 = 0;
-				}
-				if(state == 35){
-					u_motorByte0.bits_in_motorByte0.m2Dir = 1;
-					m2 =  1;
-				}
-				if(state == 36){
-					if(print == 0){
-						OrangutanLCD::print("BRUSH1     FRONT");
-						print = 1;
-					}
-					u_motorByte0.bits_in_motorByte0.m3Dir = 0;
-					m3 =  1;
-					m2 = 0;
-				}
-				if(state == 37){
-					u_motorByte0.bits_in_motorByte0.m3Dir = 1;
-					m3 =  1;
-				}
-				if(state == 38){
-					if(print == 0){
-						OrangutanLCD::print("BRUSH2     FRONT");
-						print = 1;
-					}
-					u_motorByte1.bits_in_motorByte1.m4Dir = 0;
-					m4 =  1;
-					m3 = 0;
-				}
-				if(state == 39){
-					u_motorByte1.bits_in_motorByte1.m4Dir = 1;
-					m4 =  1;
-				}
-				if(state == 40){
-					if(print == 0){
-						OrangutanLCD::print("PAPER      FRONT");
-						print = 1;
-					}
-					u_motorByte1.bits_in_motorByte1.m5Dir = 0;
-					m5 =  1;
-					m4 = 0;
-				}
-				if(state == 41){
-					u_motorByte1.bits_in_motorByte1.m5Dir = 1;
-					m5 =  1;
+				switch (state) {
+					case S0:
+						if(print == 0){
+							OrangutanLCD::print("SENSOR 0");
+							print = 1;
+						}
+						OrangutanLCD::gotoXY(15,1);
+						OrangutanLCD::print(u_inputByte0.bits_in_inputByte0.plate);
+					case S1:
+						if(print == 0){
+							OrangutanLCD::print("SENSOR 1");
+							print = 1;
+						}
+						OrangutanLCD::gotoXY(15,1);
+						OrangutanLCD::print(u_inputByte0.bits_in_inputByte0.fixtureLift);
+					case S2:
+						if(print == 0){
+							OrangutanLCD::print("SENSOR 2");
+							print = 1;
+						}
+						OrangutanLCD::gotoXY(15,1);
+						OrangutanLCD::print(u_inputByte0.bits_in_inputByte0.fixtureHome);
+					case S3:
+						if(print == 0){
+							OrangutanLCD::print("SENSOR 3");
+							print = 1;
+						}
+						OrangutanLCD::gotoXY(15,1);
+						OrangutanLCD::print(u_inputByte0.bits_in_inputByte0.fixturePlate);
+					case S4:
+						if(print == 0){
+							OrangutanLCD::print("SENSOR 4");
+							print = 1;
+						}
+						OrangutanLCD::gotoXY(15,1);
+						OrangutanLCD::print(u_inputByte0.bits_in_inputByte0.fixtureBrush1);
+					case S5:
+						if(print == 0){
+							OrangutanLCD::print("SENSOR 5");
+							print = 1;
+						}
+						OrangutanLCD::gotoXY(15,1);
+						OrangutanLCD::print(u_inputByte0.bits_in_inputByte0.fixtureBrush2);
+					case S6:
+						if(print == 0){
+							OrangutanLCD::print("SENSOR 6");
+							print = 1;
+						}
+						OrangutanLCD::gotoXY(15,1);
+						OrangutanLCD::print(u_inputByte0.bits_in_inputByte0.fixtureDry1);
+					case S7:
+						if(print == 0){
+							OrangutanLCD::print("SENSOR 7");
+							print = 1;
+						}
+						OrangutanLCD::gotoXY(15,1);
+						OrangutanLCD::print(u_inputByte0.bits_in_inputByte0.fixtureDry2);
+					case O0_ON:
+						if(print == 0){
+							OrangutanLCD::print("AC POWER     ON ");
+							print = 1;
+						}
+						u_outputByte0.bits_in_outputByte0.ACPower = 0;
+					case O0_OFF:
+						u_outputByte0.bits_in_outputByte0.ACPower = 1;
+					case O1_ON:
+						if(print == 0){
+							OrangutanLCD::print("BLOWER       ON  ");
+							print = 1;
+						}
+						u_outputByte0.bits_in_outputByte0.blowerPulse = 0;
+					case O1_OFF:
+						u_outputByte0.bits_in_outputByte0.blowerPulse = 1;
+					case O2_ON:
+						if(print == 0){
+							OrangutanLCD::print("PLATE STOP   ON ");
+							print = 1;
+						}
+						u_outputByte0.bits_in_outputByte0.plateStop = 0;
+					case O2_OFF:
+						u_outputByte0.bits_in_outputByte0.plateStop = 1;
+					case O3_ON:
+						if(print == 0){
+							OrangutanLCD::print("PLATE RAISE  ON ");
+							print = 1;
+						}
+						u_outputByte0.bits_in_outputByte0.raiseFixture = 0;
+						u_outputByte0.bits_in_outputByte0.lowerFixture = 1;
+					case O3_OFF:
+						u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
+						//u_outputByte0.bits_in_outputByte0.lowerFixture = 0;
+					case O4_ON:
+						if(print == 0){
+							OrangutanLCD::print("PLATE LOWER  ON ");
+							print = 1;
+						}
+						u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
+						u_outputByte0.bits_in_outputByte0.lowerFixture = 0;
+					case O4_OFF:
+						u_outputByte0.bits_in_outputByte0.lowerFixture = 1;
+					case O5_ON:
+						if(print == 0){
+							OrangutanLCD::print("BRUSH1 RAISE ON ");
+							print = 1;
+						}
+						u_outputByte0.bits_in_outputByte0.brush1Raise = 0;
+						u_outputByte0.bits_in_outputByte0.brush1Lower = 1;
+					case O5_OFF:
+						u_outputByte0.bits_in_outputByte0.brush1Raise = 1;
+						//u_outputByte0.bits_in_outputByte0.brush1Lower = 0;
+					case O6_ON:
+						if(print == 0){
+							OrangutanLCD::print("BRUSH1 LOWER ON ");
+							print = 1;
+						}
+						u_outputByte0.bits_in_outputByte0.brush1Lower = 0;
+						u_outputByte0.bits_in_outputByte0.brush1Raise = 1;
+					case O6_OFF:
+						u_outputByte0.bits_in_outputByte0.brush1Lower = 1;
+					case O7_ON:
+						if(print == 0){
+							OrangutanLCD::print("BRUSH2 RAISE ON ");
+							print = 1;
+						}
+						u_outputByte0.bits_in_outputByte0.brush2Raise = 0;
+						u_outputByte1.bits_in_outputByte1.brush2Lower = 1;
+					case O7_OFF:
+						u_outputByte0.bits_in_outputByte0.brush2Raise = 1;
+						//u_outputByte0.bits_in_outputByte0.brush2Lower = 0;
+					case O8_ON:
+						if(print == 0){
+							OrangutanLCD::print("BRUSH2 LOWER ON ");
+							print = 1;
+						}
+						u_outputByte1.bits_in_outputByte1.brush2Lower = 0;
+						u_outputByte0.bits_in_outputByte0.brush2Raise = 1;
+					case O8_OFF:
+						u_outputByte1.bits_in_outputByte1.brush2Lower = 1;
+					case O9_ON:
+						if(print == 0){
+							OrangutanLCD::print("PAPER RAISE  ON ");
+							print = 1;
+						}
+						u_outputByte1.bits_in_outputByte1.ptRaise = 0;
+						u_outputByte1.bits_in_outputByte1.ptLower = 1;
+					case O9_OFF:
+						u_outputByte1.bits_in_outputByte1.ptRaise = 1;
+						//u_outputByte1.bits_in_outputByte1.ptLower = 0;
+					case O10_ON:
+						if(print == 0){
+							OrangutanLCD::print("PAPER LOWER  ON ");
+							print = 1;
+						}
+						u_outputByte1.bits_in_outputByte1.ptLower = 0;
+						u_outputByte1.bits_in_outputByte1.ptRaise = 1;
+					case O10_OFF:
+						u_outputByte1.bits_in_outputByte1.ptLower = 1;
+					case O11_ON:
+						if(print == 0){
+							OrangutanLCD::print("AIR KNIFE    ON ");
+							print = 1;
+						}
+						u_outputByte1.bits_in_outputByte1.airKnife = 0;
+					case O11_OFF:
+						u_outputByte1.bits_in_outputByte1.airKnife = 1;
+					case M1_F:
+						if(print == 0){
+							OrangutanLCD::print("LOADING    FRONT");
+							print = 1;
+						}
+						u_motorByte0.bits_in_motorByte0.m1Dir = 0;
+						m1 =  1;
+					case M1_B:
+						u_motorByte0.bits_in_motorByte0.m1Dir = 1;
+						m1 =  1;
+					case M2_F:
+						if(print == 0){
+							OrangutanLCD::print("DRIVE      FRONT");
+							print = 1;
+						}
+						u_motorByte0.bits_in_motorByte0.m2Dir = 0;
+						m2 =  1;
+						m1 = 0;
+					case M2_B:
+						u_motorByte0.bits_in_motorByte0.m2Dir = 1;
+						m2 =  1;
+					case M3_F:
+						if(print == 0){
+							OrangutanLCD::print("BRUSH1     FRONT");
+							print = 1;
+						}
+						u_motorByte0.bits_in_motorByte0.m3Dir = 0;
+						m3 =  1;
+						m2 = 0;
+					case M3_B:
+						u_motorByte0.bits_in_motorByte0.m3Dir = 1;
+						m3 =  1;
+					case M4_F:
+						if(print == 0){
+							OrangutanLCD::print("BRUSH2     FRONT");
+							print = 1;
+						}
+						u_motorByte1.bits_in_motorByte1.m4Dir = 0;
+						m4 =  1;
+						m3 = 0;
+					case M4_B:
+						u_motorByte1.bits_in_motorByte1.m4Dir = 1;
+						m4 =  1;
+					case M5_F:
+						if(print == 0){
+							OrangutanLCD::print("PAPER      FRONT");
+							print = 1;
+						}
+						u_motorByte1.bits_in_motorByte1.m5Dir = 0;
+						m5 =  1;
+						m4 = 0;
+					case M5_B:
+						u_motorByte1.bits_in_motorByte1.m5Dir = 1;
+						m5 =  1;
 				}
 
 				//motor and write
-				if( ((counter - counterRef) % (totallength1) ) < (steplength1) && m1)  //check if it is in the right period of the loop to send high
+				motor_and_write(counter, counterRef, counterRefFive, m1, m2, m3, m4, m5);
+
+
+
+				/*if( ((counter - counterRef) % (totallength1) ) < (steplength1) && m1)  //check if it is in the right period of the loop to send high
 				{
 					u_motorByte0.bits_in_motorByte0.m1Step = 1; // set bit 0
 				}
@@ -1031,13 +933,13 @@ int main()
 				i2c_start(I2C2+I2C_WRITE);
 				i2c_write(0x2);
 				i2c_write(u_outputByte0.outputByte0);
-				i2c_write(u_outputByte1.outputByte1);
+				i2c_write(u_outputByte1.outputByte1);*/
 
 				counter ++;
 				delay_ms(1);
 			}
 		}
-		else{
+		else{										//If switch is set to Run Mode
 		
 		OrangutanLCD::print("NORMAL");
 		delay_ms(1000);
@@ -2396,4 +2298,63 @@ int main()
 	}
 	OrangutanLCD::print("END");
 	}
+}
+
+
+void motor_and_write(int counter, int counterRef, int counterRefFive, int m1, int m2, int m3, int m4, int m5)
+{
+//motor and write
+	if( ((counter - counterRef) % (totallength1) ) < (steplength1) && m1)  //check if it is in the right period of the loop to send high
+	{
+		u_motorByte0.bits_in_motorByte0.m1Step = 1; // set bit 0
+	}
+	else
+	{
+		u_motorByte0.bits_in_motorByte0.m1Step = 0; // set bit 0
+	}
+		if( ((counter - counterRef) % (totallength2) ) < (steplength2) && m2)
+	{
+		u_motorByte0.bits_in_motorByte0.m2Step = 1; // set bit 1
+	}
+	else
+	{
+		u_motorByte0.bits_in_motorByte0.m2Step = 0; // set bit 1
+	}
+	if( ((counter - counterRef) % (totallength3) ) < (steplength3) && m3)
+	{
+		u_motorByte0.bits_in_motorByte0.m3Step = 1; // set bit 1
+	}
+	else
+	{
+		u_motorByte0.bits_in_motorByte0.m3Step = 0; // set bit 1
+	}
+
+	if( ((counter - counterRef) % (totallength4) ) < (steplength4) && m4)
+	{
+		u_motorByte1.bits_in_motorByte1.m4Step = 1; // set bit 1
+	}
+	else
+	{
+		u_motorByte1.bits_in_motorByte1.m4Step = 0; // set bit 1
+	}
+
+	if( ((counter - counterRefFive) % (totallength5) ) < (steplength5) && m5)
+	{
+		u_motorByte1.bits_in_motorByte1.m5Step = 1; // set bit 1
+	}
+	else
+	{
+		u_motorByte1.bits_in_motorByte1.m5Step = 0; // set bit 1
+	}
+
+	i2c_start(I2C1+I2C_WRITE);
+	i2c_write(0x2);									// write command byte
+	i2c_write(u_motorByte0.motorByte0);                       // write first byte of output
+	i2c_write(u_motorByte1.motorByte1);                       // write second byte of output
+	i2c_stop();                            // set stop conditon = release bus
+
+	i2c_start(I2C2+I2C_WRITE);
+	i2c_write(0x2);
+	i2c_write(u_outputByte0.outputByte0);
+	i2c_write(u_outputByte1.outputByte1);
 }
