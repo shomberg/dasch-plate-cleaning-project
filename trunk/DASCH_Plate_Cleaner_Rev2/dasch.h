@@ -10,6 +10,13 @@ Runs on Orangutan SVP 1284p board
 
 
 
+enum button_states
+{
+	NONE = 0,	// Nothing - waiting for press
+	PRESSED,	// Pressed - waiting for depress
+	DEPRESSED	// Depressed - waiting for consistency
+};
+
 enum maintenance_states
 {
 	S0 = 0,		//S = sensor
@@ -53,7 +60,15 @@ enum maintenance_states
 	M4_F,
 	M4_B,
 	M5_F,
-	M5_B,
+	M5_B
+};
+
+enum maintenance_modes
+{
+	INPUT = 0,
+	OUTPUT,
+	MOTOR,
+	ALL
 };
 
 enum run_states
@@ -73,9 +88,8 @@ enum run_states
 	CLEAN1_2,	//Return to center of 1st cleaning station
 	B1START2,	//Start brush 1 motor and raise brush 1
 	CLEAN1_3,	//Clean 2nd half of the plate with the first brush
-	B1STOP2,	//Lower brush, turn off motor
+	B1STOP2,	//Lower brush, turn off motor, continue to next cleaning station
 				
-	MOVEC2,		//Move fixture to second cleaning station
 	B2SET,		//Set up brush 2 motor
 	B2START1,	//Start brush 2 motor and raise brush 2
 	CLEAN2_1,	//Clean 1st half of the plate with the second brush
@@ -189,6 +203,3 @@ union u_inputByte1_tag{
 	char inputByte1;
 } u_inputByte1;
 
-int steplength1 = 1, steplength2 = 1, steplength3 = 1, steplength4 = 1, steplength5 = 1;
-int totallength1 = 2, totallength2 = 2;
-int totallength3 = 2, totallength4 = 2, totallength5 = 2;
