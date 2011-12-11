@@ -152,7 +152,7 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000     0x34f0
+.text           0x00000000     0x32c8
  *(.vectors)
  .vectors       0x00000000       0x8c c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51/crtm1284p.o
                 0x00000000                __vectors
@@ -244,253 +244,253 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a
                 0x000001f6                __vector_16
                 0x000001f6                __vector_18
                 0x000001f6                __vector_20
- .text          0x000001fa     0x230a DASCH_Plate_Cleaner_Rev2.o
-                0x000024f8                operator delete(void*)
+ .text          0x000001fa     0x20e2 DASCH_Plate_Cleaner_Rev2.o
+                0x000002a8                button_debounce(int, int*)
+                0x000022d0                operator delete(void*)
                 0x000002a6                __cxa_pure_virtual
-                0x000004e0                main
+                0x000004d0                main
                 0x0000029c                __cxa_guard_release
                 0x000002a4                __cxa_guard_abort
-                0x00000376                motor_and_write(int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int)
-                0x000002a8                button_debounce(int, int*, int*, int*)
-                0x000024fe                operator new(unsigned int)
+                0x00000366                motor_and_write(int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int)
+                0x000022d6                operator new(unsigned int)
                 0x000001fa                OrangutanDigital::isInputHigh(unsigned char)
                 0x00000288                __cxa_guard_acquire
- .text          0x00002504      0x10a twimaster.o
-                0x000025e6                i2c_readAck()
-                0x000025c2                i2c_write(unsigned char)
-                0x000025ac                i2c_rep_start(unsigned char)
-                0x00002510                i2c_start(unsigned char)
-                0x0000255c                i2c_start_wait(unsigned char)
-                0x000025b2                i2c_stop()
-                0x00002504                i2c_init()
-                0x000025fa                i2c_readNak()
- .text          0x0000260e        0x0 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
- .text          0x0000260e        0x0 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
- .text          0x0000260e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mulsi3.o)
- .text          0x0000260e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodhi4.o)
- .text          0x0000260e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodsi4.o)
- .text          0x0000260e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_prologue.o)
- .text          0x0000260e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_epilogue.o)
- .text          0x0000260e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
- .text          0x0000260e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clear_bss.o)
- .text          0x0000260e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodhi4.o)
- .text          0x0000260e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(malloc.o)
- .text          0x0000260e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(fdevopen.o)
- .text          0x0000260e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(iob.o)
- .text          0x0000260e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(calloc.o)
- .text          0x0000260e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(memset.o)
-                0x0000260e                . = ALIGN (0x2)
+ .text          0x000022dc      0x10a twimaster.o
+                0x000023be                i2c_readAck()
+                0x0000239a                i2c_write(unsigned char)
+                0x00002384                i2c_rep_start(unsigned char)
+                0x000022e8                i2c_start(unsigned char)
+                0x00002334                i2c_start_wait(unsigned char)
+                0x0000238a                i2c_stop()
+                0x000022dc                i2c_init()
+                0x000023d2                i2c_readNak()
+ .text          0x000023e6        0x0 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+ .text          0x000023e6        0x0 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
+ .text          0x000023e6        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mulsi3.o)
+ .text          0x000023e6        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodhi4.o)
+ .text          0x000023e6        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodsi4.o)
+ .text          0x000023e6        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_prologue.o)
+ .text          0x000023e6        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_epilogue.o)
+ .text          0x000023e6        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
+ .text          0x000023e6        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clear_bss.o)
+ .text          0x000023e6        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodhi4.o)
+ .text          0x000023e6        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(malloc.o)
+ .text          0x000023e6        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(fdevopen.o)
+ .text          0x000023e6        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(iob.o)
+ .text          0x000023e6        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(calloc.o)
+ .text          0x000023e6        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(memset.o)
+                0x000023e6                . = ALIGN (0x2)
  *(.text.*)
  .text._ZN12OrangutanLCDC2Ev
-                0x0000260e        0x2 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x0000260e                OrangutanLCD::OrangutanLCD()
+                0x000023e6        0x2 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x000023e6                OrangutanLCD::OrangutanLCD()
  .text._ZN12OrangutanLCDC1Ev
-                0x00002610        0x2 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002610                OrangutanLCD::OrangutanLCD()
+                0x000023e8        0x2 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x000023e8                OrangutanLCD::OrangutanLCD()
  .text.void_getchar
-                0x00002612        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002612                void_getchar
+                0x000023ea        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x000023ea                void_getchar
  .text._ZN12OrangutanLCD8busyWaitEv
-                0x00002618       0xca C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002618                OrangutanLCD::busyWait()
+                0x000023f0       0xca C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x000023f0                OrangutanLCD::busyWait()
  .text._ZN12OrangutanLCD8sendDataEh
-                0x000026e2       0x3e C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x000026e2                OrangutanLCD::sendData(unsigned char)
+                0x000024ba       0x3e C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x000024ba                OrangutanLCD::sendData(unsigned char)
  .text._ZN12OrangutanLCD10initPrintfEv
-                0x00002720       0x8a C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002720                OrangutanLCD::initPrintf()
+                0x000024f8       0x8a C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x000024f8                OrangutanLCD::initPrintf()
  .text._ZN12OrangutanLCD10initPrintfEhh
-                0x000027aa        0xe C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x000027aa                OrangutanLCD::initPrintf(unsigned char, unsigned char)
+                0x00002582        0xe C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00002582                OrangutanLCD::initPrintf(unsigned char, unsigned char)
  .text.lcd_init_printf_with_dimensions
-                0x000027b8        0xe C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x000027b8                lcd_init_printf_with_dimensions
+                0x00002590        0xe C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00002590                lcd_init_printf_with_dimensions
  .text.lcd_init_printf
-                0x000027c6        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x000027c6                lcd_init_printf
+                0x0000259e        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x0000259e                lcd_init_printf
  .text._ZN12OrangutanLCD5init2Ev
-                0x000027cc       0x82 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x000027cc                OrangutanLCD::init2()
+                0x000025a4       0x82 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x000025a4                OrangutanLCD::init2()
  .text._ZN12OrangutanLCD4initEv
-                0x0000284e       0x14 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x0000284e                OrangutanLCD::init()
+                0x00002626       0x14 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00002626                OrangutanLCD::init()
  .text._ZN12OrangutanLCD4sendEhhh
-                0x00002862       0xa8 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002862                OrangutanLCD::send(unsigned char, unsigned char, unsigned char)
+                0x0000263a       0xa8 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x0000263a                OrangutanLCD::send(unsigned char, unsigned char, unsigned char)
  .text._ZN12OrangutanLCD8send_cmdEh
-                0x0000290a        0xa C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x0000290a                OrangutanLCD::send_cmd(unsigned char)
+                0x000026e2        0xa C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x000026e2                OrangutanLCD::send_cmd(unsigned char)
  .text._ZN12OrangutanLCD10moveCursorEhh
-                0x00002914       0x24 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002914                OrangutanLCD::moveCursor(unsigned char, unsigned char)
+                0x000026ec       0x24 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x000026ec                OrangutanLCD::moveCursor(unsigned char, unsigned char)
  .text.lcd_move_cursor
-                0x00002938        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002938                lcd_move_cursor
+                0x00002710        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00002710                lcd_move_cursor
  .text._ZN12OrangutanLCD10hideCursorEv
-                0x0000293e        0x8 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x0000293e                OrangutanLCD::hideCursor()
+                0x00002716        0x8 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00002716                OrangutanLCD::hideCursor()
  .text.lcd_hide_cursor
-                0x00002946        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002946                lcd_hide_cursor
+                0x0000271e        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x0000271e                lcd_hide_cursor
  .text._ZN12OrangutanLCD10showCursorEh
-                0x0000294c       0x10 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x0000294c                OrangutanLCD::showCursor(unsigned char)
+                0x00002724       0x10 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00002724                OrangutanLCD::showCursor(unsigned char)
  .text.lcd_show_cursor
-                0x0000295c        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x0000295c                lcd_show_cursor
+                0x00002734        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00002734                lcd_show_cursor
  .text._ZN12OrangutanLCD6gotoXYEhh
-                0x00002962       0x3e C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002962                OrangutanLCD::gotoXY(unsigned char, unsigned char)
+                0x0000273a       0x3e C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x0000273a                OrangutanLCD::gotoXY(unsigned char, unsigned char)
  .text.lcd_goto_xy
-                0x000029a0        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x000029a0                lcd_goto_xy
+                0x00002778        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00002778                lcd_goto_xy
  .text._ZN12OrangutanLCD5clearEv
-                0x000029a6       0x5a C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x000029a6                OrangutanLCD::clear()
- .text.clear    0x00002a00        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002a00                clear
+                0x0000277e       0x5a C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x0000277e                OrangutanLCD::clear()
+ .text.clear    0x000027d8        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x000027d8                clear
  .text._ZN12OrangutanLCD9send_dataEh
-                0x00002a06        0xa C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002a06                OrangutanLCD::send_data(unsigned char)
+                0x000027de        0xa C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x000027de                OrangutanLCD::send_data(unsigned char)
  .text._ZN12OrangutanLCD11printBinaryEh
-                0x00002a10       0x3a C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002a10                OrangutanLCD::printBinary(unsigned char)
+                0x000027e8       0x3a C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x000027e8                OrangutanLCD::printBinary(unsigned char)
  .text.print_binary
-                0x00002a4a        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002a4a                print_binary
+                0x00002822        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00002822                print_binary
  .text._ZN12OrangutanLCD14printHexNibbleEh
-                0x00002a50       0x10 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002a50                OrangutanLCD::printHexNibble(unsigned char)
+                0x00002828       0x10 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00002828                OrangutanLCD::printHexNibble(unsigned char)
  .text._ZN12OrangutanLCD8printHexEh
-                0x00002a60       0x18 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002a60                OrangutanLCD::printHex(unsigned char)
+                0x00002838       0x18 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00002838                OrangutanLCD::printHex(unsigned char)
  .text._ZN12OrangutanLCD8printHexEj
-                0x00002a78       0x14 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002a78                OrangutanLCD::printHex(unsigned int)
+                0x00002850       0x14 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00002850                OrangutanLCD::printHex(unsigned int)
  .text.print_hex
-                0x00002a8c        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002a8c                print_hex
+                0x00002864        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00002864                print_hex
  .text.print_hex_byte
-                0x00002a92        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002a92                print_hex_byte
+                0x0000286a        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x0000286a                print_hex_byte
  .text._ZN12OrangutanLCD5printEm
-                0x00002a98       0xc0 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002a98                OrangutanLCD::print(unsigned long)
+                0x00002870       0xc0 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00002870                OrangutanLCD::print(unsigned long)
  .text.print_unsigned_long
-                0x00002b58        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002b58                print_unsigned_long
+                0x00002930        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00002930                print_unsigned_long
  .text._ZN12OrangutanLCD5printEl
-                0x00002b5e       0x38 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002b5e                OrangutanLCD::print(long)
+                0x00002936       0x38 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00002936                OrangutanLCD::print(long)
  .text.print_long
-                0x00002b96        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002b96                print_long
+                0x0000296e        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x0000296e                print_long
  .text._ZN12OrangutanLCD21printFromProgramSpaceEPKc
-                0x00002b9c       0x1c C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002b9c                OrangutanLCD::printFromProgramSpace(char const*)
+                0x00002974       0x1c C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00002974                OrangutanLCD::printFromProgramSpace(char const*)
  .text.print_from_program_space
-                0x00002bb8        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002bb8                print_from_program_space
+                0x00002990        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00002990                print_from_program_space
  .text._ZN12OrangutanLCD5printEPKc
-                0x00002bbe       0x1a C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002bbe                OrangutanLCD::print(char const*)
- .text.print    0x00002bd8        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002bd8                print
+                0x00002996       0x1a C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00002996                OrangutanLCD::print(char const*)
+ .text.print    0x000029b0        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x000029b0                print
  .text._ZN12OrangutanLCD5printEc
-                0x00002bde        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002bde                OrangutanLCD::print(char)
+                0x000029b6        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x000029b6                OrangutanLCD::print(char)
  .text.print_character
-                0x00002be4        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002be4                print_character
+                0x000029bc        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x000029bc                print_character
  .text.lcd_putchar
-                0x00002bea      0x23a C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002bea                lcd_putchar
+                0x000029c2      0x23a C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x000029c2                lcd_putchar
  .text._ZN12OrangutanLCD19loadCustomCharacterEPKch
-                0x00002e24       0x4c C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002e24                OrangutanLCD::loadCustomCharacter(char const*, unsigned char)
+                0x00002bfc       0x4c C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00002bfc                OrangutanLCD::loadCustomCharacter(char const*, unsigned char)
  .text.lcd_load_custom_character
-                0x00002e70        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002e70                lcd_load_custom_character
+                0x00002c48        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00002c48                lcd_load_custom_character
  .text._ZN12OrangutanLCD13send_4bit_cmdEh
-                0x00002e76        0xa C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002e76                OrangutanLCD::send_4bit_cmd(unsigned char)
+                0x00002c4e        0xa C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00002c4e                OrangutanLCD::send_4bit_cmd(unsigned char)
  .text._ZN12OrangutanLCD6scrollEhhj
-                0x00002e80       0x34 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002e80                OrangutanLCD::scroll(unsigned char, unsigned char, unsigned int)
+                0x00002c58       0x34 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00002c58                OrangutanLCD::scroll(unsigned char, unsigned char, unsigned int)
  .text.lcd_scroll
-                0x00002eb4        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00002eb4                lcd_scroll
+                0x00002c8c        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00002c8c                lcd_scroll
  .text.__vector_11
-                0x00002eba       0x74 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
-                0x00002eba                __vector_11
+                0x00002c92       0x74 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
+                0x00002c92                __vector_11
  .text.ticks_to_microseconds
-                0x00002f2e       0x22 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
-                0x00002f2e                ticks_to_microseconds
+                0x00002d06       0x22 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
+                0x00002d06                ticks_to_microseconds
  .text.delay_ms
-                0x00002f50       0x1e C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
-                0x00002f50                delay_ms
+                0x00002d28       0x1e C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
+                0x00002d28                delay_ms
  .text._ZN13OrangutanTime19ticksToMicrosecondsEm
-                0x00002f6e       0x22 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
-                0x00002f6e                OrangutanTime::ticksToMicroseconds(unsigned long)
+                0x00002d46       0x22 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
+                0x00002d46                OrangutanTime::ticksToMicroseconds(unsigned long)
  .text._ZN13OrangutanTime17delayMillisecondsEj
-                0x00002f90       0x1e C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
-                0x00002f90                OrangutanTime::delayMilliseconds(unsigned int)
+                0x00002d68       0x1e C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
+                0x00002d68                OrangutanTime::delayMilliseconds(unsigned int)
  .text._ZN13OrangutanTime5init2Ev
-                0x00002fae       0x30 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
-                0x00002fae                OrangutanTime::init2()
+                0x00002d86       0x30 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
+                0x00002d86                OrangutanTime::init2()
  .text._ZN13OrangutanTime4initEv
-                0x00002fde       0x14 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
-                0x00002fde                OrangutanTime::init()
+                0x00002db6       0x14 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
+                0x00002db6                OrangutanTime::init()
  .text._ZN13OrangutanTime2msEv
-                0x00002ff2       0x2a C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
-                0x00002ff2                OrangutanTime::ms()
- .text.get_ms   0x0000301c        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
-                0x0000301c                get_ms
+                0x00002dca       0x2a C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
+                0x00002dca                OrangutanTime::ms()
+ .text.get_ms   0x00002df4        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
+                0x00002df4                get_ms
  .text._ZN13OrangutanTime5ticksEv
-                0x00003022       0x6a C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
-                0x00003022                OrangutanTime::ticks()
+                0x00002dfa       0x6a C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
+                0x00002dfa                OrangutanTime::ticks()
  .text.get_ticks
-                0x0000308c        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
-                0x0000308c                get_ticks
+                0x00002e64        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
+                0x00002e64                get_ticks
  .text._ZN13OrangutanTime5resetEv
-                0x00003092       0x2e C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
-                0x00003092                OrangutanTime::reset()
+                0x00002e6a       0x2e C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
+                0x00002e6a                OrangutanTime::reset()
  .text.time_reset
-                0x000030c0        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
-                0x000030c0                time_reset
- .text.libgcc   0x000030c6       0x3e c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mulsi3.o)
-                0x000030c6                __mulsi3
- .text.libgcc   0x00003104       0x26 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodhi4.o)
-                0x00003104                __divmodhi4
-                0x00003104                _div
- .text.libgcc   0x0000312a       0x44 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodsi4.o)
-                0x0000312a                __udivmodsi4
- .text.libgcc   0x0000316e       0x38 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_prologue.o)
-                0x0000316e                __prologue_saves__
- .text.libgcc   0x000031a6       0x36 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_epilogue.o)
-                0x000031a6                __epilogue_restores__
- .text.libgcc   0x000031dc        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
- .text.libgcc   0x000031dc        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clear_bss.o)
- .text.libgcc   0x000031dc       0x28 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodhi4.o)
-                0x000031dc                __udivmodhi4
+                0x00002e98        0x6 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
+                0x00002e98                time_reset
+ .text.libgcc   0x00002e9e       0x3e c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mulsi3.o)
+                0x00002e9e                __mulsi3
+ .text.libgcc   0x00002edc       0x26 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodhi4.o)
+                0x00002edc                __divmodhi4
+                0x00002edc                _div
+ .text.libgcc   0x00002f02       0x44 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodsi4.o)
+                0x00002f02                __udivmodsi4
+ .text.libgcc   0x00002f46       0x38 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_prologue.o)
+                0x00002f46                __prologue_saves__
+ .text.libgcc   0x00002f7e       0x36 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_epilogue.o)
+                0x00002f7e                __epilogue_restores__
+ .text.libgcc   0x00002fb4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
+ .text.libgcc   0x00002fb4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clear_bss.o)
+ .text.libgcc   0x00002fb4       0x28 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodhi4.o)
+                0x00002fb4                __udivmodhi4
  .text.avr-libc
-                0x00003204      0x20a c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(malloc.o)
-                0x00003204                malloc
-                0x0000335e                free
+                0x00002fdc      0x20a c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(malloc.o)
+                0x00002fdc                malloc
+                0x00003136                free
  .text.avr-libc
-                0x0000340e       0x98 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(fdevopen.o)
-                0x0000340e                fdevopen
+                0x000031e6       0x98 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(fdevopen.o)
+                0x000031e6                fdevopen
  .text.avr-libc
-                0x000034a6       0x38 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(calloc.o)
-                0x000034a6                calloc
+                0x0000327e       0x38 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(calloc.o)
+                0x0000327e                calloc
  .text.avr-libc
-                0x000034de        0xe c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(memset.o)
-                0x000034de                memset
-                0x000034ec                . = ALIGN (0x2)
+                0x000032b6        0xe c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(memset.o)
+                0x000032b6                memset
+                0x000032c4                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000034ec        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
-                0x000034ec                exit
-                0x000034ec                _exit
+ .fini9         0x000032c4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
+                0x000032c4                exit
+                0x000032c4                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -509,98 +509,97 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000034ec        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
+ .fini0         0x000032c4        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
  *(.fini0)
-                0x000034f0                _etext = .
+                0x000032c8                _etext = .
 
-.data           0x00800100      0x238 load address 0x000034f0
+.data           0x00800100      0x226 load address 0x000032c8
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800100        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51/crtm1284p.o
- .data          0x00800100      0x22f DASCH_Plate_Cleaner_Rev2.o
- .data          0x0080032f        0x0 twimaster.o
- .data          0x0080032f        0x2 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x00800330                numLCDCols
-                0x0080032f                numLCDRows
- .data          0x00800331        0x0 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
- .data          0x00800331        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mulsi3.o)
- .data          0x00800331        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodhi4.o)
- .data          0x00800331        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodsi4.o)
- .data          0x00800331        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_prologue.o)
- .data          0x00800331        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_epilogue.o)
- .data          0x00800331        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
- .data          0x00800331        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clear_bss.o)
- .data          0x00800331        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodhi4.o)
- .data          0x00800331        0x6 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(malloc.o)
-                0x00800333                __malloc_heap_start
-                0x00800335                __malloc_heap_end
-                0x00800331                __malloc_margin
- .data          0x00800337        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(fdevopen.o)
- .data          0x00800337        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(iob.o)
- .data          0x00800337        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(calloc.o)
- .data          0x00800337        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(memset.o)
+ .data          0x00800100      0x21e DASCH_Plate_Cleaner_Rev2.o
+ .data          0x0080031e        0x0 twimaster.o
+ .data          0x0080031e        0x2 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x0080031f                numLCDCols
+                0x0080031e                numLCDRows
+ .data          0x00800320        0x0 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
+ .data          0x00800320        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mulsi3.o)
+ .data          0x00800320        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodhi4.o)
+ .data          0x00800320        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodsi4.o)
+ .data          0x00800320        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_prologue.o)
+ .data          0x00800320        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_epilogue.o)
+ .data          0x00800320        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
+ .data          0x00800320        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clear_bss.o)
+ .data          0x00800320        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodhi4.o)
+ .data          0x00800320        0x6 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(malloc.o)
+                0x00800322                __malloc_heap_start
+                0x00800324                __malloc_heap_end
+                0x00800320                __malloc_margin
+ .data          0x00800326        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(fdevopen.o)
+ .data          0x00800326        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(iob.o)
+ .data          0x00800326        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(calloc.o)
+ .data          0x00800326        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(memset.o)
  *(.data*)
  *(.rodata)
  *(.rodata*)
  *(.gnu.linkonce.d*)
-                0x00800338                . = ALIGN (0x2)
- *fill*         0x00800337        0x1 00
-                0x00800338                _edata = .
-                0x00800338                PROVIDE (__data_end, .)
+                0x00800326                . = ALIGN (0x2)
+                0x00800326                _edata = .
+                0x00800326                PROVIDE (__data_end, .)
 
-.bss            0x00800338       0x24
-                0x00800338                PROVIDE (__bss_start, .)
+.bss            0x00800326       0x28
+                0x00800326                PROVIDE (__bss_start, .)
  *(.bss)
- .bss           0x00800338        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51/crtm1284p.o
- .bss           0x00800338        0x6 DASCH_Plate_Cleaner_Rev2.o
-                0x0080033c                u_inputByte0
-                0x00800339                u_motorByte1
-                0x0080033b                u_outputByte1
-                0x0080033d                u_inputByte1
-                0x0080033a                u_outputByte0
-                0x00800338                u_motorByte0
- .bss           0x0080033e        0x0 twimaster.o
- .bss           0x0080033e        0x9 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
-                0x0080033e                printf_chars
-                0x00800342                lcdTimeout
-                0x00800341                col
-                0x00800346                OrangutanLCD::init()::initialized
-                0x00800340                row
- .bss           0x00800347        0xb C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
-                0x00800351                OrangutanTime::init()::initialized
-                0x00800347                tickCount
-                0x0080034b                msCounter
-                0x0080034f                us_over_10
- .bss           0x00800352        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mulsi3.o)
- .bss           0x00800352        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodhi4.o)
- .bss           0x00800352        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodsi4.o)
- .bss           0x00800352        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_prologue.o)
- .bss           0x00800352        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_epilogue.o)
- .bss           0x00800352        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
- .bss           0x00800352        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clear_bss.o)
- .bss           0x00800352        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodhi4.o)
- .bss           0x00800352        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(malloc.o)
- .bss           0x00800352        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(fdevopen.o)
- .bss           0x00800352        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(iob.o)
- .bss           0x00800352        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(calloc.o)
- .bss           0x00800352        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(memset.o)
+ .bss           0x00800326        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51/crtm1284p.o
+ .bss           0x00800326        0xa DASCH_Plate_Cleaner_Rev2.o
+                0x0080032a                u_inputByte0
+                0x00800327                u_motorByte1
+                0x00800329                u_outputByte1
+                0x0080032b                u_inputByte1
+                0x00800328                u_outputByte0
+                0x00800326                u_motorByte0
+ .bss           0x00800330        0x0 twimaster.o
+ .bss           0x00800330        0x9 C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanLCD.o)
+                0x00800330                printf_chars
+                0x00800334                lcdTimeout
+                0x00800333                col
+                0x00800338                OrangutanLCD::init()::initialized
+                0x00800332                row
+ .bss           0x00800339        0xb C:\libpololu-avr\libpololu_atmega1284p.a(OrangutanTime.o)
+                0x00800343                OrangutanTime::init()::initialized
+                0x00800339                tickCount
+                0x0080033d                msCounter
+                0x00800341                us_over_10
+ .bss           0x00800344        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mulsi3.o)
+ .bss           0x00800344        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodhi4.o)
+ .bss           0x00800344        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodsi4.o)
+ .bss           0x00800344        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_prologue.o)
+ .bss           0x00800344        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_epilogue.o)
+ .bss           0x00800344        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
+ .bss           0x00800344        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clear_bss.o)
+ .bss           0x00800344        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodhi4.o)
+ .bss           0x00800344        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(malloc.o)
+ .bss           0x00800344        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(fdevopen.o)
+ .bss           0x00800344        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(iob.o)
+ .bss           0x00800344        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(calloc.o)
+ .bss           0x00800344        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(memset.o)
  *(.bss*)
  *(COMMON)
- COMMON         0x00800352        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(malloc.o)
-                0x00800352                __brkval
-                0x00800354                __flp
- COMMON         0x00800356        0x6 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(iob.o)
-                0x00800356                __iob
-                0x0080035c                PROVIDE (__bss_end, .)
-                0x000034f0                __data_load_start = LOADADDR (.data)
-                0x00003728                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x00800344        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(malloc.o)
+                0x00800344                __brkval
+                0x00800346                __flp
+ COMMON         0x00800348        0x6 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(iob.o)
+                0x00800348                __iob
+                0x0080034e                PROVIDE (__bss_end, .)
+                0x000032c8                __data_load_start = LOADADDR (.data)
+                0x000034ee                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x0080035c        0x0
-                0x0080035c                PROVIDE (__noinit_start, .)
+.noinit         0x0080034e        0x0
+                0x0080034e                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x0080035c                PROVIDE (__noinit_end, .)
-                0x0080035c                _end = .
-                0x0080035c                PROVIDE (__heap_start, .)
+                0x0080034e                PROVIDE (__noinit_end, .)
+                0x0080034e                _end = .
+                0x0080034e                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
  *(.eeprom*)
@@ -670,38 +669,38 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a
  .debug_pubnames
                 0x0000014f       0x8d twimaster.o
 
-.debug_info     0x00000000     0x1294
+.debug_info     0x00000000     0x12ac
  *(.debug_info)
- .debug_info    0x00000000     0x10e6 DASCH_Plate_Cleaner_Rev2.o
- .debug_info    0x000010e6      0x1ae twimaster.o
+ .debug_info    0x00000000     0x10fe DASCH_Plate_Cleaner_Rev2.o
+ .debug_info    0x000010fe      0x1ae twimaster.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev   0x00000000      0x402
+.debug_abbrev   0x00000000      0x3ec
  *(.debug_abbrev)
- .debug_abbrev  0x00000000      0x340 DASCH_Plate_Cleaner_Rev2.o
- .debug_abbrev  0x00000340       0xc2 twimaster.o
+ .debug_abbrev  0x00000000      0x32a DASCH_Plate_Cleaner_Rev2.o
+ .debug_abbrev  0x0000032a       0xc2 twimaster.o
 
-.debug_line     0x00000000     0x1a8f
+.debug_line     0x00000000     0x1917
  *(.debug_line)
- .debug_line    0x00000000     0x1852 DASCH_Plate_Cleaner_Rev2.o
- .debug_line    0x00001852      0x23d twimaster.o
+ .debug_line    0x00000000     0x16da DASCH_Plate_Cleaner_Rev2.o
+ .debug_line    0x000016da      0x23d twimaster.o
 
 .debug_frame    0x00000000      0x140
  *(.debug_frame)
  .debug_frame   0x00000000       0xb0 DASCH_Plate_Cleaner_Rev2.o
  .debug_frame   0x000000b0       0x90 twimaster.o
 
-.debug_str      0x00000000      0xb71
+.debug_str      0x00000000      0xce9
  *(.debug_str)
- .debug_str     0x00000000      0xa64 DASCH_Plate_Cleaner_Rev2.o
-                                0xb20 (size before relaxing)
- .debug_str     0x00000a64      0x10d twimaster.o
+ .debug_str     0x00000000      0xbdc DASCH_Plate_Cleaner_Rev2.o
+                                0xc78 (size before relaxing)
+ .debug_str     0x00000bdc      0x10d twimaster.o
                                 0x1d1 (size before relaxing)
 
-.debug_loc      0x00000000      0xb45
+.debug_loc      0x00000000      0xb23
  *(.debug_loc)
- .debug_loc     0x00000000      0xa86 DASCH_Plate_Cleaner_Rev2.o
- .debug_loc     0x00000a86       0xbf twimaster.o
+ .debug_loc     0x00000000      0xa64 DASCH_Plate_Cleaner_Rev2.o
+ .debug_loc     0x00000a64       0xbf twimaster.o
 
 .debug_macinfo
  *(.debug_macinfo)
