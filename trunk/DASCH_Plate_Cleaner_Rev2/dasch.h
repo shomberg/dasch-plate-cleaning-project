@@ -114,7 +114,8 @@ enum run_states
 	LOWERL3,	//Lower lift
 	UNLOAD,		//Return plate to loading area
 	END,		//End of cycle
-	DONER		//Stop loop
+	DONER,		//Stop loop
+	WAIT		//In Debug Cycle, wait for button press
 };
 
 
