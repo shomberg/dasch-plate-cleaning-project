@@ -40,10 +40,8 @@ I2C_Output_PCA9555.o: ../I2C_Output_PCA9555.c \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanPulseIn/OrangutanPulseIn.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanPulseIn/../OrangutanTime/OrangutanTime.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanSVP/OrangutanSVP.h \
-  c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanX2/OrangutanX2.h \
-  c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanX2/../OrangutanResources/include/OrangutanModel.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanSPIMaster/OrangutanSPIMaster.h \
-  C:\Documents\ and\ Settings\Bianca\My\ Documents\Steven\DASCH\SVN\ Directory\I2C_Output_PCA9555\i2cmaster/i2cmaster.h \
+  C:\Users\Steven\Documents\DASCH\SVN\ Directory\I2C_Output_PCA9555\i2cmaster/i2cmaster.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/stdlib.h \
   c:\winavr-20100110\bin\../lib/gcc/avr/4.3.3/include/stddef.h
 
@@ -129,13 +127,9 @@ c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanPulseIn/../Oranguta
 
 c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanSVP/OrangutanSVP.h:
 
-c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanX2/OrangutanX2.h:
-
-c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanX2/../OrangutanResources/include/OrangutanModel.h:
-
 c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanSPIMaster/OrangutanSPIMaster.h:
 
-C:\Documents\ and\ Settings\Bianca\My\ Documents\Steven\DASCH\SVN\ Directory\I2C_Output_PCA9555\i2cmaster/i2cmaster.h:
+C:\Users\Steven\Documents\DASCH\SVN\ Directory\I2C_Output_PCA9555\i2cmaster/i2cmaster.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/stdlib.h:
 

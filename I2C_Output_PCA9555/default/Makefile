@@ -15,7 +15,7 @@ COMMON = -mmcu=$(MCU)
 
 ## Compile options common for all C compilation units.
 CFLAGS = $(COMMON)
-CFLAGS += -Wall -gdwarf-2 -Os -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums 
+CFLAGS += -Wall -gdwarf-2 -Os -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 CFLAGS += -MD -MP -MT $(*F).o -MF dep/$(@F).d 
 
 ## Assembly specific flags
@@ -37,7 +37,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Include Directories
-INCLUDES = -I"C:\Documents and Settings\Bianca\My Documents\Steven\DASCH\SVN Directory\I2C_Output_PCA9555\i2cmaster" 
+INCLUDES = -I"C:\Users\Steven\Documents\DASCH\SVN Directory\I2C_Output_PCA9555\i2cmaster" 
 
 ## Libraries
 LIBS = -lpololu_atmega1284p 
@@ -49,9 +49,7 @@ OBJECTS = I2C_Output_PCA9555.o twimaster.o
 LINKONLYOBJECTS = 
 
 ## Build
-all: $(TARGET) I2C_Output_PCA9555.hex I2C_Output_PCA9555.eep I2C_Output_PCA9555.lss size
-
-## Compile
+all: $(TARGET) I2C_Output_PCA9555.hex I2C_Output_PCA9555.eep I2C_Output_PCA9555.lss## Compile
 I2C_Output_PCA9555.o: ../I2C_Output_PCA9555.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
@@ -71,10 +69,6 @@ $(TARGET): $(OBJECTS)
 %.lss: $(TARGET)
 	avr-objdump -h -S $< > $@
 
-size: ${TARGET}
-	@echo
-	@avr-size -C --mcu=${MCU} ${TARGET}
-
 ## Clean target
 .PHONY: clean
 clean:
@@ -82,5 +76,5 @@ clean:
 
 
 ## Other dependencies
--include $(shell mkdir dep 2>/dev/null) $(wildcard dep/*)
+-include $(shell mkdir dep 2>NUL) $(wildcard dep/*)
 
