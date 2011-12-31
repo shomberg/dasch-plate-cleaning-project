@@ -64,7 +64,7 @@ int main()
 {
     
     unsigned char ret1, ret2, ret3;												// Used to determine if the I2Cs return properly
-	int fixtureMotorHalfPlate = 2000;	//Number of steps of the fixture motor to move 1/2 plate length
+	int fixtureMotorHalfPlate = 1000;	//Number of steps of the fixture motor to move 1/2 plate length
 	int fixtureMotorWholePlate = 2000;	//Number of steps of the fixture motor to move one plate length
 	int plateLoadMotorLoadPlate = 2000;	//Number of steps of the plate load motor to load the plate
 	int fixtureMotorHomeFix = 2000;		//Number of steps of the fixture motor to home the fixture
