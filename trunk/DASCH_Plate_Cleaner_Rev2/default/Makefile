@@ -37,7 +37,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Include Directories
-INCLUDES = -I"C:\Users\Bob\Documents\DASH code\svndirectory\DASCH_Plate_Cleaner_Rev2\i2cmaster" -I"C:\Users\Bob\Documents\DASH code\svndirectory\DASCH_Plate_Cleaner_Rev2\." 
+INCLUDES = -I"C:\Users\Steven\Documents\DASCH\SVN Directory\DASCH_Plate_Cleaner_Rev2\i2cmaster" -I"C:\Users\Steven\Documents\DASCH\SVN Directory\DASCH_Plate_Cleaner_Rev2\." 
 
 ## Library Directories
 LIBDIRS = -L"C:\libpololu-avr" 

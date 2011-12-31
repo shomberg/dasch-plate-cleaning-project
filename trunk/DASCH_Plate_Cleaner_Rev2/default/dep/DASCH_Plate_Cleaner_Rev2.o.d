@@ -1,5 +1,5 @@
 DASCH_Plate_Cleaner_Rev2.o: ../DASCH_Plate_Cleaner_Rev2.c \
-  C:\Users\Bob\Documents\DASH\ code\svndirectory\DASCH_Plate_Cleaner_Rev2\./dasch.h \
+  C:\Users\Steven\Documents\DASCH\SVN\ Directory\DASCH_Plate_Cleaner_Rev2\./dasch.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/orangutan \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanAnalog/OrangutanAnalog.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/io.h \
@@ -42,11 +42,11 @@ DASCH_Plate_Cleaner_Rev2.o: ../DASCH_Plate_Cleaner_Rev2.c \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanPulseIn/../OrangutanTime/OrangutanTime.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanSVP/OrangutanSVP.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanSPIMaster/OrangutanSPIMaster.h \
-  C:\Users\Bob\Documents\DASH\ code\svndirectory\DASCH_Plate_Cleaner_Rev2\i2cmaster/i2cmaster.h \
+  C:\Users\Steven\Documents\DASCH\SVN\ Directory\DASCH_Plate_Cleaner_Rev2\i2cmaster/i2cmaster.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/stdlib.h \
   c:\winavr-20100110\bin\../lib/gcc/avr/4.3.3/include/stddef.h
 
-C:\Users\Bob\Documents\DASH\ code\svndirectory\DASCH_Plate_Cleaner_Rev2\./dasch.h:
+C:\Users\Steven\Documents\DASCH\SVN\ Directory\DASCH_Plate_Cleaner_Rev2\./dasch.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/pololu/orangutan:
 
@@ -132,7 +132,7 @@ c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanSVP/OrangutanSVP.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanSPIMaster/OrangutanSPIMaster.h:
 
-C:\Users\Bob\Documents\DASH\ code\svndirectory\DASCH_Plate_Cleaner_Rev2\i2cmaster/i2cmaster.h:
+C:\Users\Steven\Documents\DASCH\SVN\ Directory\DASCH_Plate_Cleaner_Rev2\i2cmaster/i2cmaster.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/stdlib.h:
 
