@@ -1202,7 +1202,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == LOAD && /*counter - counterRef > totallength1*plateLoadMotorLoadPlate*/&& u_inputByte0.bits_in_inputByte0.plate == 0){
+				if(state == LOAD && /*counter - counterRef > totallength1*plateLoadMotorLoadPlate&&*/ u_inputByte0.bits_in_inputByte0.plate == 0){
 					state ++;
 					counterRef = counter;
 				}
@@ -1615,7 +1615,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == LOAD && /*counter - counterRef > totallength1*plateLoadMotorLoadPlate*/&& u_inputByte0.bits_in_inputByte0.plate == 0){
+				if(state == LOAD && /*counter - counterRef > totallength1*plateLoadMotorLoadPlate&&*/ u_inputByte0.bits_in_inputByte0.plate == 0){
 					state ++;
 					counterRef = counter;
 				}
@@ -2032,7 +2032,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == LOAD && /*counter - counterRef > totallength1*plateLoadMotorLoadPlate*/&& u_inputByte0.bits_in_inputByte0.plate == 0){
+				if(state == LOAD && /*counter - counterRef > totallength1*plateLoadMotorLoadPlate&&*/ u_inputByte0.bits_in_inputByte0.plate == 0){
 					state ++;
 					counterRef = counter;
 				}
@@ -2523,7 +2523,7 @@ int main()
 					state = WAIT;
 					counterRef = counter;
 				}
-				if(state == LOAD && /*counter - counterRef > totallength1*plateLoadMotorLoadPlate*/&& u_inputByte0.bits_in_inputByte0.plate == 0){
+				if(state == LOAD && /*counter - counterRef > totallength1*plateLoadMotorLoadPlate&&*/ u_inputByte0.bits_in_inputByte0.plate == 0){
 					state = WAIT;
 					counterRef = counter;
 				}
