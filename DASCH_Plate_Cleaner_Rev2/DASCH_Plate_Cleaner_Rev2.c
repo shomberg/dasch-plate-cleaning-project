@@ -53,7 +53,7 @@ void __cxa_pure_virtual(void) {};
 
 
   
-void motor_and_write(int counter, int counterRef, int counterRefFive, int plateLoadMotor, int fixtureMotor, int brush1Motor, int brush2Motor, int paperTowelMotor, int totallength1, int totallength2, int totallength3, int totallength4, int totallength5, int steplength1, int steplength2, int steplength3, int steplength4, int steplength5);
+void motor_and_write(int counter, int counterRef, int counterRefFive, int plateLoadMotor, int fixtureMotor, int brush1Motor, int brush2Motor, int paperTowelMotor, int totalStepLength1, int totalStepLength2, int totalStepLength3, int totalStepLength4, int totalStepLength5, int highLength1, int highLength2, int highLength3, int highLength4, int highLength5);
 
 //int button_debounce(int counter, int *pcounterRefPush, int *pcounterRefRel, int *pstateButton);
 
@@ -100,16 +100,16 @@ int main()
 	int  kWait = 100;
 
 	//hold the length of the high and high-low periods for the various motors - this controls their speed
-	int steplength1 = 1;
-	int  steplength2 = 1;
-	int  steplength3 = 1;
-	int  steplength4 = 1;
-	int  steplength5 = 1;
-	int totallength1 = 2;
-	int  totallength2 = 2;
-	int totallength3 = 2;
-	int  totallength4 = 2;
-	int  totallength5 = 2;
+	int highLength1 = 1;
+	int  highLength2 = 1;
+	int  highLength3 = 1;
+	int  highLength4 = 1;
+	int  highLength5 = 1;
+	int totalStepLength1 = 2;
+	int  totalStepLength2 = 2;
+	int totalStepLength3 = 2;
+	int  totalStepLength4 = 2;
+	int  totalStepLength5 = 2;
 		
 	//hold whether or not statements have been printed yet (numbers refer to run mode states)
 	int print0 = 1;
@@ -120,6 +120,7 @@ int main()
 	int stateButton = NONE;			//holds the state in the button subroutine where the program is currently
 
 	bool buttonTriggered = false;	//buttonTriggered is false if it hasn't been triggered, true if it has;
+	bool switched = false;			//switched is false if the submode in maintenance mode wasn't just switched, true otherwise
     
 	while(1){						//Repeats the entire program indefinitely (runs maintenance or normal each time)
 
@@ -147,16 +148,16 @@ int main()
 	kWait = 100;
 
 	//hold the length of the high and high-low periods for the various motors - this controls their speed
-	steplength1 = 1;
-	steplength2 = 1;
-	steplength3 = 1;
-	steplength4 = 1;
-	steplength5 = 1;
-	totallength1 = 2;
-	totallength2 = 2;
-	totallength3 = 2;
-	totallength4 = 2;
-	totallength5 = 2;
+	highLength1 = 1;
+	highLength2 = 1;
+	highLength3 = 1;
+	highLength4 = 1;
+	highLength5 = 1;
+	totalStepLength1 = 2;
+	totalStepLength2 = 2;
+	totalStepLength3 = 2;
+	totalStepLength4 = 2;
+	totalStepLength5 = 2;
 	
 	//hold whether or not statements have been printed yet (numbers refer to run mode states)
 	print0 = 1;
@@ -172,6 +173,12 @@ int main()
 	u_outputByte1.outputByte1 = 255;  // initialize outputByte1
 	u_inputByte0.inputByte0 = 0;  // initialize inputByte0
 	u_inputByte1.inputByte1 = 0;  // initialize inputByte1
+	
+	OrangutanLCD::clear();
+	OrangutanLCD::print("DASCH CLEANER 2");
+	OrangutanLCD::gotoXY(0,1);
+	OrangutanLCD::print("REV: 25");
+	delay_ms(2000);
 	
 	OrangutanLCD::clear();
 	OrangutanLCD::print("BEGIN ");
@@ -323,6 +330,7 @@ int main()
 					OrangutanLCD::print("INPUTS ");
 					OrangutanLCD::gotoXY(0,1);
 					print = 0;
+					switched = true;
 				}
 				if(OrangutanDigital::isInputHigh(IO_D1) && !OrangutanDigital::isInputHigh(IO_D2) && submode != 1){
 					state = O0_ON;
@@ -331,6 +339,7 @@ int main()
 					OrangutanLCD::print("OUTPUTS");
 					OrangutanLCD::gotoXY(0,1);
 					print = 0;
+					switched = true;
 				}
 				if(!OrangutanDigital::isInputHigh(IO_D1) && OrangutanDigital::isInputHigh(IO_D2) && submode != 2){
 					state = M1_F;
@@ -339,6 +348,7 @@ int main()
 					OrangutanLCD::print("MOTORS ");
 					OrangutanLCD::gotoXY(0,1);
 					print = 0;
+					switched = true;
 				}
 				if(OrangutanDigital::isInputHigh(IO_D1) && OrangutanDigital::isInputHigh(IO_D2) && submode != 3){
 					state = S0;
@@ -347,6 +357,17 @@ int main()
 					OrangutanLCD::print("INPUTS ");
 					OrangutanLCD::gotoXY(0,1);
 					print = 0;
+					switched = true;
+				}
+				if(switched){
+					plateLoadMotor = 0;
+					fixtureMotor = 0;
+					brush1Motor = 0;
+					brush2Motor = 0;
+					paperTowelMotor = 0;
+					u_outputByte0.outputByte0 = 255;  // reset outputByte0
+					u_outputByte1.outputByte1 = 255;  // reset outputByte1
+					switched = false;
 				}
 
 				//state transitions
@@ -1037,11 +1058,11 @@ int main()
 				}
 
 				//determines which motors need to be sent which signals and writes the outputs and motors to the appropriate I2C expander
-				motor_and_write(counter, counterRef, counterRefFive, plateLoadMotor, fixtureMotor, brush1Motor, brush2Motor, paperTowelMotor, totallength1, totallength2, totallength3, totallength4, totallength5, steplength1, steplength2, steplength3, steplength4, steplength5);
+				motor_and_write(counter, counterRef, counterRefFive, plateLoadMotor, fixtureMotor, brush1Motor, brush2Motor, paperTowelMotor, totalStepLength1, totalStepLength2, totalStepLength3, totalStepLength4, totalStepLength5, highLength1, highLength2, highLength3, highLength4, highLength5);
 
 
 
-				/*if( ((counter - counterRef) % (totallength1) ) < (steplength1) && plateLoadMotor)  //check if it is in the right period of the loop to send high
+				/*if( ((counter - counterRef) % (totalStepLength1) ) < (highLength1) && plateLoadMotor)  //check if it is in the right period of the loop to send high
 				{
 					u_motorByte0.bits_in_motorByte0.plateLoadMotorStep = 1; // set bit 0
 				}
@@ -1050,7 +1071,7 @@ int main()
 					u_motorByte0.bits_in_motorByte0.plateLoadMotorStep = 0; // set bit 0
 				}
 
-				if( ((counter - counterRef) % (totallength2) ) < (steplength2) && fixtureMotor)
+				if( ((counter - counterRef) % (totalStepLength2) ) < (highLength2) && fixtureMotor)
 				{
 					u_motorByte0.bits_in_motorByte0.fixtureMotorStep = 1; // set bit 1
 				}
@@ -1059,7 +1080,7 @@ int main()
 					u_motorByte0.bits_in_motorByte0.fixtureMotorStep = 0; // set bit 1
 				}
 
-				if( ((counter - counterRef) % (totallength3) ) < (steplength3) && brush1Motor)
+				if( ((counter - counterRef) % (totalStepLength3) ) < (highLength3) && brush1Motor)
 				{
 					u_motorByte0.bits_in_motorByte0.brush1MotorStep = 1; // set bit 1
 				}
@@ -1068,7 +1089,7 @@ int main()
 					u_motorByte0.bits_in_motorByte0.brush1MotorStep = 0; // set bit 1
 				}
 
-				if( ((counter - counterRef) % (totallength4) ) < (steplength4) && brush2Motor)
+				if( ((counter - counterRef) % (totalStepLength4) ) < (highLength4) && brush2Motor)
 				{
 					u_motorByte1.bits_in_motorByte1.brush2MotorStep = 1; // set bit 1
 				}
@@ -1077,7 +1098,7 @@ int main()
 					u_motorByte1.bits_in_motorByte1.brush2MotorStep = 0; // set bit 1
 				}
 
-				if( ((counter - counterRefFive) % (totallength5) ) < (steplength5) && paperTowelMotor)
+				if( ((counter - counterRefFive) % (totalStepLength5) ) < (highLength5) && paperTowelMotor)
 				{
 					u_motorByte1.bits_in_motorByte1.paperTowelMotorStep = 1; // set bit 1
 				}
@@ -1202,7 +1223,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == LOAD && /*counter - counterRef > totallength1*plateLoadMotorLoadPlate&&*/ u_inputByte0.bits_in_inputByte0.plate == 0){
+				if(state == LOAD && /*counter - counterRef > totalStepLength1*plateLoadMotorLoadPlate&&*/ u_inputByte0.bits_in_inputByte0.plate == 0){
 					state ++;
 					counterRef = counter;
 				}
@@ -1210,7 +1231,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == FIXL && counter - counterRef > totallength2*fixtureMotorHomeFix /*&& u_inputByte0.bits_in_inputByte0.fixtureLift == 0*/){
+				if(state == FIXL && counter - counterRef > totalStepLength2*fixtureMotorHomeFix /*&& u_inputByte0.bits_in_inputByte0.fixtureLift == 0*/){
 					state ++;
 					counterRef = counter;
 				}
@@ -1222,7 +1243,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == MOVEC1 && counter - counterRef > totallength2*fixtureMotorBrush1Step /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush1 == 0*/){
+				if(state == MOVEC1 && counter - counterRef > totalStepLength2*fixtureMotorBrush1Step /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush1 == 0*/){
 					state ++;
 					counterRef = counter;
 				}
@@ -1234,14 +1255,14 @@ int main()
 					state ++;
 						counterRef = counter;
 				}
-				if(state == CLEAN1_1 && counter - counterRef > totallength2*fixtureMotorHalfPlate){
+				if(state == CLEAN1_1 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate){
 					state ++;
 					counterRef = counter;
 				}
 				if(state == B1STOP1 && counter - counterRef > pWait){
 					state ++;
 				}
-				if(state == CLEAN1_2 && counter - counterRef > totallength2*fixtureMotorHalfPlate /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush1 == 0*/){
+				if(state == CLEAN1_2 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush1 == 0*/){
 					state ++;
 					counterRef = counter;
 				}
@@ -1249,7 +1270,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == CLEAN1_3 && counter - counterRef > totallength2*fixtureMotorHalfPlate){
+				if(state == CLEAN1_3 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate){
 					state ++;
 					counterRef14 = counter;
 					}
@@ -1257,7 +1278,7 @@ int main()
 					state = 23;
 					counterRef = counter;
 				}
-				if(state == MOVED1 && counter - counterRef > totallength2*fixtureMotorDry1StepWhole /*&& u_inputByte0.bits_in_inputByte0.fixtureDry1 == 0*/){
+				if(state == MOVED1 && counter - counterRef > totalStepLength2*fixtureMotorDry1StepWhole /*&& u_inputByte0.bits_in_inputByte0.fixtureDry1 == 0*/){
 					state ++;
 					counterRef = counter;
 				}
@@ -1265,11 +1286,11 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == DRY1 && counter - counterRef > totallength2*fixtureMotorWholePlate){
+				if(state == DRY1 && counter - counterRef > totalStepLength2*fixtureMotorWholePlate){
 					state ++;
 					counterRef26 = counter;
 				}
-				if(state == D1STOP && counter - counterRef > totallength2*fixtureMotorDry2Step /*&& u_inputByte0.bits_in_inputByte0.fixtureDry2 == 0*/){
+				if(state == D1STOP && counter - counterRef > totalStepLength2*fixtureMotorDry2Step /*&& u_inputByte0.bits_in_inputByte0.fixtureDry2 == 0*/){
 					state ++;
 					counterRefFive = counter;
 				}
@@ -1281,11 +1302,11 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == DRY2 && counter - counterRef > totallength2*fixtureMotorWholePlate){
+				if(state == DRY2 && counter - counterRef > totalStepLength2*fixtureMotorWholePlate){
 					state ++;
 					counterRef30 = counter;
 				}
-				if(state == D2STOP && counter - counterRef > totallength2*fixtureMotorLoadBack /*&& u_inputByte0.bits_in_inputByte0.fixturePlate == 0*/){
+				if(state == D2STOP && counter - counterRef > totalStepLength2*fixtureMotorLoadBack /*&& u_inputByte0.bits_in_inputByte0.fixturePlate == 0*/){
 					state ++;
 					counterRef = counter;
 				}
@@ -1293,7 +1314,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == FIXH && counter - counterRef > totallength2*fixtureMotorHomeFix /*&& u_inputByte0.bits_in_inputByte0.fixtureHome == 0*/){
+				if(state == FIXH && counter - counterRef > totalStepLength2*fixtureMotorHomeFix /*&& u_inputByte0.bits_in_inputByte0.fixtureHome == 0*/){
 					state ++;
 					counterRef = counter;
 				}
@@ -1301,7 +1322,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == UNLOAD && counter - counterRef > totallength1*plateLoadMotorLoadPlate){
+				if(state == UNLOAD && counter - counterRef > totalStepLength1*plateLoadMotorLoadPlate){
 					state ++;
 					counterRef = counter;
 				}
@@ -1498,7 +1519,7 @@ int main()
 
 
 
-				/*if( ((counter - counterRef) % (totallength1) ) < (steplength1) && plateLoadMotor)  //check if it is in the right period of the loop to send high
+				/*if( ((counter - counterRef) % (totalStepLength1) ) < (highLength1) && plateLoadMotor)  //check if it is in the right period of the loop to send high
 				{
 					u_motorByte0.bits_in_motorByte0.plateLoadMotorStep = 1; // set bit 0
 				}
@@ -1507,7 +1528,7 @@ int main()
 					u_motorByte0.bits_in_motorByte0.plateLoadMotorStep = 0; // set bit 0
 				}
 
-				if( ((counter - counterRef) % (totallength2) ) < (steplength2) && fixtureMotor)
+				if( ((counter - counterRef) % (totalStepLength2) ) < (highLength2) && fixtureMotor)
 				{
 					u_motorByte0.bits_in_motorByte0.fixtureMotorStep = 1; // set bit 1
 				}
@@ -1516,7 +1537,7 @@ int main()
 					u_motorByte0.bits_in_motorByte0.fixtureMotorStep = 0; // set bit 1
 				}
 
-				if( ((counter - counterRef) % (totallength3) ) < (steplength3) && brush1Motor)
+				if( ((counter - counterRef) % (totalStepLength3) ) < (highLength3) && brush1Motor)
 				{
 					u_motorByte0.bits_in_motorByte0.brush1MotorStep = 1; // set bit 1
 				}
@@ -1525,7 +1546,7 @@ int main()
 					u_motorByte0.bits_in_motorByte0.brush1MotorStep = 0; // set bit 1
 				}
 
-				if( ((counter - counterRef) % (totallength4) ) < (steplength4) && brush2Motor)
+				if( ((counter - counterRef) % (totalStepLength4) ) < (highLength4) && brush2Motor)
 				{
 					u_motorByte1.bits_in_motorByte1.brush2MotorStep = 1; // set bit 1
 				}
@@ -1534,7 +1555,7 @@ int main()
 					u_motorByte1.bits_in_motorByte1.brush2MotorStep = 0; // set bit 1
 				}
 
-				if( ((counter - counterRefFive) % (totallength5) ) < (steplength5) && paperTowelMotor)
+				if( ((counter - counterRefFive) % (totalStepLength5) ) < (highLength5) && paperTowelMotor)
 				{
 					u_motorByte1.bits_in_motorByte1.paperTowelMotorStep = 1; // set bit 1
 				}
@@ -1555,7 +1576,7 @@ int main()
 				i2c_write(u_outputByte1.outputByte1);*/
 
 				//determines which motors need to be sent which signals and writes the outputs and motors to the appropriate I2C expander
-				motor_and_write(counter, counterRef, counterRefFive, plateLoadMotor, fixtureMotor, brush1Motor, brush2Motor, paperTowelMotor, totallength1, totallength2, totallength3, totallength4, totallength5, steplength1, steplength2, steplength3, steplength4, steplength5);
+				motor_and_write(counter, counterRef, counterRefFive, plateLoadMotor, fixtureMotor, brush1Motor, brush2Motor, paperTowelMotor, totalStepLength1, totalStepLength2, totalStepLength3, totalStepLength4, totalStepLength5, highLength1, highLength2, highLength3, highLength4, highLength5);
 
 				counter ++;
 				delay_ms(1);
@@ -1615,7 +1636,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == LOAD && /*counter - counterRef > totallength1*plateLoadMotorLoadPlate&&*/ u_inputByte0.bits_in_inputByte0.plate == 0){
+				if(state == LOAD && /*counter - counterRef > totalStepLength1*plateLoadMotorLoadPlate&&*/ u_inputByte0.bits_in_inputByte0.plate == 0){
 					state ++;
 					counterRef = counter;
 				}
@@ -1623,7 +1644,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == FIXL && counter - counterRef > totallength2*fixtureMotorHomeFix /*&& u_inputByte0.bits_in_inputByte0.fixtureLift == 0*/){
+				if(state == FIXL && counter - counterRef > totalStepLength2*fixtureMotorHomeFix /*&& u_inputByte0.bits_in_inputByte0.fixtureLift == 0*/){
 					state ++;
 					counterRef = counter;
 				}
@@ -1635,7 +1656,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == MOVEC1 && counter - counterRef > totallength2*fixtureMotorBrush2StepWhole /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush1 == 0*/){
+				if(state == MOVEC1 && counter - counterRef > totalStepLength2*fixtureMotorBrush2StepWhole /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush1 == 0*/){
 					state = B2SET;
 					counterRef = counter;
 				}
@@ -1647,7 +1668,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == CLEAN2_1 && counter - counterRef > totallength2*fixtureMotorHalfPlate){
+				if(state == CLEAN2_1 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate){
 					state ++;
 					counterRef = counter;
 				}
@@ -1655,7 +1676,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == CLEAN2_2 && counter - counterRef > totallength2*fixtureMotorHalfPlate /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush2 == 0*/){
+				if(state == CLEAN2_2 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush2 == 0*/){
 					state ++;
 					counterRef = counter;
 				}
@@ -1663,7 +1684,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == CLEAN2_3 && counter - counterRef > totallength2*fixtureMotorHalfPlate){
+				if(state == CLEAN2_3 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate){
 					state ++;
 					counterRef = counter;
 				}
@@ -1671,7 +1692,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == MOVED1 && counter - counterRef > totallength2*fixtureMotorDry1Step /*&& u_inputByte0.bits_in_inputByte0.fixtureDry1 == 0*/){
+				if(state == MOVED1 && counter - counterRef > totalStepLength2*fixtureMotorDry1Step /*&& u_inputByte0.bits_in_inputByte0.fixtureDry1 == 0*/){
 					state ++;
 					counterRef = counter;
 				}
@@ -1679,11 +1700,11 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == DRY1 && counter - counterRef > totallength2*fixtureMotorWholePlate){
+				if(state == DRY1 && counter - counterRef > totalStepLength2*fixtureMotorWholePlate){
 					state ++;
 					counterRef26 = counter;
 				}
-				if(state == D1STOP && counter - counterRef > totallength2*fixtureMotorDry2Step /*&& u_inputByte0.bits_in_inputByte0.fixtureDry2 == 0*/){
+				if(state == D1STOP && counter - counterRef > totalStepLength2*fixtureMotorDry2Step /*&& u_inputByte0.bits_in_inputByte0.fixtureDry2 == 0*/){
 					state ++;
 					counterRefFive = counter;
 				}
@@ -1695,11 +1716,11 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == DRY2 && counter - counterRef > totallength2*fixtureMotorWholePlate){
+				if(state == DRY2 && counter - counterRef > totalStepLength2*fixtureMotorWholePlate){
 					state ++;
 					counterRef30 = counter;
 				}
-				if(state == D2STOP && counter - counterRef > totallength2*fixtureMotorLoadBack /*&& u_inputByte0.bits_in_inputByte0.fixturePlate == 0*/){
+				if(state == D2STOP && counter - counterRef > totalStepLength2*fixtureMotorLoadBack /*&& u_inputByte0.bits_in_inputByte0.fixturePlate == 0*/){
 					state ++;
 					counterRef = counter;
 				}
@@ -1707,7 +1728,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == FIXH && counter - counterRef > totallength2*fixtureMotorHomeFix /*&& u_inputByte0.bits_in_inputByte0.fixtureHome == 0*/){
+				if(state == FIXH && counter - counterRef > totalStepLength2*fixtureMotorHomeFix /*&& u_inputByte0.bits_in_inputByte0.fixtureHome == 0*/){
 					state ++;
 					counterRef = counter;
 				}
@@ -1715,7 +1736,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == UNLOAD && counter - counterRef > totallength1*plateLoadMotorLoadPlate){
+				if(state == UNLOAD && counter - counterRef > totalStepLength1*plateLoadMotorLoadPlate){
 					state ++;
 					counterRef = counter;
 				}
@@ -1914,7 +1935,7 @@ int main()
 
 
 
-				/*if( ((counter - counterRef) % (totallength1) ) < (steplength1) && plateLoadMotor)  //check if it is in the right period of the loop to send high
+				/*if( ((counter - counterRef) % (totalStepLength1) ) < (highLength1) && plateLoadMotor)  //check if it is in the right period of the loop to send high
 				{
 					u_motorByte0.bits_in_motorByte0.plateLoadMotorStep = 1; // set bit 0
 				}
@@ -1923,7 +1944,7 @@ int main()
 					u_motorByte0.bits_in_motorByte0.plateLoadMotorStep = 0; // set bit 0
 				}
 
-				if( ((counter - counterRef) % (totallength2) ) < (steplength2) && fixtureMotor)
+				if( ((counter - counterRef) % (totalStepLength2) ) < (highLength2) && fixtureMotor)
 				{
 					u_motorByte0.bits_in_motorByte0.fixtureMotorStep = 1; // set bit 1
 				}
@@ -1932,7 +1953,7 @@ int main()
 					u_motorByte0.bits_in_motorByte0.fixtureMotorStep = 0; // set bit 1
 				}
 
-				if( ((counter - counterRef) % (totallength3) ) < (steplength3) && brush1Motor)
+				if( ((counter - counterRef) % (totalStepLength3) ) < (highLength3) && brush1Motor)
 				{
 					u_motorByte0.bits_in_motorByte0.brush1MotorStep = 1; // set bit 1
 				}
@@ -1941,7 +1962,7 @@ int main()
 					u_motorByte0.bits_in_motorByte0.brush1MotorStep = 0; // set bit 1
 				}
 
-				if( ((counter - counterRef) % (totallength4) ) < (steplength4) && brush2Motor)
+				if( ((counter - counterRef) % (totalStepLength4) ) < (highLength4) && brush2Motor)
 				{
 					u_motorByte1.bits_in_motorByte1.brush2MotorStep = 1; // set bit 1
 				}
@@ -1950,7 +1971,7 @@ int main()
 					u_motorByte1.bits_in_motorByte1.brush2MotorStep = 0; // set bit 1
 				}
 
-				if( ((counter - counterRefFive) % (totallength5) ) < (steplength5) && paperTowelMotor)
+				if( ((counter - counterRefFive) % (totalStepLength5) ) < (highLength5) && paperTowelMotor)
 				{
 					u_motorByte1.bits_in_motorByte1.paperTowelMotorStep = 1; // set bit 1
 				}
@@ -1971,7 +1992,7 @@ int main()
 				i2c_write(u_outputByte1.outputByte1);*/
 
 				//determines which motors need to be sent which signals and writes the outputs and motors to the appropriate I2C expander
-				motor_and_write(counter, counterRef, counterRefFive, plateLoadMotor, fixtureMotor, brush1Motor, brush2Motor, paperTowelMotor, totallength1, totallength2, totallength3, totallength4, totallength5, steplength1, steplength2, steplength3, steplength4, steplength5);
+				motor_and_write(counter, counterRef, counterRefFive, plateLoadMotor, fixtureMotor, brush1Motor, brush2Motor, paperTowelMotor, totalStepLength1, totalStepLength2, totalStepLength3, totalStepLength4, totalStepLength5, highLength1, highLength2, highLength3, highLength4, highLength5);
 
 				counter ++;
 				delay_ms(1);
@@ -2032,7 +2053,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == LOAD && /*counter - counterRef > totallength1*plateLoadMotorLoadPlate&&*/ u_inputByte0.bits_in_inputByte0.plate == 0){
+				if(state == LOAD && /*counter - counterRef > totalStepLength1*plateLoadMotorLoadPlate&&*/ u_inputByte0.bits_in_inputByte0.plate == 0){
 					state ++;
 					counterRef = counter;
 				}
@@ -2040,7 +2061,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == FIXL && counter - counterRef > totallength2*fixtureMotorHomeFix /*&& u_inputByte0.bits_in_inputByte0.fixtureLift == 0*/){
+				if(state == FIXL && counter - counterRef > totalStepLength2*fixtureMotorHomeFix /*&& u_inputByte0.bits_in_inputByte0.fixtureLift == 0*/){
 					state ++;
 					counterRef = counter;
 				}
@@ -2052,7 +2073,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == MOVEC1 && counter - counterRef > totallength2*fixtureMotorBrush1Step /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush1 == 0*/){
+				if(state == MOVEC1 && counter - counterRef > totalStepLength2*fixtureMotorBrush1Step /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush1 == 0*/){
 					state ++;
 					counterRef = counter;
 				}
@@ -2064,14 +2085,14 @@ int main()
 					state ++;
 						counterRef = counter;
 				}
-				if(state == CLEAN1_1 && counter - counterRef > totallength2*fixtureMotorHalfPlate){
+				if(state == CLEAN1_1 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate){
 					state ++;
 					counterRef = counter;
 				}
 				if(state == B1STOP1 && counter - counterRef > pWait){
 					state ++;
 				}
-				if(state == CLEAN1_2 && counter - counterRef > totallength2*fixtureMotorHalfPlate /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush1 == 0*/){
+				if(state == CLEAN1_2 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush1 == 0*/){
 					state ++;
 					counterRef = counter;
 				}
@@ -2079,11 +2100,11 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == CLEAN1_3 && counter - counterRef > totallength2*fixtureMotorHalfPlate){
+				if(state == CLEAN1_3 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate){
 					state ++;
 					counterRef14 = counter;
 				}
-				if(state == B1STOP2 && counter - counterRef > totallength2*fixtureMotorBrush2Step /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush2*/){
+				if(state == B1STOP2 && counter - counterRef > totalStepLength2*fixtureMotorBrush2Step /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush2*/){
 					state ++;
 					counterRef = counter;
 				}
@@ -2095,7 +2116,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == CLEAN2_1 && counter - counterRef > totallength2*fixtureMotorHalfPlate){
+				if(state == CLEAN2_1 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate){
 					state ++;
 					counterRef = counter;
 				}
@@ -2103,7 +2124,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == CLEAN2_2 && counter - counterRef > totallength2*fixtureMotorHalfPlate /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush2 == 0*/){
+				if(state == CLEAN2_2 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush2 == 0*/){
 					state ++;
 					counterRef = counter;
 				}
@@ -2111,7 +2132,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == CLEAN2_3 && counter - counterRef > totallength2*fixtureMotorHalfPlate){
+				if(state == CLEAN2_3 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate){
 					state ++;
 					counterRef = counter;
 				}
@@ -2119,7 +2140,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == MOVED1 && counter - counterRef > totallength2*fixtureMotorDry1Step /*&& u_inputByte0.bits_in_inputByte0.fixtureDry1 == 0*/){
+				if(state == MOVED1 && counter - counterRef > totalStepLength2*fixtureMotorDry1Step /*&& u_inputByte0.bits_in_inputByte0.fixtureDry1 == 0*/){
 					state ++;
 					counterRef = counter;
 				}
@@ -2127,11 +2148,11 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == DRY1 && counter - counterRef > totallength2*fixtureMotorWholePlate){
+				if(state == DRY1 && counter - counterRef > totalStepLength2*fixtureMotorWholePlate){
 					state ++;
 					counterRef26 = counter;
 				}
-				if(state == D1STOP && counter - counterRef > totallength2*fixtureMotorDry2Step /*&& u_inputByte0.bits_in_inputByte0.fixtureDry2 == 0*/){
+				if(state == D1STOP && counter - counterRef > totalStepLength2*fixtureMotorDry2Step /*&& u_inputByte0.bits_in_inputByte0.fixtureDry2 == 0*/){
 					state ++;
 					counterRefFive = counter;
 				}
@@ -2143,11 +2164,11 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == DRY2 && counter - counterRef > totallength2*fixtureMotorWholePlate){
+				if(state == DRY2 && counter - counterRef > totalStepLength2*fixtureMotorWholePlate){
 					state ++;
 					counterRef30 = counter;
 				}
-				if(state == D2STOP && counter - counterRef > totallength2*fixtureMotorLoadBack /*&& u_inputByte0.bits_in_inputByte0.fixturePlate == 0*/){
+				if(state == D2STOP && counter - counterRef > totalStepLength2*fixtureMotorLoadBack /*&& u_inputByte0.bits_in_inputByte0.fixturePlate == 0*/){
 					state ++;
 					counterRef = counter;
 				}
@@ -2155,7 +2176,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == FIXH && counter - counterRef > totallength2*fixtureMotorHomeFix /*&& u_inputByte0.bits_in_inputByte0.fixtureHome == 0*/){
+				if(state == FIXH && counter - counterRef > totalStepLength2*fixtureMotorHomeFix /*&& u_inputByte0.bits_in_inputByte0.fixtureHome == 0*/){
 					state ++;
 					counterRef = counter;
 				}
@@ -2163,7 +2184,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == UNLOAD && counter - counterRef > totallength1*plateLoadMotorLoadPlate){
+				if(state == UNLOAD && counter - counterRef > totalStepLength1*plateLoadMotorLoadPlate){
 					state ++;
 					counterRef = counter;
 				}
@@ -2406,7 +2427,7 @@ int main()
 
 
 
-				/*if( ((counter - counterRef) % (totallength1) ) < (steplength1) && plateLoadMotor)  //check if it is in the right period of the loop to send high
+				/*if( ((counter - counterRef) % (totalStepLength1) ) < (highLength1) && plateLoadMotor)  //check if it is in the right period of the loop to send high
 				{
 					u_motorByte0.bits_in_motorByte0.plateLoadMotorStep = 1; // set bit 0
 				}
@@ -2415,7 +2436,7 @@ int main()
 					u_motorByte0.bits_in_motorByte0.plateLoadMotorStep = 0; // set bit 0
 				}
 
-				if( ((counter - counterRef) % (totallength2) ) < (steplength2) && fixtureMotor)
+				if( ((counter - counterRef) % (totalStepLength2) ) < (highLength2) && fixtureMotor)
 				{
 					u_motorByte0.bits_in_motorByte0.fixtureMotorStep = 1; // set bit 1
 				}
@@ -2424,7 +2445,7 @@ int main()
 					u_motorByte0.bits_in_motorByte0.fixtureMotorStep = 0; // set bit 1
 				}
 
-				if( ((counter - counterRef) % (totallength3) ) < (steplength3) && brush1Motor)
+				if( ((counter - counterRef) % (totalStepLength3) ) < (highLength3) && brush1Motor)
 				{
 					u_motorByte0.bits_in_motorByte0.brush1MotorStep = 1; // set bit 1
 				}
@@ -2433,7 +2454,7 @@ int main()
 					u_motorByte0.bits_in_motorByte0.brush1MotorStep = 0; // set bit 1
 				}
 
-				if( ((counter - counterRef) % (totallength4) ) < (steplength4) && brush2Motor)
+				if( ((counter - counterRef) % (totalStepLength4) ) < (highLength4) && brush2Motor)
 				{
 					u_motorByte1.bits_in_motorByte1.brush2MotorStep = 1; // set bit 1
 				}
@@ -2442,7 +2463,7 @@ int main()
 					u_motorByte1.bits_in_motorByte1.brush2MotorStep = 0; // set bit 1
 				}
 
-				if( ((counter - counterRefFive) % (totallength5) ) < (steplength5) && paperTowelMotor)
+				if( ((counter - counterRefFive) % (totalStepLength5) ) < (highLength5) && paperTowelMotor)
 				{
 					u_motorByte1.bits_in_motorByte1.paperTowelMotorStep = 1; // set bit 1
 				}
@@ -2463,7 +2484,7 @@ int main()
 				i2c_write(u_outputByte1.outputByte1);*/
 
 				//determines which motors need to be sent which signals and writes the outputs and motors to the appropriate I2C expander
-				motor_and_write(counter, counterRef, counterRefFive, plateLoadMotor, fixtureMotor, brush1Motor, brush2Motor, paperTowelMotor, totallength1, totallength2, totallength3, totallength4, totallength5, steplength1, steplength2, steplength3, steplength4, steplength5);
+				motor_and_write(counter, counterRef, counterRefFive, plateLoadMotor, fixtureMotor, brush1Motor, brush2Motor, paperTowelMotor, totalStepLength1, totalStepLength2, totalStepLength3, totalStepLength4, totalStepLength5, highLength1, highLength2, highLength3, highLength4, highLength5);
 
 				counter ++;
 				delay_ms(1);
@@ -2523,7 +2544,7 @@ int main()
 					state = WAIT;
 					counterRef = counter;
 				}
-				if(state == LOAD && /*counter - counterRef > totallength1*plateLoadMotorLoadPlate&&*/ u_inputByte0.bits_in_inputByte0.plate == 0){
+				if(state == LOAD && /*counter - counterRef > totalStepLength1*plateLoadMotorLoadPlate&&*/ u_inputByte0.bits_in_inputByte0.plate == 0){
 					state = WAIT;
 					counterRef = counter;
 				}
@@ -2531,7 +2552,7 @@ int main()
 					state = WAIT;
 					counterRef = counter;
 				}
-				if(state == FIXL && counter - counterRef > totallength2*fixtureMotorHomeFix /*&& u_inputByte0.bits_in_inputByte0.fixtureLift == 0*/){
+				if(state == FIXL && counter - counterRef > totalStepLength2*fixtureMotorHomeFix /*&& u_inputByte0.bits_in_inputByte0.fixtureLift == 0*/){
 					state = WAIT;
 					counterRef = counter;
 				}
@@ -2543,7 +2564,7 @@ int main()
 					state = WAIT;
 					counterRef = counter;
 				}
-				if(state == MOVEC1 && counter - counterRef > totallength2*fixtureMotorBrush1Step /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush1 == 0*/){
+				if(state == MOVEC1 && counter - counterRef > totalStepLength2*fixtureMotorBrush1Step /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush1 == 0*/){
 					state = WAIT;
 					counterRef = counter;
 				}
@@ -2555,14 +2576,14 @@ int main()
 					state = WAIT;
 						counterRef = counter;
 				}
-				if(state == CLEAN1_1 && counter - counterRef > totallength2*fixtureMotorHalfPlate){
+				if(state == CLEAN1_1 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate){
 					state = WAIT;
 					counterRef = counter;
 				}
 				if(state == B1STOP1 && counter - counterRef > pWait){
 					state = WAIT;
 				}
-				if(state == CLEAN1_2 && counter - counterRef > totallength2*fixtureMotorHalfPlate /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush1 == 0*/){
+				if(state == CLEAN1_2 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush1 == 0*/){
 					state = WAIT;
 					counterRef = counter;
 				}
@@ -2570,11 +2591,11 @@ int main()
 					state = WAIT;
 					counterRef = counter;
 				}
-				if(state == CLEAN1_3 && counter - counterRef > totallength2*fixtureMotorHalfPlate){
+				if(state == CLEAN1_3 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate){
 					state = WAIT;
 					counterRef14 = counter;
 				}
-				if(state == B1STOP2 && counter - counterRef > totallength2*fixtureMotorBrush2Step /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush2*/){
+				if(state == B1STOP2 && counter - counterRef > totalStepLength2*fixtureMotorBrush2Step /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush2*/){
 					state = WAIT;
 					counterRef = counter;
 				}
@@ -2586,7 +2607,7 @@ int main()
 					state = WAIT;
 					counterRef = counter;
 				}
-				if(state == CLEAN2_1 && counter - counterRef > totallength2*fixtureMotorHalfPlate){
+				if(state == CLEAN2_1 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate){
 					state = WAIT;
 					counterRef = counter;
 				}
@@ -2594,7 +2615,7 @@ int main()
 					state = WAIT;
 					counterRef = counter;
 				}
-				if(state == CLEAN2_2 && counter - counterRef > totallength2*fixtureMotorHalfPlate /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush2 == 0*/){
+				if(state == CLEAN2_2 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush2 == 0*/){
 					state = WAIT;
 					counterRef = counter;
 				}
@@ -2602,7 +2623,7 @@ int main()
 					state = WAIT;
 					counterRef = counter;
 				}
-				if(state == CLEAN2_3 && counter - counterRef > totallength2*fixtureMotorHalfPlate){
+				if(state == CLEAN2_3 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate){
 					state = WAIT;
 					counterRef = counter;
 				}
@@ -2610,7 +2631,7 @@ int main()
 					state = WAIT;
 					counterRef = counter;
 				}
-				if(state == MOVED1 && counter - counterRef > totallength2*fixtureMotorDry1Step /*&& u_inputByte0.bits_in_inputByte0.fixtureDry1 == 0*/){
+				if(state == MOVED1 && counter - counterRef > totalStepLength2*fixtureMotorDry1Step /*&& u_inputByte0.bits_in_inputByte0.fixtureDry1 == 0*/){
 					state = WAIT;
 					counterRef = counter;
 				}
@@ -2618,11 +2639,11 @@ int main()
 					state = WAIT;
 					counterRef = counter;
 				}
-				if(state == DRY1 && counter - counterRef > totallength2*fixtureMotorWholePlate){
+				if(state == DRY1 && counter - counterRef > totalStepLength2*fixtureMotorWholePlate){
 					state = WAIT;
 					counterRef26 = counter;
 				}
-				if(state == D1STOP && counter - counterRef > totallength2*fixtureMotorDry2Step /*&& u_inputByte0.bits_in_inputByte0.fixtureDry2 == 0*/){
+				if(state == D1STOP && counter - counterRef > totalStepLength2*fixtureMotorDry2Step /*&& u_inputByte0.bits_in_inputByte0.fixtureDry2 == 0*/){
 					state = WAIT;
 					counterRefFive = counter;
 				}
@@ -2634,11 +2655,11 @@ int main()
 					state = WAIT;
 					counterRef = counter;
 				}
-				if(state == DRY2 && counter - counterRef > totallength2*fixtureMotorWholePlate){
+				if(state == DRY2 && counter - counterRef > totalStepLength2*fixtureMotorWholePlate){
 					state = WAIT;
 					counterRef30 = counter;
 				}
-				if(state == D2STOP && counter - counterRef > totallength2*fixtureMotorLoadBack /*&& u_inputByte0.bits_in_inputByte0.fixturePlate == 0*/){
+				if(state == D2STOP && counter - counterRef > totalStepLength2*fixtureMotorLoadBack /*&& u_inputByte0.bits_in_inputByte0.fixturePlate == 0*/){
 					state = WAIT;
 					counterRef = counter;
 				}
@@ -2646,7 +2667,7 @@ int main()
 					state = WAIT;
 					counterRef = counter;
 				}
-				if(state == FIXH && counter - counterRef > totallength2*fixtureMotorHomeFix /*&& u_inputByte0.bits_in_inputByte0.fixtureHome == 0*/){
+				if(state == FIXH && counter - counterRef > totalStepLength2*fixtureMotorHomeFix /*&& u_inputByte0.bits_in_inputByte0.fixtureHome == 0*/){
 					state = WAIT;
 					counterRef = counter;
 				}
@@ -2654,7 +2675,7 @@ int main()
 					state = WAIT;
 					counterRef = counter;
 				}
-				if(state == UNLOAD && counter - counterRef > totallength1*plateLoadMotorLoadPlate){
+				if(state == UNLOAD && counter - counterRef > totalStepLength1*plateLoadMotorLoadPlate){
 					state = WAIT;
 					counterRef = counter;
 				}
@@ -2900,7 +2921,7 @@ int main()
 
 
 
-				/*if( ((counter - counterRef) % (totallength1) ) < (steplength1) && plateLoadMotor)  //check if it is in the right period of the loop to send high
+				/*if( ((counter - counterRef) % (totalStepLength1) ) < (highLength1) && plateLoadMotor)  //check if it is in the right period of the loop to send high
 				{
 					u_motorByte0.bits_in_motorByte0.plateLoadMotorStep = 1; // set bit 0
 				}
@@ -2909,7 +2930,7 @@ int main()
 					u_motorByte0.bits_in_motorByte0.plateLoadMotorStep = 0; // set bit 0
 				}
 
-				if( ((counter - counterRef) % (totallength2) ) < (steplength2) && fixtureMotor)
+				if( ((counter - counterRef) % (totalStepLength2) ) < (highLength2) && fixtureMotor)
 				{
 					u_motorByte0.bits_in_motorByte0.fixtureMotorStep = 1; // set bit 1
 				}
@@ -2918,7 +2939,7 @@ int main()
 					u_motorByte0.bits_in_motorByte0.fixtureMotorStep = 0; // set bit 1
 				}
 
-				if( ((counter - counterRef) % (totallength3) ) < (steplength3) && brush1Motor)
+				if( ((counter - counterRef) % (totalStepLength3) ) < (highLength3) && brush1Motor)
 				{
 					u_motorByte0.bits_in_motorByte0.brush1MotorStep = 1; // set bit 1
 				}
@@ -2927,7 +2948,7 @@ int main()
 					u_motorByte0.bits_in_motorByte0.brush1MotorStep = 0; // set bit 1
 				}
 
-				if( ((counter - counterRef) % (totallength4) ) < (steplength4) && brush2Motor)
+				if( ((counter - counterRef) % (totalStepLength4) ) < (highLength4) && brush2Motor)
 				{
 					u_motorByte1.bits_in_motorByte1.brush2MotorStep = 1; // set bit 1
 				}
@@ -2936,7 +2957,7 @@ int main()
 					u_motorByte1.bits_in_motorByte1.brush2MotorStep = 0; // set bit 1
 				}
 
-				if( ((counter - counterRefFive) % (totallength5) ) < (steplength5) && paperTowelMotor)
+				if( ((counter - counterRefFive) % (totalStepLength5) ) < (highLength5) && paperTowelMotor)
 				{
 					u_motorByte1.bits_in_motorByte1.paperTowelMotorStep = 1; // set bit 1
 				}
@@ -2957,7 +2978,7 @@ int main()
 				i2c_write(u_outputByte1.outputByte1);*/
 
 				//determines which motors need to be sent which signals and writes the outputs and motors to the appropriate I2C expander
-				motor_and_write(counter, counterRef, counterRefFive, plateLoadMotor, fixtureMotor, brush1Motor, brush2Motor, paperTowelMotor, totallength1, totallength2, totallength3, totallength4, totallength5, steplength1, steplength2, steplength3, steplength4, steplength5);
+				motor_and_write(counter, counterRef, counterRefFive, plateLoadMotor, fixtureMotor, brush1Motor, brush2Motor, paperTowelMotor, totalStepLength1, totalStepLength2, totalStepLength3, totalStepLength4, totalStepLength5, highLength1, highLength2, highLength3, highLength4, highLength5);
 
 				counter ++;
 				delay_ms(1);
@@ -2982,10 +3003,10 @@ int main()
 }
 
 
-void motor_and_write(int counter, int counterRef, int counterRefFive, int plateLoadMotor, int fixtureMotor, int brush1Motor, int brush2Motor, int paperTowelMotor, int totallength1, int totallength2, int totallength3, int totallength4, int totallength5, int steplength1, int steplength2, int steplength3, int steplength4, int steplength5)
+void motor_and_write(int counter, int counterRef, int counterRefFive, int plateLoadMotor, int fixtureMotor, int brush1Motor, int brush2Motor, int paperTowelMotor, int totalStepLength1, int totalStepLength2, int totalStepLength3, int totalStepLength4, int totalStepLength5, int highLength1, int highLength2, int highLength3, int highLength4, int highLength5)
 {
 //motor and write
-	if( ((counter - counterRef) % (totallength1) ) < (steplength1) && plateLoadMotor)  //check if it is in the right period of the loop to send high
+	if( ((counter - counterRef) % (totalStepLength1) ) < (highLength1) && plateLoadMotor)  //check if it is in the right period of the loop to send high
 	{
 		u_motorByte0.bits_in_motorByte0.plateLoadMotorStep = 1; // set bit 0
 	}
@@ -2993,7 +3014,7 @@ void motor_and_write(int counter, int counterRef, int counterRefFive, int plateL
 	{
 		u_motorByte0.bits_in_motorByte0.plateLoadMotorStep = 0; // set bit 0
 	}
-		if( ((counter - counterRef) % (totallength2) ) < (steplength2) && fixtureMotor)
+		if( ((counter - counterRef) % (totalStepLength2) ) < (highLength2) && fixtureMotor)
 	{
 		u_motorByte0.bits_in_motorByte0.fixtureMotorStep = 1; // set bit 1
 	}
@@ -3001,7 +3022,7 @@ void motor_and_write(int counter, int counterRef, int counterRefFive, int plateL
 	{
 		u_motorByte0.bits_in_motorByte0.fixtureMotorStep = 0; // set bit 1
 	}
-	if( ((counter - counterRef) % (totallength3) ) < (steplength3) && brush1Motor)
+	if( ((counter - counterRef) % (totalStepLength3) ) < (highLength3) && brush1Motor)
 	{
 		u_motorByte0.bits_in_motorByte0.brush1MotorStep = 1; // set bit 1
 	}
@@ -3010,7 +3031,7 @@ void motor_and_write(int counter, int counterRef, int counterRefFive, int plateL
 		u_motorByte0.bits_in_motorByte0.brush1MotorStep = 0; // set bit 1
 	}
 
-	if( ((counter - counterRef) % (totallength4) ) < (steplength4) && brush2Motor)
+	if( ((counter - counterRef) % (totalStepLength4) ) < (highLength4) && brush2Motor)
 	{
 		u_motorByte1.bits_in_motorByte1.brush2MotorStep = 1; // set bit 1
 	}
@@ -3019,7 +3040,7 @@ void motor_and_write(int counter, int counterRef, int counterRefFive, int plateL
 		u_motorByte1.bits_in_motorByte1.brush2MotorStep = 0; // set bit 1
 	}
 
-	if( ((counter - counterRefFive) % (totallength5) ) < (steplength5) && paperTowelMotor)
+	if( ((counter - counterRefFive) % (totalStepLength5) ) < (highLength5) && paperTowelMotor)
 	{
 		u_motorByte1.bits_in_motorByte1.paperTowelMotorStep = 1; // set bit 1
 	}
