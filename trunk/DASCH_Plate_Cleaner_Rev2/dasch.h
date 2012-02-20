@@ -123,10 +123,10 @@ union u_motorByte0_tag{
 	struct {
 		unsigned int plateLoadMotorStep : 1;
 		unsigned int plateLoadMotorDir : 1;
-		unsigned int plateLoadMotorDrop : 1;
+		unsigned int plateLoadMotorHighPower : 1;
 		unsigned int fixtureMotorStep : 1;
 		unsigned int fixtureMotorDir : 1;
-		unsigned int fixtureMotorDrop : 1;
+		unsigned int fixtureMotorHighPower : 1;
 		unsigned int brush1MotorStep : 1;
 		unsigned int brush1MotorDir : 1;
 	} bits_in_motorByte0;
@@ -136,13 +136,13 @@ union u_motorByte0_tag{
 
 union u_motorByte1_tag{
 	struct {
-		unsigned int brush1MotorDrop : 1;
+		unsigned int brush1MotorHighPower : 1;
 		unsigned int brush2MotorStep : 1;
 		unsigned int brush2MotorDir : 1;
-		unsigned int brush2MotorDrop : 1;
+		unsigned int brush2MotorHighPower : 1;
 		unsigned int paperTowelMotorStep : 1;
 		unsigned int paperTowelMotorDir : 1;
-		unsigned int paperTowelMotorDrop : 1;
+		unsigned int paperTowelMotorHighPower : 1;
 		unsigned int mNull17 : 1;
 	} bits_in_motorByte1;
 	char motorByte1;
