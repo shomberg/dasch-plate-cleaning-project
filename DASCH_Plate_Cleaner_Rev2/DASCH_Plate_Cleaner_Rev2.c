@@ -409,7 +409,7 @@ int main()
 								state = DONEM;
 							}
 							else{
-								u_motorByte0.bits_in_motorByte0.plateLoadMotorDrop = 1;
+								u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 1;
 								OrangutanLCD::print("MOTORS");
 								OrangutanLCD::gotoXY(0,1);
 							}
@@ -428,27 +428,27 @@ int main()
 							switch (state) {
 								case M1_B + 1:
 									OrangutanLCD::gotoXY(0,1);
-									u_motorByte0.bits_in_motorByte0.plateLoadMotorDrop = 0;
-									u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 1;
+									u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 0;
+									u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 									break;
 								case M2_B + 1:
 									OrangutanLCD::gotoXY(0,1);
-									u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 0;
-									u_motorByte1.bits_in_motorByte1.brush1MotorDrop = 1;
+									u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 0;
+									u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 1;
 									break;
 								case M3_B + 1:
 									OrangutanLCD::gotoXY(0,1);
-									u_motorByte1.bits_in_motorByte1.brush1MotorDrop = 0;
-									u_motorByte1.bits_in_motorByte1.brush2MotorDrop = 1;
+									u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 0;
+									u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 1;
 									break;
 								case M4_B + 1:
 									OrangutanLCD::gotoXY(0,1);
-									u_motorByte1.bits_in_motorByte1.brush2MotorDrop = 0;
-									u_motorByte1.bits_in_motorByte1.paperTowelMotorDrop = 1;
+									u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 0;
+									u_motorByte1.bits_in_motorByte1.paperTowelMotorHighPower = 1;
 									break;
 								case M5_B + 1:
 									OrangutanLCD::clear();
-									u_motorByte1.bits_in_motorByte1.paperTowelMotorDrop = 0;
+									u_motorByte1.bits_in_motorByte1.paperTowelMotorHighPower = 0;
 									state = DONEM;
 									paperTowelMotor = 0;
 									break;
@@ -695,7 +695,7 @@ int main()
 				}
 				if(state == 31 && button == 0){
 					OrangutanLCD::clear();
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorDrop = 1;
+					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 1;
 					button = 1;
 					if(submode == 1){
 						state = -1;
@@ -718,8 +718,8 @@ int main()
 				}
 				if(state == 33 && button == 0){
 					OrangutanLCD::gotoXY(0,1);
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorDrop = 0;
-					u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 1;
+					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 0;
+					u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					button = 1;
 					state = 34;
 					counterRef = counter;
@@ -735,8 +735,8 @@ int main()
 				}
 				if(state == 35 && button == 0){
 					OrangutanLCD::gotoXY(0,1);
-					u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 0;
-					u_motorByte1.bits_in_motorByte1.brush1MotorDrop = 1;
+					u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 0;
+					u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 1;
 					button = 1;
 					state = 36;
 					counterRef = counter;
@@ -752,8 +752,8 @@ int main()
 				}
 				if(state == 37 && button == 0){
 					OrangutanLCD::gotoXY(0,1);
-					u_motorByte1.bits_in_motorByte1.brush1MotorDrop = 0;
-					u_motorByte1.bits_in_motorByte1.brush2MotorDrop = 1;
+					u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 0;
+					u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 1;
 					button = 1;
 					state = 38;
 					counterRef = counter;
@@ -769,8 +769,8 @@ int main()
 				}
 				if(state == 39 && button == 0){
 					OrangutanLCD::gotoXY(0,1);
-					u_motorByte1.bits_in_motorByte1.brush2MotorDrop = 0;
-					u_motorByte1.bits_in_motorByte1.paperTowelMotorDrop = 1;
+					u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 0;
+					u_motorByte1.bits_in_motorByte1.paperTowelMotorHighPower = 1;
 					button = 1;
 					state = 40;
 					counterRef = counter;
@@ -786,7 +786,7 @@ int main()
 				}
 				if(state == 41 && button == 0){
 					OrangutanLCD::clear();
-					u_motorByte1.bits_in_motorByte1.paperTowelMotorDrop = 0;
+					u_motorByte1.bits_in_motorByte1.paperTowelMotorHighPower = 0;
 					button = 1;
 					state = -1;
 					print = 0;
@@ -1165,15 +1165,17 @@ int main()
 		OrangutanLCD::clear();
 		OrangutanLCD::print("CYCLE:");
 
-		//u_motorByte0.bits_in_motorByte0.plateLoadMotorDrop = 1;
-		u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 1;
-		/*u_motorByte1.bits_in_motorByte1.brush1MotorDrop = 1;
-		u_motorByte1.bits_in_motorByte1.brush2MotorDrop = 1;
-		u_motorByte1.bits_in_motorByte1.paperTowelMotorDrop = 1;*/
+		//u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 1;
+		u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
+		/*u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 1;
+		u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 1;
+		u_motorByte1.bits_in_motorByte1.paperTowelMotorHighPower = 1;*/
 
 		if(!OrangutanDigital::isInputHigh(IO_D1) && !OrangutanDigital::isInputHigh(IO_D2)){
 			OrangutanLCD::gotoXY(7,0);
 			OrangutanLCD::print("FIRST B");
+			OrangutanLCD::print("DEBUG");
+			fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			while(state != DONER)
 			{
 				i2c_start(I2C3+I2C_WRITE);						// first start condition (write)
@@ -1223,7 +1225,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == LOAD && /*counter - counterRef > totalStepLength1*plateLoadMotorLoadPlate&&*/ u_inputByte0.bits_in_inputByte0.plate == 0){
+				if(state == LOAD && counter - counterRef > totalStepLength1*plateLoadMotorLoadPlate/*&& u_inputByte0.bits_in_inputByte0.plate == 0*/){
 					state ++;
 					counterRef = counter;
 				}
@@ -1338,10 +1340,10 @@ int main()
 					if(u_inputByte0.bits_in_inputByte0.fixtureHome == 1){
 						u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  //********* 0 is used as fixture backward ?cc?, 1 as forward ?c? **********
 						u_outputByte0.bits_in_outputByte0.raiseFixture = 0;
-						fixtureMotor = 1;
+						u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					}
 					else{
-						u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 0;
+						u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 0;
 						fixtureMotor = 0;
 						u_outputByte0.bits_in_outputByte0.lowerFixture = 0;
 						u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
@@ -1362,8 +1364,8 @@ int main()
 						u_outputByte0.bits_in_outputByte0.blowerPulse = 1;
 					}
 					plateLoadMotor = 1;
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorDir = 1;  //****** dir1 ******
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorDrop = 1;
+					u_motorByte0.bits_in_motorByte0.plateLoadMotorDir = 0;  //****** dir1 ******
+					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 1;
 					u_outputByte0.bits_in_outputByte0.plateStop = 0;
 					break;
 				case RAISEL1:
@@ -1372,30 +1374,30 @@ int main()
 					u_outputByte0.bits_in_outputByte0.raiseFixture = 0;
 					u_outputByte0.bits_in_outputByte0.plateStop = 1;
 						plateLoadMotor = 0;
-					u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 1;
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorDrop = 0;
+					u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
+					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 0;
 					break;
 				case FIXL:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ****** dir2 *******
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case LOWERL1:
 						fixtureMotor = 0;
-					u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 0;
+					u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 0;
 					u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
 					break;
 				case LOWERL2:
 					u_outputByte0.bits_in_outputByte0.lowerFixture = 0;
-					u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 1;
+					u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 				//*********************************************
 					break;
 				case MOVEC1:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ******* dir2 *******
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case B1SET:
 					fixtureMotor = 0;
-					u_motorByte1.bits_in_motorByte1.brush1MotorDrop = 1;
+					u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 1;
 					u_motorByte0.bits_in_motorByte0.brush1MotorDir = 0;  // ******* dir3 *******
 					/*if(print6 == 1){
 						OrangutanLCD::clear();
@@ -1409,7 +1411,7 @@ int main()
 					u_outputByte0.bits_in_outputByte0.brush1Raise = 0;
 					break;
 				case CLEAN1_1:
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
 					break;
 				case B1STOP1:
@@ -1420,7 +1422,7 @@ int main()
 					break;
 				case CLEAN1_2:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ******* dir2 *******
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case B1START2:
 					fixtureMotor = 0;
@@ -1430,7 +1432,7 @@ int main()
 					u_outputByte0.bits_in_outputByte0.brush1Raise = 0;
 					break;
 				case CLEAN1_3:
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case B1STOP2:
 					brush1Motor = 0;
@@ -1442,8 +1444,8 @@ int main()
 				//*************************************************
 				case MOVED1:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ******* dir2 *******
-					fixtureMotor = 1;
-					u_motorByte1.bits_in_motorByte1.brush1MotorDrop = 0;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
+					u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 0;
 					break;
 				case D1START:
 					fixtureMotor = 0;
@@ -1456,14 +1458,14 @@ int main()
 					break;
 				case DRY1:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case D1STOP:
 					u_outputByte1.bits_in_outputByte1.airKnife = 1;
 					break;
 				case D2START:
 					fixtureMotor = 0;
-					u_motorByte1.bits_in_motorByte1.paperTowelMotorDrop = 1;
+					u_motorByte1.bits_in_motorByte1.paperTowelMotorHighPower = 1;
 					u_motorByte1.bits_in_motorByte1.paperTowelMotorDir = 0;
 					paperTowelMotor = 1;
 					break;
@@ -1476,11 +1478,11 @@ int main()
 					u_outputByte1.bits_in_outputByte1.ptRaise = 0;
 					break;
 				case DRY2:
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case D2STOP:
 					paperTowelMotor = 0;
-						u_motorByte1.bits_in_motorByte1.paperTowelMotorDrop = 0;
+						u_motorByte1.bits_in_motorByte1.paperTowelMotorHighPower = 0;
 					u_outputByte1.bits_in_outputByte1.ptRaise = 1;
 					u_outputByte1.bits_in_outputByte1.ptLower = 0;
 					break;
@@ -1491,12 +1493,12 @@ int main()
 					break;
 				case FIXH:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case LOWERL3:
 					fixtureMotor = 0;
-					u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 0;
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorDrop = 1;
+					u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 0;
+					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 1;
 					u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
 					u_outputByte0.bits_in_outputByte0.lowerFixture = 0;
 					break;
@@ -1506,7 +1508,7 @@ int main()
 					break;
 				case END:
 					plateLoadMotor = 0;
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorDrop = 0;
+					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 0;
 					if(print35 == 1){
 						OrangutanLCD::clear();
 						OrangutanLCD::print("END OF CYCLE");
@@ -1587,6 +1589,8 @@ int main()
 		else if(OrangutanDigital::isInputHigh(IO_D1) && !OrangutanDigital::isInputHigh(IO_D2)){
 			OrangutanLCD::gotoXY(7,0);
 			OrangutanLCD::print("SECOND B");
+			OrangutanLCD::print("DEBUG");
+			fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			while(state != DONER)
 			{
 				i2c_start(I2C3+I2C_WRITE);						// first start condition (write)
@@ -1636,7 +1640,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == LOAD && /*counter - counterRef > totalStepLength1*plateLoadMotorLoadPlate&&*/ u_inputByte0.bits_in_inputByte0.plate == 0){
+				if(state == LOAD && counter - counterRef > totalStepLength1*plateLoadMotorLoadPlate/*&& u_inputByte0.bits_in_inputByte0.plate == 0*/){
 					state ++;
 					counterRef = counter;
 				}
@@ -1644,11 +1648,11 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == FIXL && counter - counterRef > totalStepLength2*fixtureMotorHomeFix /*&& u_inputByte0.bits_in_inputByte0.fixtureLift == 0*/){
+				if(state == FIXL && /*counter - counterRef > totalStepLength2*fixtureMotorHomeFix &&*/ u_inputByte0.bits_in_inputByte0.fixtureLift == 0){
 					state ++;
 					counterRef = counter;
 				}
-				if(state == LOWERL1 && counter - counterRef > 1000 /*&& u_inputByte0.bits_in_inputByte0.fixturePlate == 0*/){
+				if(state == LOWERL1 && /*counter - counterRef > 1000 &&*/ u_inputByte0.bits_in_inputByte0.fixturePlate == 0){
 					state ++;
 					counterRef = counter;
 				}
@@ -1720,15 +1724,15 @@ int main()
 					state ++;
 					counterRef30 = counter;
 				}
-				if(state == D2STOP && counter - counterRef > totalStepLength2*fixtureMotorLoadBack /*&& u_inputByte0.bits_in_inputByte0.fixturePlate == 0*/){
+				if(state == D2STOP && /*counter - counterRef > totalStepLength2*fixtureMotorLoadBack &&*/ u_inputByte0.bits_in_inputByte0.fixturePlate == 0){
 					state ++;
 					counterRef = counter;
 				}
-				if(state == RAISEL2 && counter - counterRef > 1000 /*&& u_inputByte0.bits_in_inputByte0.fixtureLift == 0*/){
+				if(state == RAISEL2 && /*counter - counterRef > 1000 &&*/ u_inputByte0.bits_in_inputByte0.fixtureLift == 0){
 					state ++;
 					counterRef = counter;
 				}
-				if(state == FIXH && counter - counterRef > totalStepLength2*fixtureMotorHomeFix /*&& u_inputByte0.bits_in_inputByte0.fixtureHome == 0*/){
+				if(state == FIXH && /*counter - counterRef > totalStepLength2*fixtureMotorHomeFix &&*/ u_inputByte0.bits_in_inputByte0.fixtureHome == 0){
 					state ++;
 					counterRef = counter;
 				}
@@ -1752,10 +1756,10 @@ int main()
 					if(u_inputByte0.bits_in_inputByte0.fixtureHome == 1){
 						u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  //********* 0 is used as fixture backward ?cc?, 1 as forward ?c? **********
 						u_outputByte0.bits_in_outputByte0.raiseFixture = 0;
-						fixtureMotor = 1;
+						u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					}
 					else{
-						u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 0;
+						u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 0;
 						fixtureMotor = 0;
 						u_outputByte0.bits_in_outputByte0.lowerFixture = 0;
 						u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
@@ -1776,8 +1780,8 @@ int main()
 						u_outputByte0.bits_in_outputByte0.blowerPulse = 1;
 					}
 					plateLoadMotor = 1;
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorDir = 1;  //****** dir1 ******
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorDrop = 1;
+					u_motorByte0.bits_in_motorByte0.plateLoadMotorDir = 0;  //****** dir1 ******
+					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 1;
 					u_outputByte0.bits_in_outputByte0.plateStop = 0;
 					break;
 				case RAISEL1:
@@ -1786,32 +1790,32 @@ int main()
 					u_outputByte0.bits_in_outputByte0.raiseFixture = 0;
 					u_outputByte0.bits_in_outputByte0.plateStop = 1;
 						plateLoadMotor = 0;
-					u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 1;
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorDrop = 0;
+					u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
+					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 0;
 					break;
 				case FIXL:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ****** dir2 *******
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case LOWERL1:
 						fixtureMotor = 0;
-					u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 0;
+					u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 0;
 					u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
 					break;
 				case LOWERL2:
 					u_outputByte0.bits_in_outputByte0.lowerFixture = 0;
-					u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 1;
+					u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				//*********************************************
 				case MOVEC1:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ******* dir2 *******
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 				
 					break;
 				//*************************** may need to reverse order depending on dry station 1 positioning ***************************
 				case B2SET:
 					fixtureMotor = 0;
-					u_motorByte1.bits_in_motorByte1.brush2MotorDrop = 1;
+					u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 1;
 					u_motorByte1.bits_in_motorByte1.brush2MotorDir = 0;  // ******* dir4 *******
 					/*if(print15 == 1){
 						OrangutanLCD::clear();
@@ -1825,7 +1829,7 @@ int main()
 					u_outputByte0.bits_in_outputByte0.brush2Raise = 0;
 					break;
 				case CLEAN2_1:
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					//u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
 					break;
 				case B2STOP1:
@@ -1836,7 +1840,7 @@ int main()
 					break;
 				case CLEAN2_2:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case B2START2:
 					fixtureMotor = 0;
@@ -1846,20 +1850,20 @@ int main()
 					u_outputByte0.bits_in_outputByte0.brush2Raise = 0;
 					break;
 				case CLEAN2_3:
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case B2STOP2:
 					brush2Motor = 0;
 					fixtureMotor = 0;
 					u_outputByte1.bits_in_outputByte1.brush2Lower = 0;
 					u_outputByte0.bits_in_outputByte0.brush2Raise = 1;
-					u_motorByte1.bits_in_motorByte1.brush2MotorDrop = 0;
+					u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 0;
 					break;
 				//*************************************************
 				case MOVED1:
 					//u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ******* dir2 *******
-					fixtureMotor = 1;
-					//u_motorByte1.bits_in_motorByte1.brush1MotorDrop = 0;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
+					//u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 0;
 					break;
 				case D1START:
 					fixtureMotor = 0;
@@ -1872,14 +1876,14 @@ int main()
 					break;
 				case DRY1:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case D1STOP:
 					u_outputByte1.bits_in_outputByte1.airKnife = 1;
 					break;
 				case D2START:
 					fixtureMotor = 0;
-					u_motorByte1.bits_in_motorByte1.paperTowelMotorDrop = 1;
+					u_motorByte1.bits_in_motorByte1.paperTowelMotorHighPower = 1;
 					u_motorByte1.bits_in_motorByte1.paperTowelMotorDir = 0;
 					paperTowelMotor = 1;
 					break;
@@ -1892,11 +1896,11 @@ int main()
 					u_outputByte1.bits_in_outputByte1.ptRaise = 0;
 					break;
 				case DRY2:
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case D2STOP:
 					paperTowelMotor = 0;
-						u_motorByte1.bits_in_motorByte1.paperTowelMotorDrop = 0;
+						u_motorByte1.bits_in_motorByte1.paperTowelMotorHighPower = 0;
 					u_outputByte1.bits_in_outputByte1.ptRaise = 1;
 					u_outputByte1.bits_in_outputByte1.ptLower = 0;
 					break;
@@ -1907,12 +1911,12 @@ int main()
 					break;
 				case FIXH:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case LOWERL3:
 					fixtureMotor = 0;
-					u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 0;
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorDrop = 1;
+					u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 0;
+					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 1;
 					u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
 					u_outputByte0.bits_in_outputByte0.lowerFixture = 0;
 					break;
@@ -1922,7 +1926,7 @@ int main()
 					break;
 				case END:
 					plateLoadMotor = 0;
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorDrop = 0;
+					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 0;
 					if(print35 == 1){
 						OrangutanLCD::clear();
 						OrangutanLCD::print("END OF CYCLE");
@@ -2003,6 +2007,8 @@ int main()
 		else if(!OrangutanDigital::isInputHigh(IO_D1) && OrangutanDigital::isInputHigh(IO_D2)){
 			OrangutanLCD::gotoXY(7,0);
 			OrangutanLCD::print("BOTH B");
+			OrangutanLCD::print("DEBUG");
+			fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			while(state != DONER)
 			{
 				i2c_start(I2C3+I2C_WRITE);						// first start condition (write)
@@ -2013,6 +2019,8 @@ int main()
   	 	     	i2c_stop();								// set stop conditon = release bus 		
 				
 				if(state != INIT){
+					OrangutanLCD::gotoXY(6,1);
+					OrangutanLCD::print("       ");
 					OrangutanLCD::gotoXY(0,1);
 					OrangutanLCD::print("STATE ");
 					OrangutanLCD::print(state);
@@ -2053,7 +2061,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == LOAD && /*counter - counterRef > totalStepLength1*plateLoadMotorLoadPlate&&*/ u_inputByte0.bits_in_inputByte0.plate == 0){
+				if(state == LOAD && counter - counterRef > totalStepLength1*plateLoadMotorLoadPlate/*&& u_inputByte0.bits_in_inputByte0.plate == 0*/){
 					state ++;
 					counterRef = counter;
 				}
@@ -2061,11 +2069,11 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == FIXL && counter - counterRef > totalStepLength2*fixtureMotorHomeFix /*&& u_inputByte0.bits_in_inputByte0.fixtureLift == 0*/){
+				if(state == FIXL && /*counter - counterRef > totalStepLength2*fixtureMotorHomeFix &&*/ u_inputByte0.bits_in_inputByte0.fixtureLift == 0){
 					state ++;
 					counterRef = counter;
 				}
-				if(state == LOWERL1 && counter - counterRef > 1000 /*&& u_inputByte0.bits_in_inputByte0.fixturePlate == 0*/){
+				if(state == LOWERL1 && /*counter - counterRef > 1000 &&*/ u_inputByte0.bits_in_inputByte0.fixturePlate == 0){
 					state ++;
 					counterRef = counter;
 				}
@@ -2168,7 +2176,7 @@ int main()
 					state ++;
 					counterRef30 = counter;
 				}
-				if(state == D2STOP && counter - counterRef > totalStepLength2*fixtureMotorLoadBack /*&& u_inputByte0.bits_in_inputByte0.fixturePlate == 0*/){
+				if(state == D2STOP && /*counter - counterRef > totalStepLength2*fixtureMotorLoadBack &&*/ u_inputByte0.bits_in_inputByte0.fixturePlate == 0){
 					state ++;
 					counterRef = counter;
 				}
@@ -2176,7 +2184,7 @@ int main()
 					state ++;
 					counterRef = counter;
 				}
-				if(state == FIXH && counter - counterRef > totalStepLength2*fixtureMotorHomeFix /*&& u_inputByte0.bits_in_inputByte0.fixtureHome == 0*/){
+				if(state == FIXH && /*counter - counterRef > totalStepLength2*fixtureMotorHomeFix &&*/ u_inputByte0.bits_in_inputByte0.fixtureHome == 0){
 					state ++;
 					counterRef = counter;
 				}
@@ -2200,10 +2208,10 @@ int main()
 					if(u_inputByte0.bits_in_inputByte0.fixtureHome == 1){
 						u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  //********* 0 is used as fixture backward ?cc?, 1 as forward ?c? **********
 						u_outputByte0.bits_in_outputByte0.raiseFixture = 0;
-						fixtureMotor = 1;
+						u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					}
 					else{
-						u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 0;
+						u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 0;
 						fixtureMotor = 0;
 						u_outputByte0.bits_in_outputByte0.lowerFixture = 0;
 						u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
@@ -2224,8 +2232,8 @@ int main()
 						u_outputByte0.bits_in_outputByte0.blowerPulse = 1;
 					}
 					plateLoadMotor = 1;
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorDir = 1;  //****** dir1 ******
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorDrop = 1;
+					u_motorByte0.bits_in_motorByte0.plateLoadMotorDir = 0;  //****** dir1 ******
+					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 1;
 					u_outputByte0.bits_in_outputByte0.plateStop = 0;
 					break;
 				case RAISEL1:
@@ -2234,30 +2242,30 @@ int main()
 					u_outputByte0.bits_in_outputByte0.raiseFixture = 0;
 					u_outputByte0.bits_in_outputByte0.plateStop = 1;
 						plateLoadMotor = 0;
-					u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 1;
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorDrop = 0;
+					u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
+					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 0;
 					break;
 				case FIXL:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ****** dir2 *******
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case LOWERL1:
 						fixtureMotor = 0;
-					u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 0;
+					u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 0;
 					u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
 					break;
 				case LOWERL2:
 					u_outputByte0.bits_in_outputByte0.lowerFixture = 0;
-					u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 1;
+					u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				//*********************************************
 				case MOVEC1:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ******* dir2 *******
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case B1SET:
 					fixtureMotor = 0;
-					u_motorByte1.bits_in_motorByte1.brush1MotorDrop = 1;
+					u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 1;
 					u_motorByte0.bits_in_motorByte0.brush1MotorDir = 0;  // ******* dir3 *******
 					/*if(print6 == 1){
 						OrangutanLCD::clear();
@@ -2271,7 +2279,9 @@ int main()
 					u_outputByte0.bits_in_outputByte0.brush1Raise = 0;
 					break;
 				case CLEAN1_1:
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
+					OrangutanLCD::gotoXY(0,1);
+					OrangutanLCD::print("SET MOTOR HIGH");
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
 					break;
 				case B1STOP1:
@@ -2282,7 +2292,7 @@ int main()
 					break;
 				case CLEAN1_2:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ******* dir2 *******
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case B1START2:
 					fixtureMotor = 0;
@@ -2292,7 +2302,7 @@ int main()
 					u_outputByte0.bits_in_outputByte0.brush1Raise = 0;
 					break;
 				case CLEAN1_3:
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case B1STOP2:
 					brush1Motor = 0;
@@ -2304,7 +2314,7 @@ int main()
 				//*************************** may need to reverse order depending on dry station 1 positioning ***************************
 				case B2SET:
 					fixtureMotor = 0;
-					u_motorByte1.bits_in_motorByte1.brush2MotorDrop = 1;
+					u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 1;
 					u_motorByte1.bits_in_motorByte1.brush2MotorDir = 0;  // ******* dir4 *******
 					/*if(print15 == 1){
 						OrangutanLCD::clear();
@@ -2318,7 +2328,7 @@ int main()
 					u_outputByte0.bits_in_outputByte0.brush2Raise = 0;
 					break;
 				case CLEAN2_1:
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					//u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
 					break;
 				case B2STOP1:
@@ -2329,7 +2339,7 @@ int main()
 					break;
 				case CLEAN2_2:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case B2START2:
 					fixtureMotor = 0;
@@ -2339,20 +2349,20 @@ int main()
 					u_outputByte0.bits_in_outputByte0.brush2Raise = 0;
 					break;
 				case CLEAN2_3:
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case B2STOP2:
 					brush2Motor = 0;
 					fixtureMotor = 0;
 					u_outputByte1.bits_in_outputByte1.brush2Lower = 0;
 					u_outputByte0.bits_in_outputByte0.brush2Raise = 1;
-					u_motorByte1.bits_in_motorByte1.brush2MotorDrop = 0;
+					u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 0;
 					break;
 				//*************************************************
 				case MOVED1:
 					//u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ******* dir2 *******
-					fixtureMotor = 1;
-					//u_motorByte1.bits_in_motorByte1.brush1MotorDrop = 0;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
+					//u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 0;
 					break;
 				case D1START:
 					fixtureMotor = 0;
@@ -2365,14 +2375,14 @@ int main()
 					break;
 				case DRY1:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case D1STOP:
 					u_outputByte1.bits_in_outputByte1.airKnife = 1;
 					break;
 				case D2START:
 					fixtureMotor = 0;
-					u_motorByte1.bits_in_motorByte1.paperTowelMotorDrop = 1;
+					u_motorByte1.bits_in_motorByte1.paperTowelMotorHighPower = 1;
 					u_motorByte1.bits_in_motorByte1.paperTowelMotorDir = 0;
 					paperTowelMotor = 1;
 					break;
@@ -2385,11 +2395,11 @@ int main()
 					u_outputByte1.bits_in_outputByte1.ptRaise = 0;
 					break;
 				case DRY2:
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case D2STOP:
 					paperTowelMotor = 0;
-						u_motorByte1.bits_in_motorByte1.paperTowelMotorDrop = 0;
+						u_motorByte1.bits_in_motorByte1.paperTowelMotorHighPower = 0;
 					u_outputByte1.bits_in_outputByte1.ptRaise = 1;
 					u_outputByte1.bits_in_outputByte1.ptLower = 0;
 					break;
@@ -2400,12 +2410,12 @@ int main()
 					break;
 				case FIXH:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case LOWERL3:
 					fixtureMotor = 0;
-					u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 0;
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorDrop = 1;
+					u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 0;
+					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 1;
 					u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
 					u_outputByte0.bits_in_outputByte0.lowerFixture = 0;
 					break;
@@ -2415,7 +2425,7 @@ int main()
 					break;
 				case END:
 					plateLoadMotor = 0;
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorDrop = 0;
+					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 0;
 					if(print35 == 1){
 						OrangutanLCD::clear();
 						OrangutanLCD::print("END OF CYCLE");
@@ -2494,6 +2504,7 @@ int main()
 		else if(OrangutanDigital::isInputHigh(IO_D1) && OrangutanDigital::isInputHigh(IO_D2)){
 			OrangutanLCD::gotoXY(7,0);
 			OrangutanLCD::print("DEBUG");
+			fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			while(state != DONER)
 			{
 				i2c_start(I2C3+I2C_WRITE);						// first start condition (write)
@@ -2544,7 +2555,7 @@ int main()
 					state = WAIT;
 					counterRef = counter;
 				}
-				if(state == LOAD && /*counter - counterRef > totalStepLength1*plateLoadMotorLoadPlate&&*/ u_inputByte0.bits_in_inputByte0.plate == 0){
+				if(state == LOAD && counter - counterRef > totalStepLength1*plateLoadMotorLoadPlate/*&& u_inputByte0.bits_in_inputByte0.plate == 0*/){
 					state = WAIT;
 					counterRef = counter;
 				}
@@ -2552,11 +2563,11 @@ int main()
 					state = WAIT;
 					counterRef = counter;
 				}
-				if(state == FIXL && counter - counterRef > totalStepLength2*fixtureMotorHomeFix /*&& u_inputByte0.bits_in_inputByte0.fixtureLift == 0*/){
+				if(state == FIXL && /*counter - counterRef > totalStepLength2*fixtureMotorHomeFix &&*/ u_inputByte0.bits_in_inputByte0.fixtureLift == 0){
 					state = WAIT;
 					counterRef = counter;
 				}
-				if(state == LOWERL1 && counter - counterRef > 1000 /*&& u_inputByte0.bits_in_inputByte0.fixturePlate == 0*/){
+				if(state == LOWERL1 && /*counter - counterRef > 1000 &&*/ u_inputByte0.bits_in_inputByte0.fixturePlate == 0){
 					state = WAIT;
 					counterRef = counter;
 				}
@@ -2659,15 +2670,15 @@ int main()
 					state = WAIT;
 					counterRef30 = counter;
 				}
-				if(state == D2STOP && counter - counterRef > totalStepLength2*fixtureMotorLoadBack /*&& u_inputByte0.bits_in_inputByte0.fixturePlate == 0*/){
+				if(state == D2STOP && /*counter - counterRef > totalStepLength2*fixtureMotorLoadBack &&*/ u_inputByte0.bits_in_inputByte0.fixturePlate == 0){
 					state = WAIT;
 					counterRef = counter;
 				}
-				if(state == RAISEL2 && counter - counterRef > 1000 /*&& u_inputByte0.bits_in_inputByte0.fixtureLift == 0*/){
+				if(state == RAISEL2 && /*counter - counterRef > 1000 &&*/ u_inputByte0.bits_in_inputByte0.fixtureLift == 0){
 					state = WAIT;
 					counterRef = counter;
 				}
-				if(state == FIXH && counter - counterRef > totalStepLength2*fixtureMotorHomeFix /*&& u_inputByte0.bits_in_inputByte0.fixtureHome == 0*/){
+				if(state == FIXH && /*counter - counterRef > totalStepLength2*fixtureMotorHomeFix &&*/ u_inputByte0.bits_in_inputByte0.fixtureHome == 0){
 					state = WAIT;
 					counterRef = counter;
 				}
@@ -2690,14 +2701,20 @@ int main()
 				//state actions
 						
 			switch (state){
+				case WAIT:
+					plateLoadMotor = 0;
+					fixtureMotor = 0;
+					brush1Motor = 0;
+					brush2Motor = 0;
+					paperTowelMotor = 0;
+					break;
 				case INIT:
 					if(u_inputByte0.bits_in_inputByte0.fixtureHome == 1){
 						u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  //********* 0 is used as fixture backward ?cc?, 1 as forward ?c? **********
 						u_outputByte0.bits_in_outputByte0.raiseFixture = 0;
-						fixtureMotor = 1;
 					}
 					else{
-						u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 0;
+						u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 0;
 						fixtureMotor = 0;
 						u_outputByte0.bits_in_outputByte0.lowerFixture = 0;
 						u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
@@ -2718,8 +2735,8 @@ int main()
 						u_outputByte0.bits_in_outputByte0.blowerPulse = 1;
 					}
 					plateLoadMotor = 1;
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorDir = 1;  //****** dir1 ******
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorDrop = 1;
+					u_motorByte0.bits_in_motorByte0.plateLoadMotorDir = 0;  //****** dir1 ******
+					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 1;
 					u_outputByte0.bits_in_outputByte0.plateStop = 0;
 					break;
 				case RAISEL1:
@@ -2727,31 +2744,31 @@ int main()
 					u_outputByte0.bits_in_outputByte0.lowerFixture = 1;
 					u_outputByte0.bits_in_outputByte0.raiseFixture = 0;
 					u_outputByte0.bits_in_outputByte0.plateStop = 1;
-						plateLoadMotor = 0;
-					u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 1;
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorDrop = 0;
+					plateLoadMotor = 0;
+					u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
+					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 0;
 					break;
 				case FIXL:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ****** dir2 *******
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case LOWERL1:
 						fixtureMotor = 0;
-					u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 0;
+					u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 0;
 					u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
 					break;
 				case LOWERL2:
 					u_outputByte0.bits_in_outputByte0.lowerFixture = 0;
-					u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 1;
+					u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				//*********************************************
 				case MOVEC1:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ******* dir2 *******
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case B1SET:
 					fixtureMotor = 0;
-					u_motorByte1.bits_in_motorByte1.brush1MotorDrop = 1;
+					u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 1;
 					u_motorByte0.bits_in_motorByte0.brush1MotorDir = 0;  // ******* dir3 *******
 					/*if(print6 == 1){
 						OrangutanLCD::clear();
@@ -2765,7 +2782,8 @@ int main()
 					u_outputByte0.bits_in_outputByte0.brush1Raise = 0;
 					break;
 				case CLEAN1_1:
-					fixtureMotor = 1;
+					brush1Motor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
 					break;
 				case B1STOP1:
@@ -2776,7 +2794,7 @@ int main()
 					break;
 				case CLEAN1_2:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ******* dir2 *******
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case B1START2:
 					fixtureMotor = 0;
@@ -2786,7 +2804,8 @@ int main()
 					u_outputByte0.bits_in_outputByte0.brush1Raise = 0;
 					break;
 				case CLEAN1_3:
-					fixtureMotor = 1;
+					brush1Motor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case B1STOP2:
 					brush1Motor = 0;
@@ -2798,7 +2817,7 @@ int main()
 				//*************************** may need to reverse order depending on dry station 1 positioning ***************************
 				case B2SET:
 					fixtureMotor = 0;
-					u_motorByte1.bits_in_motorByte1.brush2MotorDrop = 1;
+					u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 1;
 					u_motorByte1.bits_in_motorByte1.brush2MotorDir = 0;  // ******* dir4 *******
 					/*if(print15 == 1){
 						OrangutanLCD::clear();
@@ -2812,7 +2831,8 @@ int main()
 					u_outputByte0.bits_in_outputByte0.brush2Raise = 0;
 					break;
 				case CLEAN2_1:
-					fixtureMotor = 1;
+					brush2Motor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					//u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
 					break;
 				case B2STOP1:
@@ -2823,7 +2843,7 @@ int main()
 					break;
 				case CLEAN2_2:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case B2START2:
 					fixtureMotor = 0;
@@ -2833,20 +2853,21 @@ int main()
 					u_outputByte0.bits_in_outputByte0.brush2Raise = 0;
 					break;
 				case CLEAN2_3:
-					fixtureMotor = 1;
+					brush2Motor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case B2STOP2:
 					brush2Motor = 0;
 					fixtureMotor = 0;
 					u_outputByte1.bits_in_outputByte1.brush2Lower = 0;
 					u_outputByte0.bits_in_outputByte0.brush2Raise = 1;
-					u_motorByte1.bits_in_motorByte1.brush2MotorDrop = 0;
+					u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 0;
 					break;
 				//*************************************************
 				case MOVED1:
 					//u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ******* dir2 *******
-					fixtureMotor = 1;
-					//u_motorByte1.bits_in_motorByte1.brush1MotorDrop = 0;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
+					//u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 0;
 					break;
 				case D1START:
 					fixtureMotor = 0;
@@ -2859,18 +2880,20 @@ int main()
 					break;
 				case DRY1:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case D1STOP:
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					u_outputByte1.bits_in_outputByte1.airKnife = 1;
 					break;
 				case D2START:
 					fixtureMotor = 0;
-					u_motorByte1.bits_in_motorByte1.paperTowelMotorDrop = 1;
+					u_motorByte1.bits_in_motorByte1.paperTowelMotorHighPower = 1;
 					u_motorByte1.bits_in_motorByte1.paperTowelMotorDir = 0;
 					paperTowelMotor = 1;
 					break;
 				case D2RAISE:
+					paperTowelMotor = 1;
 					/*if(print28 == 1){
 							OrangutanLCD::clear();
 						OrangutanLCD::print("FINAL DRY");
@@ -2879,11 +2902,13 @@ int main()
 					u_outputByte1.bits_in_outputByte1.ptRaise = 0;
 					break;
 				case DRY2:
-					fixtureMotor = 1;
+					paperTowelMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case D2STOP:
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					paperTowelMotor = 0;
-						u_motorByte1.bits_in_motorByte1.paperTowelMotorDrop = 0;
+						u_motorByte1.bits_in_motorByte1.paperTowelMotorHighPower = 0;
 					u_outputByte1.bits_in_outputByte1.ptRaise = 1;
 					u_outputByte1.bits_in_outputByte1.ptLower = 0;
 					break;
@@ -2894,12 +2919,12 @@ int main()
 					break;
 				case FIXH:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;
-					fixtureMotor = 1;
+					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 					break;
 				case LOWERL3:
 					fixtureMotor = 0;
-					u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 0;
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorDrop = 1;
+					u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 0;
+					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 1;
 					u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
 					u_outputByte0.bits_in_outputByte0.lowerFixture = 0;
 					break;
@@ -2909,7 +2934,7 @@ int main()
 					break;
 				case END:
 					plateLoadMotor = 0;
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorDrop = 0;
+					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 0;
 					if(print35 == 1){
 						OrangutanLCD::clear();
 						OrangutanLCD::print("END OF CYCLE");
@@ -2986,11 +3011,11 @@ int main()
 		}
 
 		}
-		u_motorByte0.bits_in_motorByte0.plateLoadMotorDrop = 0;
-		u_motorByte0.bits_in_motorByte0.fixtureMotorDrop = 0;
-		u_motorByte1.bits_in_motorByte1.brush1MotorDrop = 0;
-		u_motorByte1.bits_in_motorByte1.brush2MotorDrop = 0;
-		u_motorByte1.bits_in_motorByte1.paperTowelMotorDrop = 0;
+		u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 0;
+		u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 0;
+		u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 0;
+		u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 0;
+		u_motorByte1.bits_in_motorByte1.paperTowelMotorHighPower = 0;
 		
 		i2c_start(I2C1+I2C_WRITE);
 		i2c_write(0x2);
