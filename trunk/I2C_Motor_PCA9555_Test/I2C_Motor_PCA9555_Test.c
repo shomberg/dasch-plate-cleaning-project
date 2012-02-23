@@ -159,7 +159,7 @@ int main()
 			//OrangutanLCD::print( (int) u_byte0.byte0);
 			//OrangutanLCD::print(" ");
 
-			if( (j % (totallength0/delaytime) ) < (steplength0/delaytime) )  //check if it is in the right period of the loop to send high
+			/*if( (j % (totallength0/delaytime) ) < (steplength0/delaytime) )  //check if it is in the right period of the loop to send high
 			{
 				//motorouts[0] = 1;
 				u_byte0.bits_in_byte0.bit_0 = 1; // set bit 0
@@ -168,7 +168,7 @@ int main()
 			{
 				//motorouts[0] = 0;
 				u_byte0.bits_in_byte0.bit_0 = 0; // set bit 0
-			}
+			}*/
 
 			if( (j % (totallength1/delaytime) ) < (steplength1/delaytime) )
 			{
@@ -192,7 +192,7 @@ int main()
 				u_byte0.bits_in_byte0.bit_6 = 0; // set bit 1
 			}
 
-			if( (j % (totallength3/delaytime) ) < (steplength3/delaytime) )
+			/*if( (j % (totallength3/delaytime) ) < (steplength3/delaytime) )
 			{
 				//motorouts[0] = 1;
 				u_byte1.bits_in_byte1.bit_11 = 1; // set bit 1
@@ -212,7 +212,7 @@ int main()
 			{
 				//motorouts[0] = 0;
 				u_byte1.bits_in_byte1.bit_14 = 0; // set bit 1
-			}
+			}*/
 
 			i2c_write(0x2);									// write command byte
 			i2c_write(u_byte0.byte0);                       // write first byte of output

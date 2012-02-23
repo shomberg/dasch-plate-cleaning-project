@@ -61,6 +61,8 @@ enum maintenance_states
 	M4_B,
 	M5_F,
 	M5_B,
+	M2_AND_M3,
+	M2_AND_M4,
 	DONEM		//Stop loop
 };
 
@@ -69,7 +71,7 @@ enum maintenance_modes
 	INPUT = 0,
 	OUTPUT,
 	MOTOR,
-	ALL
+	MULTI
 };
 
 enum run_states
