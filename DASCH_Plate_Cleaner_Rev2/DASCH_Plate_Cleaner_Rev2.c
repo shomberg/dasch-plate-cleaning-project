@@ -177,7 +177,7 @@ int main()
 	OrangutanLCD::clear();
 	OrangutanLCD::print("DASCH CLEANER 2");
 	OrangutanLCD::gotoXY(0,1);
-	OrangutanLCD::print("REV: 25");
+	OrangutanLCD::print("REV: 26");
 	delay_ms(2000);
 	
 	OrangutanLCD::clear();
@@ -242,31 +242,6 @@ int main()
 			
 			//Repeats until user presses and releases button - waiting for user to select a mode
 			while(!buttonTriggered){
-				/*if(stateButton == NONE && OrangutanDigital::isInputHigh(IO_D0)){
-					counterRefPush = counter;
-					stateButton = PRESSED;
-				}
-				if(stateButton == PRESSED){
-					if(counter - counterRefPush > 15){
-						if(!OrangutanDigital::isInputHigh(IO_D0)){
-							counterRefRel = counter;
-							stateButton = RELEASED;
-						}
-					}
-					else if(!OrangutanDigital::isInputHigh(IO_D0)){
-						stateButton = NONE;
-					}
-				}
-				if(stateButton == RELEASED){
-					if(OrangutanDigital::isInputHigh(IO_D0)){
-						stateButton = PRESSED;
-						counterRefPush = counter;
-					}
-					else if(counter - counterRefRel > 15){
-						button = 0;
-						stateButton = NONE;
-					}
-				}*/
 				buttonTriggered = button_debounce(counter, &stateButton);//, &counterRefPush, &counterRefRel, &stateButton);
 				counter++;
 				delay_ms(1);
@@ -285,45 +260,19 @@ int main()
 				u_inputByte0.inputByte0 = i2c_readAck();				// read first byte and send Ack, requesting more
    		     	u_inputByte1.inputByte1 = i2c_readNak();				// read second byte and send stop condition
   	 	     	i2c_stop();								// set stop conditon = release bus 		
-				
-				/*if(stateButton == 0 && OrangutanDigital::isInputHigh(IO_D0)){
-					counterRefPush = counter;
-					stateButton = 1;
-				}
-				if(stateButton == 1){
-					if(counter - counterRefPush > 15){
-						if(!OrangutanDigital::isInputHigh(IO_D0)){
-							counterRefRel = counter;
-							stateButton = 2;
-						}
-					}
-					else if(!OrangutanDigital::isInputHigh(IO_D0)){
-						stateButton = 0;
-					}
-				}
-				if(stateButton == 2){
-					if(OrangutanDigital::isInputHigh(IO_D0)){
-						stateButton = 1;
-						counterRefPush = counter;
-					}
-					else if(counter - counterRefRel > 15){
-						button = 0;
-						stateButton = 0;
-					}
-				}*/
 
 				//User presses button for each state transition
 				buttonTriggered = button_debounce(counter, &stateButton);//, &counterRefPush, &counterRefRel, &stateButton);
 				
 
 				/*Switches mode to whichever is currently selected with submode selection switch
-				Modes are:	Input only 		--     starts testing each input individually and ends after testing all inputs
-							Output only 	--     starts testing each output individually and ends after testing all outputs
-							Motor only		--     starts testing each motor individually and ends after testing all motors
-							All				--     starts testing each input, then output, then motor, and ends after testing each
+				Modes are:	Input 			--     starts testing each input individually and ends after testing all inputs
+							Output 			--     starts testing each output individually and ends after testing all outputs
+							Motor			--     starts testing each motor individually and ends after testing all motors
+							Multi motor		--     starts testing each the fixture motor with each of the brush motors
 
 				*/
-				if(!OrangutanDigital::isInputHigh(IO_D1) && !OrangutanDigital::isInputHigh(IO_D2) && submode != 0){
+				if(!OrangutanDigital::isInputHigh(IO_D1) && !OrangutanDigital::isInputHigh(IO_D2) && submode != INPUT){
 					state = S0;
 					submode = INPUT;
 					OrangutanLCD::clear();
@@ -332,7 +281,7 @@ int main()
 					print = 0;
 					switched = true;
 				}
-				if(OrangutanDigital::isInputHigh(IO_D1) && !OrangutanDigital::isInputHigh(IO_D2) && submode != 1){
+				if(OrangutanDigital::isInputHigh(IO_D1) && !OrangutanDigital::isInputHigh(IO_D2) && submode != OUTPUT){
 					state = O0_ON;
 					submode = OUTPUT;
 					OrangutanLCD::clear();
@@ -341,22 +290,25 @@ int main()
 					print = 0;
 					switched = true;
 				}
-				if(!OrangutanDigital::isInputHigh(IO_D1) && OrangutanDigital::isInputHigh(IO_D2) && submode != 2){
+				if(!OrangutanDigital::isInputHigh(IO_D1) && OrangutanDigital::isInputHigh(IO_D2) && submode != MOTOR){
 					state = M1_F;
 					submode = MOTOR;
 					OrangutanLCD::clear();
 					OrangutanLCD::print("MOTORS ");
 					OrangutanLCD::gotoXY(0,1);
 					print = 0;
+					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 1;
 					switched = true;
 				}
-				if(OrangutanDigital::isInputHigh(IO_D1) && OrangutanDigital::isInputHigh(IO_D2) && submode != 3){
-					state = S0;
-					submode = ALL;
+				if(OrangutanDigital::isInputHigh(IO_D1) && OrangutanDigital::isInputHigh(IO_D2) && submode != MULTI){
+					state = M2_AND_M3;
+					submode = MULTI;
 					OrangutanLCD::clear();
-					OrangutanLCD::print("INPUTS ");
+					OrangutanLCD::print("MULTI ");
 					OrangutanLCD::gotoXY(0,1);
 					print = 0;
+					u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
+					u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 1;
 					switched = true;
 				}
 				if(switched){
@@ -367,6 +319,8 @@ int main()
 					paperTowelMotor = 0;
 					u_outputByte0.outputByte0 = 255;  // reset outputByte0
 					u_outputByte1.outputByte1 = 255;  // reset outputByte1
+					u_motorByte0.motorByte0 = 0;	  // reset motorByte0
+					u_motorByte1.motorByte1 = 0;	  // reset motorByte1
 					switched = false;
 				}
 
@@ -380,15 +334,9 @@ int main()
 						state ++;
 						counterRef = counter;
 						print = 0;
-						if(state == S7 + 1){		//accounts for possible end of maintenance mode after sensors
+						if(state == S7 + 1){		//accounts for end of maintenance mode after sensors
 							OrangutanLCD::clear();
-							if(submode == 0){
-								state = DONEM;
-							}
-							else{
-								OrangutanLCD::print("OUTPUTS");
-								OrangutanLCD::gotoXY(0,1);
-							}
+							state = DONEM;
 						}
 					}
 					else if(state <= O11_OFF){		//if it's doing the outputs
@@ -403,19 +351,12 @@ int main()
 						state ++;
 						counterRef = counter;
 						print = 0;
-						if(state == O11_OFF + 1){	//accounts for possible end of maintenance mode after outputs
+						if(state == O11_OFF + 1){	//accounts for end of maintenance mode after outputs
 							OrangutanLCD::clear();
-							if(submode == 1){
-								state = DONEM;
-							}
-							else{
-								u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 1;
-								OrangutanLCD::print("MOTORS");
-								OrangutanLCD::gotoXY(0,1);
-							}
+							state = DONEM;
 						}
 					}
-					else{							//if it's doing the motors
+					else if(state <= M5_B){							//if it's doing the motors
 						buttonTriggered = false;
 						state ++;
 						counterRef = counter;
@@ -455,343 +396,28 @@ int main()
 							}
 						}
 					}
-				}
-				
-				/*if(state == 0 && button == 0){
-					OrangutanLCD::gotoXY(0,1);
-					button = 1;
-					state = 1;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 1 && button == 0){
-					OrangutanLCD::gotoXY(0,1);
-					button = 1;
-					state = 2;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 2 && button == 0){
-					OrangutanLCD::gotoXY(0,1);
-					button = 1;
-					state = 3;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 3 && button == 0){
-					OrangutanLCD::gotoXY(0,1);
-					button = 1;
-					state = 4;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 4 && button == 0){
-					OrangutanLCD::gotoXY(0,1);
-					button = 1;
-					state = 5;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 5 && button == 0){
-					OrangutanLCD::gotoXY(0,1);
-					button = 1;
-					state = 6;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 6 && button == 0){
-					OrangutanLCD::gotoXY(0,1);
-					button = 1;
-					state = 7;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 7 && button == 0){
-					OrangutanLCD::clear();
-					button = 1;
-					if(submode == 0){
-						state = -1;
-					}
 					else{
-						state = 8;
-						OrangutanLCD::print("OUTPUTS");
-						OrangutanLCD::gotoXY(0,1);
+						buttonTriggered = false;
+						state ++;
+						counterRef = counter;
+						print = 0;
+						switch(state){
+							case M2_AND_M3 + 1:
+								u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 0;
+								u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
+								u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 1;
+								break;
+							case M2_AND_M4 + 1:
+								OrangutanLCD::clear();
+								u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 0;
+								u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 0;
+								state = DONEM;
+								fixtureMotor = 0;
+								brush2Motor = 0;
+								break;
+						}
 					}
-					counterRef = counter;
-					print = 0;
 				}
-				if(state == 8 && button == 0){
-					OrangutanLCD::gotoXY(13,1);
-					OrangutanLCD::print("OFF");
-					state = 9;
-					button = 1;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 9 && button == 0){
-					OrangutanLCD::gotoXY(0,1);
-					button = 1;
-					state = 10;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 10 && button == 0){
-					OrangutanLCD::gotoXY(13,1);
-					OrangutanLCD::print("OFF");
-					button = 1;
-					state = 11;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 11 && button == 0){
-					OrangutanLCD::gotoXY(0,1);
-					button = 1;
-					state = 12;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 12 && button == 0){
-					OrangutanLCD::gotoXY(13,1);
-					OrangutanLCD::print("OFF");
-					button = 1;
-					state = 13;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 13 && button == 0){
-					OrangutanLCD::gotoXY(0,1);
-					button = 1;
-					state = 14;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 14 && button == 0){
-					OrangutanLCD::gotoXY(13,1);
-					OrangutanLCD::print("OFF");
-					button = 1;
-					state = 15;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 15 && button == 0){
-					OrangutanLCD::gotoXY(0,1);
-					button = 1;
-					state = 16;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 16 && button == 0){
-					OrangutanLCD::gotoXY(13,1);
-					OrangutanLCD::print("OFF");
-					button = 1;
-					state = 17;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 17 && button == 0){
-					OrangutanLCD::gotoXY(0,1);
-					button = 1;
-					state = 18;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 18 && button == 0){
-					OrangutanLCD::gotoXY(13,1);
-					OrangutanLCD::print("OFF");
-					button = 1;
-					state = 19;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 19 && button == 0){
-					OrangutanLCD::gotoXY(0,1);
-					button = 1;
-					state = 20;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 20 && button == 0){
-					OrangutanLCD::gotoXY(13,1);
-					OrangutanLCD::print("OFF");
-					button = 1;
-					state = 21;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 21 && button == 0){
-					OrangutanLCD::gotoXY(0,1);
-					button = 1;
-					state = 22;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 22 && button == 0){
-					OrangutanLCD::gotoXY(13,1);
-					OrangutanLCD::print("OFF");
-					button = 1;
-					state = 23;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 23 && button == 0){
-					OrangutanLCD::gotoXY(0,1);
-					button = 1;
-					state = 24;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 24 && button == 0){
-					OrangutanLCD::gotoXY(13,1);
-					OrangutanLCD::print("OFF");
-					button = 1;
-					state = 25;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 25 && button == 0){
-					OrangutanLCD::gotoXY(0,1);
-					button = 1;
-					state = 26;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 26 && button == 0){
-					OrangutanLCD::gotoXY(13,1);
-					OrangutanLCD::print("OFF");
-					button = 1;
-					state = 27;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 27 && button == 0){
-					OrangutanLCD::gotoXY(0,1);
-					button = 1;
-					state = 28;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 28 && button == 0){
-					OrangutanLCD::gotoXY(13,1);
-					OrangutanLCD::print("OFF");
-					button = 1;
-					state = 29;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 29 && button == 0){
-					OrangutanLCD::gotoXY(0,1);
-					button = 1;
-					state = 30;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 30 && button == 0){
-					OrangutanLCD::gotoXY(13,1);
-					OrangutanLCD::print("OFF");
-					button = 1;
-					state = 31;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 31 && button == 0){
-					OrangutanLCD::clear();
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 1;
-					button = 1;
-					if(submode == 1){
-						state = -1;
-					}
-					else{
-						state = 32;
-						OrangutanLCD::print("MOTORS");
-						OrangutanLCD::gotoXY(0,1);
-					}
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 32 && button == 0){
-					OrangutanLCD::gotoXY(11,1);
-					OrangutanLCD::print("BACK ");
-					button = 1;
-					state = 33;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 33 && button == 0){
-					OrangutanLCD::gotoXY(0,1);
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 0;
-					u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
-					button = 1;
-					state = 34;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 34 && button == 0){
-					OrangutanLCD::gotoXY(11,1);
-					OrangutanLCD::print("BACK ");
-					button = 1;
-					state = 35;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 35 && button == 0){
-					OrangutanLCD::gotoXY(0,1);
-					u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 0;
-					u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 1;
-					button = 1;
-					state = 36;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 36 && button == 0){
-					OrangutanLCD::gotoXY(11,1);
-					OrangutanLCD::print("BACK ");
-					button = 1;
-					state = 37;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 37 && button == 0){
-					OrangutanLCD::gotoXY(0,1);
-					u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 0;
-					u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 1;
-					button = 1;
-					state = 38;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 38 && button == 0){
-					OrangutanLCD::gotoXY(11,1);
-					OrangutanLCD::print("BACK ");
-					button = 1;
-					state = 39;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 39 && button == 0){
-					OrangutanLCD::gotoXY(0,1);
-					u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 0;
-					u_motorByte1.bits_in_motorByte1.paperTowelMotorHighPower = 1;
-					button = 1;
-					state = 40;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 40 && button == 0){
-					OrangutanLCD::gotoXY(11,1);
-					OrangutanLCD::print("BACK ");
-					button = 1;
-					state = 41;
-					counterRef = counter;
-					print = 0;
-				}
-				if(state == 41 && button == 0){
-					OrangutanLCD::clear();
-					u_motorByte1.bits_in_motorByte1.paperTowelMotorHighPower = 0;
-					button = 1;
-					state = -1;
-					print = 0;
-					paperTowelMotor = 0;
-				}*/
 
 				//state actions
 				switch (state) {
@@ -1055,68 +681,26 @@ int main()
 						u_motorByte1.bits_in_motorByte1.paperTowelMotorDir = 1;
 						paperTowelMotor =  1;
 						break;
+					case M2_AND_M3:
+						if(print == 0){
+							OrangutanLCD::print("FIXTURE AND BRUSH1");
+							print = 1;
+						}
+						fixtureMotor = 1;
+						brush1Motor = 1;
+						break;
+					case M2_AND_M4:
+						if(print == 0){
+							OrangutanLCD::print("FIXTURE AND BRUSH2");
+							print = 1;
+						}
+						fixtureMotor = 1;
+						brush1Motor = 0;
+						brush2Motor = 1;
 				}
 
 				//determines which motors need to be sent which signals and writes the outputs and motors to the appropriate I2C expander
 				motor_and_write(counter, counterRef, counterRefFive, plateLoadMotor, fixtureMotor, brush1Motor, brush2Motor, paperTowelMotor, totalStepLength1, totalStepLength2, totalStepLength3, totalStepLength4, totalStepLength5, highLength1, highLength2, highLength3, highLength4, highLength5);
-
-
-
-				/*if( ((counter - counterRef) % (totalStepLength1) ) < (highLength1) && plateLoadMotor)  //check if it is in the right period of the loop to send high
-				{
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorStep = 1; // set bit 0
-				}
-				else
-				{
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorStep = 0; // set bit 0
-				}
-
-				if( ((counter - counterRef) % (totalStepLength2) ) < (highLength2) && fixtureMotor)
-				{
-					u_motorByte0.bits_in_motorByte0.fixtureMotorStep = 1; // set bit 1
-				}
-				else
-				{
-					u_motorByte0.bits_in_motorByte0.fixtureMotorStep = 0; // set bit 1
-				}
-
-				if( ((counter - counterRef) % (totalStepLength3) ) < (highLength3) && brush1Motor)
-				{
-					u_motorByte0.bits_in_motorByte0.brush1MotorStep = 1; // set bit 1
-				}
-				else
-				{
-					u_motorByte0.bits_in_motorByte0.brush1MotorStep = 0; // set bit 1
-				}
-
-				if( ((counter - counterRef) % (totalStepLength4) ) < (highLength4) && brush2Motor)
-				{
-					u_motorByte1.bits_in_motorByte1.brush2MotorStep = 1; // set bit 1
-				}
-				else
-				{
-					u_motorByte1.bits_in_motorByte1.brush2MotorStep = 0; // set bit 1
-				}
-
-				if( ((counter - counterRefFive) % (totalStepLength5) ) < (highLength5) && paperTowelMotor)
-				{
-					u_motorByte1.bits_in_motorByte1.paperTowelMotorStep = 1; // set bit 1
-				}
-				else
-				{
-					u_motorByte1.bits_in_motorByte1.paperTowelMotorStep = 0; // set bit 1
-				}
-
-				i2c_start(I2C1+I2C_WRITE);
-				i2c_write(0x2);									// write command byte
-				i2c_write(u_motorByte0.motorByte0);                       // write first byte of output
-       	 		i2c_write(u_motorByte1.motorByte1);                       // write second byte of output
-       		 	i2c_stop();                            // set stop conditon = release bus
-
-				i2c_start(I2C2+I2C_WRITE);
-				i2c_write(0x2);
-				i2c_write(u_outputByte0.outputByte0);
-				i2c_write(u_outputByte1.outputByte1);*/
 
 				counter ++;
 				delay_ms(1);
@@ -1131,31 +715,6 @@ int main()
 		OrangutanLCD::print("SELECT CYCLE");
 		//Repeats until user presses and releases button - waiting for user to select a mode
 		while(!buttonTriggered){
-			/*if(stateButton == NONE && OrangutanDigital::isInputHigh(IO_D0)){
-				counterRefPush = counter;
-				stateButton = PRESSED;
-			}
-			if(stateButton == PRESSED){
-				if(counter - counterRefPush > 15){
-					if(!OrangutanDigital::isInputHigh(IO_D0)){
-						counterRefRel = counter;
-						stateButton = RELEASED;
-					}
-				}
-				else if(!OrangutanDigital::isInputHigh(IO_D0)){
-					stateButton = NONE;
-				}
-			}
-			if(stateButton == RELEASED){
-				if(OrangutanDigital::isInputHigh(IO_D0)){
-					stateButton = PRESSED;
-					counterRefPush = counter;
-				}
-				else if(counter - counterRefRel > 15){
-					button = 0;
-					stateButton = NONE;
-				}
-			}*/
 			buttonTriggered = button_debounce(counter, &stateButton);//, &counterRefPush, &counterRefRel, &stateButton);
 			counter++;
 			delay_ms(1);
@@ -1165,11 +724,7 @@ int main()
 		OrangutanLCD::clear();
 		OrangutanLCD::print("CYCLE:");
 
-		//u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 1;
 		u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
-		/*u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 1;
-		u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 1;
-		u_motorByte1.bits_in_motorByte1.paperTowelMotorHighPower = 1;*/
 
 		if(!OrangutanDigital::isInputHigh(IO_D1) && !OrangutanDigital::isInputHigh(IO_D2)){
 			OrangutanLCD::gotoXY(7,0);
@@ -1191,31 +746,7 @@ int main()
 					OrangutanLCD::print(state);
 				}
 
-				/*if(stateButton == 0 && OrangutanDigital::isInputHigh(IO_D0)){
-					counterRefPush = counter;
-					stateButton = 1;
-				}
-				if(stateButton == 1){
-					if(counter - counterRefPush > 15){
-						if(!OrangutanDigital::isInputHigh(IO_D0)){
-							counterRefRel = counter;
-							stateButton = 2;
-						}
-					}
-					else if(!OrangutanDigital::isInputHigh(IO_D0)){
-						stateButton = 0;
-					}
-				}
-				if(stateButton == 2){
-					if(OrangutanDigital::isInputHigh(IO_D0)){
-						stateButton = 1;
-						counterRefPush = counter;
-					}
-					else if(counter - counterRefRel > 15){
-						button = 0;
-						stateButton = 0;
-					}
-				}*/
+				
 				buttonTriggered = button_debounce(counter, &stateButton);//, &counterRefPush, &counterRefRel, &stateButton);
 
 				//state transitions
@@ -1355,7 +886,6 @@ int main()
 					}
 					break;
 				case LOAD:
-					//OrangutanLCD::clear();
 					u_outputByte0.bits_in_outputByte0.ACPower = 0;
 					if((counter % 200) < 100){
 						u_outputByte0.bits_in_outputByte0.blowerPulse = 0;
@@ -1450,11 +980,6 @@ int main()
 				case D1START:
 					fixtureMotor = 0;
 					u_outputByte1.bits_in_outputByte1.airKnife = 0;
-						/*if(print24 == 1){
-						OrangutanLCD::clear();
-						OrangutanLCD::print("DRY AIR");
-						print24 = 0;
-					}*/
 					break;
 				case DRY1:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
@@ -1470,11 +995,6 @@ int main()
 					paperTowelMotor = 1;
 					break;
 				case D2RAISE:
-					/*if(print28 == 1){
-							OrangutanLCD::clear();
-						OrangutanLCD::print("FINAL DRY");
-						print28 = 0;
-						}*/
 					u_outputByte1.bits_in_outputByte1.ptRaise = 0;
 					break;
 				case DRY2:
@@ -1517,66 +1037,6 @@ int main()
 					break;
 			}
 
-
-
-
-
-				/*if( ((counter - counterRef) % (totalStepLength1) ) < (highLength1) && plateLoadMotor)  //check if it is in the right period of the loop to send high
-				{
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorStep = 1; // set bit 0
-				}
-				else
-				{
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorStep = 0; // set bit 0
-				}
-
-				if( ((counter - counterRef) % (totalStepLength2) ) < (highLength2) && fixtureMotor)
-				{
-					u_motorByte0.bits_in_motorByte0.fixtureMotorStep = 1; // set bit 1
-				}
-				else
-				{
-					u_motorByte0.bits_in_motorByte0.fixtureMotorStep = 0; // set bit 1
-				}
-
-				if( ((counter - counterRef) % (totalStepLength3) ) < (highLength3) && brush1Motor)
-				{
-					u_motorByte0.bits_in_motorByte0.brush1MotorStep = 1; // set bit 1
-				}
-				else
-				{
-					u_motorByte0.bits_in_motorByte0.brush1MotorStep = 0; // set bit 1
-				}
-
-				if( ((counter - counterRef) % (totalStepLength4) ) < (highLength4) && brush2Motor)
-				{
-					u_motorByte1.bits_in_motorByte1.brush2MotorStep = 1; // set bit 1
-				}
-				else
-				{
-					u_motorByte1.bits_in_motorByte1.brush2MotorStep = 0; // set bit 1
-				}
-
-				if( ((counter - counterRefFive) % (totalStepLength5) ) < (highLength5) && paperTowelMotor)
-				{
-					u_motorByte1.bits_in_motorByte1.paperTowelMotorStep = 1; // set bit 1
-				}
-				else
-				{
-					u_motorByte1.bits_in_motorByte1.paperTowelMotorStep = 0; // set bit 1
-				}
-
-				i2c_start(I2C1+I2C_WRITE);
-				i2c_write(0x2);									// write command byte
-				i2c_write(u_motorByte0.motorByte0);                       // write first byte of output
-       	 		i2c_write(u_motorByte1.motorByte1);                       // write second byte of output
-       		 	i2c_stop();                            // set stop conditon = release bus
-
-				i2c_start(I2C2+I2C_WRITE);
-				i2c_write(0x2);
-				i2c_write(u_outputByte0.outputByte0);
-				i2c_write(u_outputByte1.outputByte1);*/
-
 				//determines which motors need to be sent which signals and writes the outputs and motors to the appropriate I2C expander
 				motor_and_write(counter, counterRef, counterRefFive, plateLoadMotor, fixtureMotor, brush1Motor, brush2Motor, paperTowelMotor, totalStepLength1, totalStepLength2, totalStepLength3, totalStepLength4, totalStepLength5, highLength1, highLength2, highLength3, highLength4, highLength5);
 
@@ -1606,31 +1066,7 @@ int main()
 					OrangutanLCD::print(state);
 				}
 
-				/*if(stateButton == 0 && OrangutanDigital::isInputHigh(IO_D0)){
-					counterRefPush = counter;
-					stateButton = 1;
-				}
-				if(stateButton == 1){
-					if(counter - counterRefPush > 15){
-						if(!OrangutanDigital::isInputHigh(IO_D0)){
-							counterRefRel = counter;
-							stateButton = 2;
-						}
-					}
-					else if(!OrangutanDigital::isInputHigh(IO_D0)){
-						stateButton = 0;
-					}
-				}
-				if(stateButton == 2){
-					if(OrangutanDigital::isInputHigh(IO_D0)){
-						stateButton = 1;
-						counterRefPush = counter;
-					}
-					else if(counter - counterRefRel > 15){
-						button = 0;
-						stateButton = 0;
-					}
-				}*/
+				
 				buttonTriggered = button_debounce(counter, &stateButton);//, &counterRefPush, &counterRefRel, &stateButton);
 
 				//state transitions
@@ -1771,7 +1207,6 @@ int main()
 					}
 					break;
 				case LOAD:
-					//OrangutanLCD::clear();
 					u_outputByte0.bits_in_outputByte0.ACPower = 0;
 					if((counter % 200) < 100){
 						u_outputByte0.bits_in_outputByte0.blowerPulse = 0;
@@ -1817,11 +1252,6 @@ int main()
 					fixtureMotor = 0;
 					u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 1;
 					u_motorByte1.bits_in_motorByte1.brush2MotorDir = 0;  // ******* dir4 *******
-					/*if(print15 == 1){
-						OrangutanLCD::clear();
-						OrangutanLCD::print("Clean 2");
-						print15 = 0;
-					}*/
 					break;
 				case B2START1:
 					brush2Motor = 1;
@@ -1830,7 +1260,6 @@ int main()
 					break;
 				case CLEAN2_1:
 					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
-					//u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
 					break;
 				case B2STOP1:
 					fixtureMotor = 0;
@@ -1861,18 +1290,11 @@ int main()
 					break;
 				//*************************************************
 				case MOVED1:
-					//u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ******* dir2 *******
 					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
-					//u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 0;
 					break;
 				case D1START:
 					fixtureMotor = 0;
 					u_outputByte1.bits_in_outputByte1.airKnife = 0;
-						/*if(print24 == 1){
-						OrangutanLCD::clear();
-						OrangutanLCD::print("DRY AIR");
-						print24 = 0;
-					}*/
 					break;
 				case DRY1:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
@@ -1888,11 +1310,6 @@ int main()
 					paperTowelMotor = 1;
 					break;
 				case D2RAISE:
-					/*if(print28 == 1){
-							OrangutanLCD::clear();
-						OrangutanLCD::print("FINAL DRY");
-						print28 = 0;
-						}*/
 					u_outputByte1.bits_in_outputByte1.ptRaise = 0;
 					break;
 				case DRY2:
@@ -1935,66 +1352,6 @@ int main()
 					break;
 			}
 
-
-
-
-
-				/*if( ((counter - counterRef) % (totalStepLength1) ) < (highLength1) && plateLoadMotor)  //check if it is in the right period of the loop to send high
-				{
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorStep = 1; // set bit 0
-				}
-				else
-				{
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorStep = 0; // set bit 0
-				}
-
-				if( ((counter - counterRef) % (totalStepLength2) ) < (highLength2) && fixtureMotor)
-				{
-					u_motorByte0.bits_in_motorByte0.fixtureMotorStep = 1; // set bit 1
-				}
-				else
-				{
-					u_motorByte0.bits_in_motorByte0.fixtureMotorStep = 0; // set bit 1
-				}
-
-				if( ((counter - counterRef) % (totalStepLength3) ) < (highLength3) && brush1Motor)
-				{
-					u_motorByte0.bits_in_motorByte0.brush1MotorStep = 1; // set bit 1
-				}
-				else
-				{
-					u_motorByte0.bits_in_motorByte0.brush1MotorStep = 0; // set bit 1
-				}
-
-				if( ((counter - counterRef) % (totalStepLength4) ) < (highLength4) && brush2Motor)
-				{
-					u_motorByte1.bits_in_motorByte1.brush2MotorStep = 1; // set bit 1
-				}
-				else
-				{
-					u_motorByte1.bits_in_motorByte1.brush2MotorStep = 0; // set bit 1
-				}
-
-				if( ((counter - counterRefFive) % (totalStepLength5) ) < (highLength5) && paperTowelMotor)
-				{
-					u_motorByte1.bits_in_motorByte1.paperTowelMotorStep = 1; // set bit 1
-				}
-				else
-				{
-					u_motorByte1.bits_in_motorByte1.paperTowelMotorStep = 0; // set bit 1
-				}
-
-				i2c_start(I2C1+I2C_WRITE);
-				i2c_write(0x2);									// write command byte
-				i2c_write(u_motorByte0.motorByte0);                       // write first byte of output
-       	 		i2c_write(u_motorByte1.motorByte1);                       // write second byte of output
-       		 	i2c_stop();                            // set stop conditon = release bus
-
-				i2c_start(I2C2+I2C_WRITE);
-				i2c_write(0x2);
-				i2c_write(u_outputByte0.outputByte0);
-				i2c_write(u_outputByte1.outputByte1);*/
-
 				//determines which motors need to be sent which signals and writes the outputs and motors to the appropriate I2C expander
 				motor_and_write(counter, counterRef, counterRefFive, plateLoadMotor, fixtureMotor, brush1Motor, brush2Motor, paperTowelMotor, totalStepLength1, totalStepLength2, totalStepLength3, totalStepLength4, totalStepLength5, highLength1, highLength2, highLength3, highLength4, highLength5);
 
@@ -2025,32 +1382,6 @@ int main()
 					OrangutanLCD::print("STATE ");
 					OrangutanLCD::print(state);
 				}
-
-				/*if(stateButton == 0 && OrangutanDigital::isInputHigh(IO_D0)){
-					counterRefPush = counter;
-					stateButton = 1;
-				}
-				if(stateButton == 1){
-					if(counter - counterRefPush > 15){
-						if(!OrangutanDigital::isInputHigh(IO_D0)){
-							counterRefRel = counter;
-							stateButton = 2;
-						}
-					}
-					else if(!OrangutanDigital::isInputHigh(IO_D0)){
-						stateButton = 0;
-					}
-				}
-				if(stateButton == 2){
-					if(OrangutanDigital::isInputHigh(IO_D0)){
-						stateButton = 1;
-						counterRefPush = counter;
-					}
-					else if(counter - counterRefRel > 15){
-						button = 0;
-						stateButton = 0;
-					}
-				}*/
 
 				buttonTriggered = button_debounce(counter, &stateButton);//, &counterRefPush, &counterRefRel, &stateButton);
 
@@ -2223,7 +1554,6 @@ int main()
 					}
 					break;
 				case LOAD:
-					//OrangutanLCD::clear();
 					u_outputByte0.bits_in_outputByte0.ACPower = 0;
 					if((counter % 200) < 100){
 						u_outputByte0.bits_in_outputByte0.blowerPulse = 0;
@@ -2267,11 +1597,6 @@ int main()
 					fixtureMotor = 0;
 					u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 1;
 					u_motorByte0.bits_in_motorByte0.brush1MotorDir = 0;  // ******* dir3 *******
-					/*if(print6 == 1){
-						OrangutanLCD::clear();
-						OrangutanLCD::print("Clean 1");
-						print6 = 0;
-					}*/
 					break;
 				case B1START1:
 					brush1Motor = 1;
@@ -2316,11 +1641,6 @@ int main()
 					fixtureMotor = 0;
 					u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 1;
 					u_motorByte1.bits_in_motorByte1.brush2MotorDir = 0;  // ******* dir4 *******
-					/*if(print15 == 1){
-						OrangutanLCD::clear();
-						OrangutanLCD::print("Clean 2");
-						print15 = 0;
-					}*/
 					break;
 				case B2START1:
 					brush2Motor = 1;
@@ -2329,7 +1649,6 @@ int main()
 					break;
 				case CLEAN2_1:
 					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
-					//u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
 					break;
 				case B2STOP1:
 					fixtureMotor = 0;
@@ -2360,18 +1679,11 @@ int main()
 					break;
 				//*************************************************
 				case MOVED1:
-					//u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ******* dir2 *******
 					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
-					//u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 0;
 					break;
 				case D1START:
 					fixtureMotor = 0;
 					u_outputByte1.bits_in_outputByte1.airKnife = 0;
-						/*if(print24 == 1){
-						OrangutanLCD::clear();
-						OrangutanLCD::print("DRY AIR");
-						print24 = 0;
-					}*/
 					break;
 				case DRY1:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
@@ -2387,11 +1699,6 @@ int main()
 					paperTowelMotor = 1;
 					break;
 				case D2RAISE:
-					/*if(print28 == 1){
-							OrangutanLCD::clear();
-						OrangutanLCD::print("FINAL DRY");
-						print28 = 0;
-						}*/
 					u_outputByte1.bits_in_outputByte1.ptRaise = 0;
 					break;
 				case DRY2:
@@ -2434,65 +1741,6 @@ int main()
 					break;
 			}
 
-
-
-
-				/*if( ((counter - counterRef) % (totalStepLength1) ) < (highLength1) && plateLoadMotor)  //check if it is in the right period of the loop to send high
-				{
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorStep = 1; // set bit 0
-				}
-				else
-				{
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorStep = 0; // set bit 0
-				}
-
-				if( ((counter - counterRef) % (totalStepLength2) ) < (highLength2) && fixtureMotor)
-				{
-					u_motorByte0.bits_in_motorByte0.fixtureMotorStep = 1; // set bit 1
-				}
-				else
-				{
-					u_motorByte0.bits_in_motorByte0.fixtureMotorStep = 0; // set bit 1
-				}
-
-				if( ((counter - counterRef) % (totalStepLength3) ) < (highLength3) && brush1Motor)
-				{
-					u_motorByte0.bits_in_motorByte0.brush1MotorStep = 1; // set bit 1
-				}
-				else
-				{
-					u_motorByte0.bits_in_motorByte0.brush1MotorStep = 0; // set bit 1
-				}
-
-				if( ((counter - counterRef) % (totalStepLength4) ) < (highLength4) && brush2Motor)
-				{
-					u_motorByte1.bits_in_motorByte1.brush2MotorStep = 1; // set bit 1
-				}
-				else
-				{
-					u_motorByte1.bits_in_motorByte1.brush2MotorStep = 0; // set bit 1
-				}
-
-				if( ((counter - counterRefFive) % (totalStepLength5) ) < (highLength5) && paperTowelMotor)
-				{
-					u_motorByte1.bits_in_motorByte1.paperTowelMotorStep = 1; // set bit 1
-				}
-				else
-				{
-					u_motorByte1.bits_in_motorByte1.paperTowelMotorStep = 0; // set bit 1
-				}
-
-				i2c_start(I2C1+I2C_WRITE);
-				i2c_write(0x2);									// write command byte
-				i2c_write(u_motorByte0.motorByte0);                       // write first byte of output
-       	 		i2c_write(u_motorByte1.motorByte1);                       // write second byte of output
-       		 	i2c_stop();                            // set stop conditon = release bus
-
-				i2c_start(I2C2+I2C_WRITE);
-				i2c_write(0x2);
-				i2c_write(u_outputByte0.outputByte0);
-				i2c_write(u_outputByte1.outputByte1);*/
-
 				//determines which motors need to be sent which signals and writes the outputs and motors to the appropriate I2C expander
 				motor_and_write(counter, counterRef, counterRefFive, plateLoadMotor, fixtureMotor, brush1Motor, brush2Motor, paperTowelMotor, totalStepLength1, totalStepLength2, totalStepLength3, totalStepLength4, totalStepLength5, highLength1, highLength2, highLength3, highLength4, highLength5);
 
@@ -2519,32 +1767,6 @@ int main()
 					OrangutanLCD::print("STATE ");
 					OrangutanLCD::print(state);
 				}
-
-				/*if(stateButton == 0 && OrangutanDigital::isInputHigh(IO_D0)){
-					counterRefPush = counter;
-					stateButton = 1;
-				}
-				if(stateButton == 1){
-					if(counter - counterRefPush > 15){
-						if(!OrangutanDigital::isInputHigh(IO_D0)){
-							counterRefRel = counter;
-							stateButton = 2;
-						}
-					}
-					else if(!OrangutanDigital::isInputHigh(IO_D0)){
-						stateButton = 0;
-					}
-				}
-				if(stateButton == 2){
-					if(OrangutanDigital::isInputHigh(IO_D0)){
-						stateButton = 1;
-						counterRefPush = counter;
-					}
-					else if(counter - counterRefRel > 15){
-						button = 0;
-						stateButton = 0;
-					}
-				}*/
 
 				buttonTriggered = button_debounce(counter, &stateButton);//, &counterRefPush, &counterRefRel, &stateButton);
 
@@ -2726,7 +1948,6 @@ int main()
 					}
 					break;
 				case LOAD:
-					//OrangutanLCD::clear();
 					u_outputByte0.bits_in_outputByte0.ACPower = 0;
 					if((counter % 200) < 100){
 						u_outputByte0.bits_in_outputByte0.blowerPulse = 0;
@@ -2770,11 +1991,6 @@ int main()
 					fixtureMotor = 0;
 					u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 1;
 					u_motorByte0.bits_in_motorByte0.brush1MotorDir = 0;  // ******* dir3 *******
-					/*if(print6 == 1){
-						OrangutanLCD::clear();
-						OrangutanLCD::print("Clean 1");
-						print6 = 0;
-					}*/
 					break;
 				case B1START1:
 					brush1Motor = 1;
@@ -2819,11 +2035,6 @@ int main()
 					fixtureMotor = 0;
 					u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 1;
 					u_motorByte1.bits_in_motorByte1.brush2MotorDir = 0;  // ******* dir4 *******
-					/*if(print15 == 1){
-						OrangutanLCD::clear();
-						OrangutanLCD::print("Clean 2");
-						print15 = 0;
-					}*/
 					break;
 				case B2START1:
 					brush2Motor = 1;
@@ -2833,7 +2044,6 @@ int main()
 				case CLEAN2_1:
 					brush2Motor = 1;
 					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
-					//u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
 					break;
 				case B2STOP1:
 					fixtureMotor = 0;
@@ -2865,18 +2075,11 @@ int main()
 					break;
 				//*************************************************
 				case MOVED1:
-					//u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ******* dir2 *******
 					fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
-					//u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 0;
 					break;
 				case D1START:
 					fixtureMotor = 0;
 					u_outputByte1.bits_in_outputByte1.airKnife = 0;
-						/*if(print24 == 1){
-						OrangutanLCD::clear();
-						OrangutanLCD::print("DRY AIR");
-						print24 = 0;
-					}*/
 					break;
 				case DRY1:
 					u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
@@ -2894,11 +2097,6 @@ int main()
 					break;
 				case D2RAISE:
 					paperTowelMotor = 1;
-					/*if(print28 == 1){
-							OrangutanLCD::clear();
-						OrangutanLCD::print("FINAL DRY");
-						print28 = 0;
-						}*/
 					u_outputByte1.bits_in_outputByte1.ptRaise = 0;
 					break;
 				case DRY2:
@@ -2942,65 +2140,6 @@ int main()
 					}
 					break;
 			}
-
-
-
-
-				/*if( ((counter - counterRef) % (totalStepLength1) ) < (highLength1) && plateLoadMotor)  //check if it is in the right period of the loop to send high
-				{
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorStep = 1; // set bit 0
-				}
-				else
-				{
-					u_motorByte0.bits_in_motorByte0.plateLoadMotorStep = 0; // set bit 0
-				}
-
-				if( ((counter - counterRef) % (totalStepLength2) ) < (highLength2) && fixtureMotor)
-				{
-					u_motorByte0.bits_in_motorByte0.fixtureMotorStep = 1; // set bit 1
-				}
-				else
-				{
-					u_motorByte0.bits_in_motorByte0.fixtureMotorStep = 0; // set bit 1
-				}
-
-				if( ((counter - counterRef) % (totalStepLength3) ) < (highLength3) && brush1Motor)
-				{
-					u_motorByte0.bits_in_motorByte0.brush1MotorStep = 1; // set bit 1
-				}
-				else
-				{
-					u_motorByte0.bits_in_motorByte0.brush1MotorStep = 0; // set bit 1
-				}
-
-				if( ((counter - counterRef) % (totalStepLength4) ) < (highLength4) && brush2Motor)
-				{
-					u_motorByte1.bits_in_motorByte1.brush2MotorStep = 1; // set bit 1
-				}
-				else
-				{
-					u_motorByte1.bits_in_motorByte1.brush2MotorStep = 0; // set bit 1
-				}
-
-				if( ((counter - counterRefFive) % (totalStepLength5) ) < (highLength5) && paperTowelMotor)
-				{
-					u_motorByte1.bits_in_motorByte1.paperTowelMotorStep = 1; // set bit 1
-				}
-				else
-				{
-					u_motorByte1.bits_in_motorByte1.paperTowelMotorStep = 0; // set bit 1
-				}
-
-				i2c_start(I2C1+I2C_WRITE);
-				i2c_write(0x2);									// write command byte
-				i2c_write(u_motorByte0.motorByte0);                       // write first byte of output
-       	 		i2c_write(u_motorByte1.motorByte1);                       // write second byte of output
-       		 	i2c_stop();                            // set stop conditon = release bus
-
-				i2c_start(I2C2+I2C_WRITE);
-				i2c_write(0x2);
-				i2c_write(u_outputByte0.outputByte0);
-				i2c_write(u_outputByte1.outputByte1);*/
 
 				//determines which motors need to be sent which signals and writes the outputs and motors to the appropriate I2C expander
 				motor_and_write(counter, counterRef, counterRefFive, plateLoadMotor, fixtureMotor, brush1Motor, brush2Motor, paperTowelMotor, totalStepLength1, totalStepLength2, totalStepLength3, totalStepLength4, totalStepLength5, highLength1, highLength2, highLength3, highLength4, highLength5);
@@ -3085,39 +2224,6 @@ void motor_and_write(int counter, int counterRef, int counterRefFive, int plateL
 	i2c_write(u_outputByte0.outputByte0);
 	i2c_write(u_outputByte1.outputByte1);
 }
-
-
-/*int button_debounce(int counter, int *pcounterRefPush, int *pcounterRefRel, int *pstateButton)
-{
-	
-	if(*pstateButton == NONE && OrangutanDigital::isInputHigh(IO_D0)){
-		*pcounterRefPush = counter;
-		*pstateButton = PRESSED;
-	}
-	if(*pstateButton == PRESSED){
-		if(counter - *pcounterRefPush > 15){
-			if(!OrangutanDigital::isInputHigh(IO_D0)){
-				*pcounterRefRel = counter;
-				*pstateButton = RELEASED;
-			}
-		}
-		else if(!OrangutanDigital::isInputHigh(IO_D0)){
-			*pstateButton = NONE;
-		}
-	}
-	if(*pstateButton == RELEASED){
-		if(OrangutanDigital::isInputHigh(IO_D0)){
-			*pstateButton = PRESSED;
-			*pcounterRefPush = counter;
-		}
-		else if(counter - *pcounterRefRel > 15){
-			*pstateButton = NONE;
-			return 0;
-		}
-	}
-	return 1;
-}*/
-
 
 bool button_debounce(int counter, int *pstateButton)
 {
