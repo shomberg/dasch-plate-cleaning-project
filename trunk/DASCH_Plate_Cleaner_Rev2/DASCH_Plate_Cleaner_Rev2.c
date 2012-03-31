@@ -177,7 +177,7 @@ int main()
 	OrangutanLCD::clear();
 	OrangutanLCD::print("DASCH CLEANER 2");
 	OrangutanLCD::gotoXY(0,1);
-	OrangutanLCD::print("REV: 26");
+	OrangutanLCD::print("REV: 28");
 	delay_ms(2000);
 	
 	OrangutanLCD::clear();
@@ -215,16 +215,41 @@ int main()
 		i2c_write(0x0);
 		i2c_write(0x0);
 		i2c_stop();
-		
+
+		i2c_start(I2C1+I2C_WRITE);
+		i2c_write(0x2);
+		i2c_write(u_motorByte0.motorByte0);
+		i2c_write(u_motorByte1.motorByte1);
+		i2c_stop();
+
 		i2c_start(I2C2+I2C_WRITE);		//Configures I2C2 registers as outputs
 		i2c_write(0x6);
 		i2c_write(0x0);
 		i2c_write(0x0);
 		i2c_stop();
-										//Registers default to input, so I2C3 is fine already
+
+		u_motorByte1.bits_in_motorByte1.enableAll = 0;	//Enables all motor drivers after startup
+		i2c_start(I2C2+I2C_WRITE);
+		i2c_write(0x2);
+		i2c_write(u_outputByte0.outputByte0);
+		i2c_write(u_outputByte1.outputByte1);
+		i2c_stop();
+		
+		//Registers default to input, so I2C3 is fine already
 
 
 		delay_ms(1000);
+		OrangutanLCD::clear();
+		OrangutanLCD::print("SELECT MODE");
+			
+		//Repeats until user presses and releases button - waiting for user to select a mode
+		while(!buttonTriggered){
+			buttonTriggered = button_debounce(counter, &stateButton);//, &counterRefPush, &counterRefRel, &stateButton);
+			counter++;
+			delay_ms(1);
+		}
+		buttonTriggered = false;
+		counter = 0;
 		OrangutanLCD::clear();
 
 
@@ -238,7 +263,7 @@ int main()
 			int submode = -1;
 
 			OrangutanLCD::clear();
-			OrangutanLCD::print("SELECT MODE");
+			OrangutanLCD::print("SELECT SUB");
 			
 			//Repeats until user presses and releases button - waiting for user to select a mode
 			while(!buttonTriggered){
@@ -2223,6 +2248,7 @@ void motor_and_write(int counter, int counterRef, int counterRefFive, int plateL
 	i2c_write(0x2);
 	i2c_write(u_outputByte0.outputByte0);
 	i2c_write(u_outputByte1.outputByte1);
+	i2c_stop();
 }
 
 bool button_debounce(int counter, int *pstateButton)
