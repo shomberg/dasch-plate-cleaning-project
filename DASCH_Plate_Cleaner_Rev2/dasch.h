@@ -145,7 +145,7 @@ union u_motorByte1_tag{
 		unsigned int paperTowelMotorStep : 1;
 		unsigned int paperTowelMotorDir : 1;
 		unsigned int paperTowelMotorHighPower : 1;
-		unsigned int mNull17 : 1;
+		unsigned int enableAll : 1;
 	} bits_in_motorByte1;
 	char motorByte1;
 } u_motorByte1;
