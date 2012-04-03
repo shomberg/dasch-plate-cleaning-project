@@ -208,3 +208,31 @@ union u_inputByte1_tag{
 	char inputByte1;
 } u_inputByte1;
 
+//holds wait times for various actions in ms
+int pWait = 100;
+int  mWait = 100;
+int  kWait = 100;
+
+//hold the length of the high and high-low periods for the various motors - this controls their speed
+int highLength1 = 1;
+int  highLength2 = 1;
+int  highLength3 = 1;
+int  highLength4 = 1;
+int  highLength5 = 1;
+int totalStepLength1 = 2;
+int  totalStepLength2 = 2;
+int totalStepLength3 = 2;
+int  totalStepLength4 = 2;
+int  totalStepLength5 = 2;
+
+int fixtureMotorHalfPlate = 1000;	//Number of steps of the fixture motor to move 1/2 plate length
+int fixtureMotorWholePlate = 2000;	//Number of steps of the fixture motor to move one plate length
+int plateLoadMotorLoadPlate = 2000;	//Number of steps of the plate load motor to load the plate
+int fixtureMotorHomeFix = 2000;		//Number of steps of the fixture motor to home the fixture
+int fixtureMotorBrush1Step = 2000;	//Number of steps of the fixture motor to move to the first brush
+int fixtureMotorBrush2Step = 2000;	//Number of steps of the fixture motor to move to the second brush
+int fixtureMotorDry1Step = 2000;	//Number of steps of the fixture motor to move to the first dry station
+int fixtureMotorDry2Step = 2000;	//Number of steps of the fixture motor to move to the second dry station
+int fixtureMotorLoadBack = 2000;	//Number of steps of the fixture motor to move back to the loading station
+int fixtureMotorDry1StepWhole = 2000;	//Number of steps of the fixture motor to move to the first drying station skipping a brush
+int fixtureMotorBrush2StepWhole = 2000;	//Number of steps of the fixture motor to move to the second brush skipping a brush
