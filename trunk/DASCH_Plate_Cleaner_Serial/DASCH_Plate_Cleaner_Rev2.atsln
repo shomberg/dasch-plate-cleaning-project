@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "DASCH_Plate_Cleaner_Rev2", "DASCH_Plate_Cleaner_Rev2\DASCH_Plate_Cleaner_Rev2.cproj", "{71B26316-5D30-41A4-B7E0-A17EF3B8B716}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		default|AVR = default|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{71B26316-5D30-41A4-B7E0-A17EF3B8B716}.Debug|AVR.ActiveCfg = default|AVR
+		{71B26316-5D30-41A4-B7E0-A17EF3B8B716}.Debug|AVR.Build.0 = default|AVR
+		{71B26316-5D30-41A4-B7E0-A17EF3B8B716}.default|AVR.ActiveCfg = default|AVR
+		{71B26316-5D30-41A4-B7E0-A17EF3B8B716}.default|AVR.Build.0 = default|AVR
+		{71B26316-5D30-41A4-B7E0-A17EF3B8B716}.Release|AVR.ActiveCfg = default|AVR
+		{71B26316-5D30-41A4-B7E0-A17EF3B8B716}.Release|AVR.Build.0 = default|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
