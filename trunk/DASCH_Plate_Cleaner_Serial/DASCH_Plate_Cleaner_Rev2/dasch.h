@@ -182,8 +182,8 @@ union u_outputByte1_tag{
 union u_inputByte0_tag{
 	struct {
 		unsigned int plate : 1;
-		unsigned int fixtureLift : 1;
 		unsigned int fixtureHome : 1;
+		unsigned int fixtureLift : 1;
 		unsigned int fixturePlate : 1;
 		unsigned int fixtureBrush1 : 1;
 		unsigned int fixtureBrush2 : 1;
@@ -219,11 +219,11 @@ int  highLength2 = 1;
 int  highLength3 = 1;
 int  highLength4 = 1;
 int  highLength5 = 1;
-int totalStepLength1 = 2;
-int  totalStepLength2 = 2;
-int totalStepLength3 = 2;
-int  totalStepLength4 = 2;
-int  totalStepLength5 = 2;
+int totalStepLength1 = 8;
+int  totalStepLength2 = 8;
+int totalStepLength3 = 8;
+int  totalStepLength4 = 8;
+int  totalStepLength5 = 8
 
 int fixtureMotorHalfPlate = 1000;	//Number of steps of the fixture motor to move 1/2 plate length
 int fixtureMotorWholePlate = 2000;	//Number of steps of the fixture motor to move one plate length

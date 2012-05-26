@@ -76,7 +76,9 @@ void brush2_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMo
 
 void dry_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMotor, int *pbrush1Motor, int *pbrush2Motor, int *ppaperTowelMotor);
 
-void serial_print(char msg[]);
+void serial_print_string(char msg[]);
+
+void serial_print_int(int a);
 
 int main()   
 {
@@ -92,6 +94,8 @@ int main()
 	int state = 0;										//Holds program's current state
 	int counter = 0;									//Counts iteration of the loop for timing purposes
 	int last = 0;										//In Debug Cycle, holds program's most recent non-waiting state
+	
+	int lastVal = -1;					//Holds last value for sensor
 
 	//various reference points used by the program to tell how long since an event has occurred
 	//the ones with numbers correspond to run mode states, and Five refers to motor 5 (paper towel roller)
@@ -159,19 +163,19 @@ int main()
 	u_inputByte1.inputByte1 = 0;  // initialize inputByte1
 	
 	//clear();
-	serial_print("DASCH CLEANER 2c");
+	serial_print_string("DASCH CLEANER 2c");
 	lcd_goto_xy(0,1);
-	serial_print("REV: 31");
+	serial_print_string("REV: 31");
 	delay_ms(2000);
 	
 	//clear();
-	serial_print("BEGIN ");
+	serial_print_string("BEGIN ");
 	
 	delay_ms(1000);
 
     i2c_init();                                // init I2C interface
 	
-    serial_print("INIT ");
+    serial_print_string("INIT ");
 	
     ret1 = i2c_start(I2C1+I2C_WRITE);       // ret1 holds whether or not I2C1 started properly
 	i2c_stop();
@@ -181,19 +185,19 @@ int main()
 	i2c_stop();
     
 	//clear();
-	serial_print("START ");
+	serial_print_string("START ");
 	
 	if ( ret1 | ret2 | ret3 ) {			// Check if all three I2C devices responded properly
         /* failed to issue start condition(s), possibly no device found */
         
-		serial_print("I2C BAD ");
+		serial_print_string("I2C BAD ");
 		i2c_stop();
-		serial_print("STOP ");
+		serial_print_string("STOP ");
     }
 	else {
-		serial_print("I2C OK ");
+		serial_print_string("I2C OK ");
         /* issuing start conditions ok, devices accessible */
-		serial_print("BINIT ");
+		serial_print_string("BINIT ");
 		i2c_start(I2C1+I2C_WRITE);		//Configures I2C1 registers as outputs
 		i2c_write(0x6);
 		i2c_write(0x0);
@@ -230,7 +234,7 @@ int main()
 
 		delay_ms(1000);
 		//clear();
-		serial_print("INPUT RUN/DEBUG");
+		serial_print_string("INPUT RUN/DEBUG");
 			
 		//Repeats until user presses and releases button - waiting for user to select a mode
 		while(!buttonTriggered){
@@ -245,7 +249,7 @@ int main()
 
 		if(is_digital_input_high(IO_D3))							//Tests if the switch is set to Maintenance Mode
 		{
-			serial_print("DEBUG");
+			serial_print_string("DEBUG");
 			delay_ms(1000);
 			
 			//initialize
@@ -253,7 +257,7 @@ int main()
 			int submode = -1;
 
 			//clear();
-			serial_print("INPUT MODE");
+			serial_print_string("INPUT MODE");
 			
 			//Repeats until user presses and releases button - waiting for user to select a mode
 			while(!buttonTriggered){
@@ -291,7 +295,7 @@ int main()
 					state = S0;
 					submode = INPUT;
 					//clear();
-					serial_print("INPUTS ");
+					serial_print_string("INPUTS ");
 					lcd_goto_xy(0,1);
 					printVar = true;
 					switched = true;
@@ -300,7 +304,7 @@ int main()
 					state = O0_ON;
 					submode = OUTPUT;
 					//clear();
-					serial_print("OUTPUTS");
+					serial_print_string("OUTPUTS");
 					lcd_goto_xy(0,1);
 					printVar = true;
 					switched = true;
@@ -309,7 +313,7 @@ int main()
 					state = M1_F;
 					submode = MOTOR;
 					//clear();
-					serial_print("MOTORS ");
+					serial_print_string("MOTORS ");
 					lcd_goto_xy(0,1);
 					printVar = true;
 					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 1;
@@ -319,7 +323,7 @@ int main()
 					state = M2_AND_M3;
 					submode = MULTI;
 					//clear();
-					serial_print("MULTI MOTOR");
+					serial_print_string("MULTI MOTOR");
 					lcd_goto_xy(0,1);
 					printVar = true;
 					u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
@@ -346,6 +350,7 @@ int main()
 				//Has button been pressed?
 				if(buttonTriggered) {					//if a state conversion is in order (button press)
 					if(state <= S7){				//if it's doing the sensors
+						lastVal = -1;
 						lcd_goto_xy(0,1);
 						buttonTriggered = false;
 						state ++;
@@ -359,7 +364,7 @@ int main()
 					else if(state <= O11_OFF){		//if it's doing the outputs
 						if(state % 2 == 0){			//current state is an 'on' state
 							lcd_goto_xy(13,1);
-							serial_print("OFF");
+							serial_print_string("OFF");
 						}
 						else{						//current state is an 'off' state
 							lcd_goto_xy(0,1);
@@ -380,7 +385,7 @@ int main()
 						printVar = true;
 						if((state - 1) % 2 == 0){	//if the current state is a 'front' state
 							lcd_goto_xy(11,1);
-							serial_print("BACK ");
+							serial_print_string("BACK ");
 						}
 						else{						//if the current state is a 'back' state
 							switch (state) {
@@ -441,71 +446,95 @@ int main()
 				switch (state) {
 					case S0:
 						if(printVar){
-							serial_print("SENSOR 0");
+							serial_print_string("SENSOR 0");
 							printVar = false;
 						}
 						lcd_goto_xy(15,1);
-						serial_print(u_inputByte0.bits_in_inputByte0.plate);
+						if(lastVal !=u_inputByte0.bits_in_inputByte0.plate){
+							serial_print_int(u_inputByte0.bits_in_inputByte0.plate);
+							lastVal = u_inputByte0.bits_in_inputByte0.plate;
+						}							
 						break;
 					case S1:
 						if(printVar){
-							serial_print("SENSOR 1");
+							serial_print_string("SENSOR 1");
 							printVar = false;
 						}
 						lcd_goto_xy(15,1);
-						serial_print(u_inputByte0.bits_in_inputByte0.fixtureLift);
+						if(lastVal !=u_inputByte0.bits_in_inputByte0.fixtureLift){
+							serial_print_int(u_inputByte0.bits_in_inputByte0.fixtureLift);
+							lastVal = u_inputByte0.bits_in_inputByte0.fixtureLift;
+						}							
 						break;
 					case S2:
 						if(printVar){
-							serial_print("SENSOR 2");
+							serial_print_string("SENSOR 2");
 							printVar = false;
 						}
 						lcd_goto_xy(15,1);
-						serial_print(u_inputByte0.bits_in_inputByte0.fixtureHome);
+						if(lastVal !=u_inputByte0.bits_in_inputByte0.fixtureHome){
+							serial_print_int(u_inputByte0.bits_in_inputByte0.fixtureHome);
+							lastVal = u_inputByte0.bits_in_inputByte0.fixtureHome;
+						}							
 						break;
 					case S3:
 						if(printVar){
-							serial_print("SENSOR 3");
+							serial_print_string("SENSOR 3");
 							printVar = false;
 						}
 						lcd_goto_xy(15,1);
-						serial_print(u_inputByte0.bits_in_inputByte0.fixturePlate);
+						if(lastVal !=u_inputByte0.bits_in_inputByte0.fixturePlate){
+							serial_print_int(u_inputByte0.bits_in_inputByte0.fixturePlate);
+							lastVal = u_inputByte0.bits_in_inputByte0.fixturePlate;
+						}							
 						break;
 					case S4:
 						if(printVar){
-							serial_print("SENSOR 4");
+							serial_print_string("SENSOR 4");
 							printVar = false;
 						}
 						lcd_goto_xy(15,1);
-						serial_print(u_inputByte0.bits_in_inputByte0.fixtureBrush1);
+						if(lastVal !=u_inputByte0.bits_in_inputByte0.fixtureBrush1){
+							serial_print_int(u_inputByte0.bits_in_inputByte0.fixtureBrush1);
+							lastVal = u_inputByte0.bits_in_inputByte0.fixtureBrush1;
+						}							
 						break;
 					case S5:
 						if(printVar){
-							serial_print("SENSOR 5");
+							serial_print_string("SENSOR 5");
 							printVar = false;
 						}
 						lcd_goto_xy(15,1);
-						serial_print(u_inputByte0.bits_in_inputByte0.fixtureBrush2);
+						if(lastVal !=u_inputByte0.bits_in_inputByte0.fixtureBrush2){
+							serial_print_int(u_inputByte0.bits_in_inputByte0.fixtureBrush2);
+							lastVal = u_inputByte0.bits_in_inputByte0.fixtureBrush2;
+						}							
 						break;
 					case S6:
 						if(printVar){
-							serial_print("SENSOR 6");
+							serial_print_string("SENSOR 6");
 							printVar = false;
 						}
 						lcd_goto_xy(15,1);
-						serial_print(u_inputByte0.bits_in_inputByte0.fixtureDry1);
+						if(lastVal !=u_inputByte0.bits_in_inputByte0.fixtureDry1){
+							serial_print_int(u_inputByte0.bits_in_inputByte0.fixtureDry1);
+							lastVal = u_inputByte0.bits_in_inputByte0.fixtureDry1;
+						}							
 						break;
 					case S7:
 						if(printVar){
-							serial_print("SENSOR 7");
+							serial_print_string("SENSOR 7");
 							printVar = false;
 						}
 						lcd_goto_xy(15,1);
-						serial_print(u_inputByte0.bits_in_inputByte0.fixtureDry2);
+						if(lastVal !=u_inputByte0.bits_in_inputByte0.fixtureDry2){
+							serial_print_int(u_inputByte0.bits_in_inputByte0.fixtureDry2);
+							lastVal = u_inputByte0.bits_in_inputByte0.fixtureDry2;
+						}							
 						break;
 					case O0_ON:
 						if(printVar){
-							serial_print("AC POWER     ON ");
+							serial_print_string("AC POWER     ON ");
 							printVar = false;
 						}
 						u_outputByte0.bits_in_outputByte0.ACPower = 0;
@@ -515,7 +544,7 @@ int main()
 						break;
 					case O1_ON:
 						if(printVar){
-							serial_print("BLOWER       ON  ");
+							serial_print_string("BLOWER       ON  ");
 							printVar = false;
 						}
 						u_outputByte0.bits_in_outputByte0.blowerPulse = 0;
@@ -525,7 +554,7 @@ int main()
 						break;
 					case O2_ON:
 						if(printVar){
-							serial_print("PLATE STOP   ON ");
+							serial_print_string("PLATE STOP   ON ");
 							printVar = false;
 						}
 						u_outputByte0.bits_in_outputByte0.plateStop = 0;
@@ -535,7 +564,7 @@ int main()
 						break;
 					case O3_ON:
 						if(printVar){
-							serial_print("PLATE RAISE  ON ");
+							serial_print_string("PLATE RAISE  ON ");
 							printVar = false;
 						}
 						u_outputByte0.bits_in_outputByte0.raiseFixture = 0;
@@ -547,7 +576,7 @@ int main()
 						break;
 					case O4_ON:
 						if(printVar){
-							serial_print("PLATE LOWER  ON ");
+							serial_print_string("PLATE LOWER  ON ");
 							printVar = false;
 						}
 						u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
@@ -558,7 +587,7 @@ int main()
 						break;
 					case O5_ON:
 						if(printVar){
-							serial_print("BRUSH1 RAISE ON ");
+							serial_print_string("BRUSH1 RAISE ON ");
 							printVar = false;
 						}
 						u_outputByte0.bits_in_outputByte0.brush1Raise = 0;
@@ -570,7 +599,7 @@ int main()
 						break;
 					case O6_ON:
 						if(printVar){
-							serial_print("BRUSH1 LOWER ON ");
+							serial_print_string("BRUSH1 LOWER ON ");
 							printVar = false;
 						}
 						u_outputByte0.bits_in_outputByte0.brush1Lower = 0;
@@ -581,7 +610,7 @@ int main()
 						break;
 					case O7_ON:
 						if(printVar){
-							serial_print("BRUSH2 RAISE ON ");
+							serial_print_string("BRUSH2 RAISE ON ");
 							printVar = false;
 						}
 						u_outputByte0.bits_in_outputByte0.brush2Raise = 0;
@@ -593,7 +622,7 @@ int main()
 						break;
 					case O8_ON:
 						if(printVar){
-							serial_print("BRUSH2 LOWER ON ");
+							serial_print_string("BRUSH2 LOWER ON ");
 							printVar = false;
 						}
 						u_outputByte1.bits_in_outputByte1.brush2Lower = 0;
@@ -604,7 +633,7 @@ int main()
 						break;
 					case O9_ON:
 						if(printVar){
-							serial_print("PAPER RAISE  ON ");
+							serial_print_string("PAPER RAISE  ON ");
 							printVar = false;
 						}
 						u_outputByte1.bits_in_outputByte1.ptRaise = 0;
@@ -616,7 +645,7 @@ int main()
 						break;
 					case O10_ON:
 						if(printVar){
-							serial_print("PAPER LOWER  ON ");
+							serial_print_string("PAPER LOWER  ON ");
 							printVar = false;
 						}
 						u_outputByte1.bits_in_outputByte1.ptLower = 0;
@@ -627,7 +656,7 @@ int main()
 						break;
 					case O11_ON:
 						if(printVar){
-							serial_print("AIR KNIFE    ON ");
+							serial_print_string("AIR KNIFE    ON ");
 							printVar = false;
 						}
 						u_outputByte1.bits_in_outputByte1.airKnife = 0;
@@ -637,7 +666,7 @@ int main()
 						break;
 					case M1_F:
 						if(printVar){
-							serial_print("LOADING    FRONT");
+							serial_print_string("LOADING    FRONT");
 							printVar = false;
 						}
 						u_motorByte0.bits_in_motorByte0.plateLoadMotorDir = 0;
@@ -649,7 +678,7 @@ int main()
 						break;
 					case M2_F:
 						if(printVar){
-							serial_print("DRIVE      FRONT");
+							serial_print_string("DRIVE      FRONT");
 							printVar = false;
 						}
 						u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;
@@ -662,7 +691,7 @@ int main()
 						break;
 					case M3_F:
 						if(printVar){
-							serial_print("BRUSH1     FRONT");
+							serial_print_string("BRUSH1     FRONT");
 							printVar = false;
 						}
 						u_motorByte0.bits_in_motorByte0.brush1MotorDir = 0;
@@ -675,7 +704,7 @@ int main()
 						break;
 					case M4_F:
 						if(printVar){
-							serial_print("BRUSH2     FRONT");
+							serial_print_string("BRUSH2     FRONT");
 							printVar = false;
 						}
 						u_motorByte1.bits_in_motorByte1.brush2MotorDir = 0;
@@ -688,7 +717,7 @@ int main()
 						break;
 					case M5_F:
 						if(printVar){
-							serial_print("PAPER      FRONT");
+							serial_print_string("PAPER      FRONT");
 							printVar = false;
 						}
 						u_motorByte1.bits_in_motorByte1.paperTowelMotorDir = 0;
@@ -701,7 +730,7 @@ int main()
 						break;
 					case M2_AND_M3:
 						if(printVar){
-							serial_print("FIXTURE & BRUSH1");
+							serial_print_string("FIXTURE & BRUSH1");
 							printVar = false;
 						}
 						fixtureMotor = 1;
@@ -709,7 +738,7 @@ int main()
 						break;
 					case M2_AND_M4:
 						if(printVar){
-							serial_print("FIXTURE & BRUSH2");
+							serial_print_string("FIXTURE & BRUSH2");
 							printVar = false;
 						}
 						fixtureMotor = 1;
@@ -729,11 +758,11 @@ int main()
 		
 		bool printVar = true;
 
-		serial_print("NORMAL");
+		serial_print_string("NORMAL");
 		delay_ms(1000);
 		
 		//clear();
-		serial_print("SELECT CYCLE");
+		serial_print_string("SELECT CYCLE");
 		//Repeats until user presses and releases button - waiting for user to select a mode
 		while(!buttonTriggered){
 			buttonTriggered = button_debounce(counter, &stateButton);//, &counterRefPush, &counterRefRel, &stateButton);
@@ -743,13 +772,13 @@ int main()
 		buttonTriggered = false;
 		counter = 0;
 		//clear();
-		serial_print("CYCLE:");
+		serial_print_string("CYCLE:");
 
 		u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 
 		if(!is_digital_input_high(IO_D1) && !is_digital_input_high(IO_D2)){
 			lcd_goto_xy(7,0);
-			serial_print("FIRST B");
+			serial_print_string("FIRST B");
 			fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			while(state != DONER)
 			{
@@ -762,10 +791,10 @@ int main()
 				
 				if(state != INIT && printVar){
 					lcd_goto_xy(6,1);
-					serial_print("     ");
+					serial_print_string("     ");
 					lcd_goto_xy(0,1);
-					serial_print("STATE ");
-					serial_print(state);
+					serial_print_string("STATE ");
+					serial_print_int(state);
 					printVar = false;
 				}
 
@@ -836,7 +865,7 @@ int main()
 					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 0;
 					if(print35 == 1){
 						//clear();
-						serial_print("END OF CYCLE");
+						serial_print_string("END OF CYCLE");
 						print35 = 0;
 					}
 				}
@@ -852,7 +881,7 @@ int main()
 
 		else if(is_digital_input_high(IO_D1) && !is_digital_input_high(IO_D2)){
 			lcd_goto_xy(7,0);
-			serial_print("SECOND B");
+			serial_print_string("SECOND B");
 			fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			while(state != DONER)
 			{
@@ -865,10 +894,10 @@ int main()
 				
 				if(state != INIT && printVar){
 					lcd_goto_xy(6,1);
-					serial_print("     ");
+					serial_print_string("     ");
 					lcd_goto_xy(0,1);
-					serial_print("STATE ");
-					serial_print(state);
+					serial_print_string("STATE ");
+					serial_print_int(state);
 					printVar = false;
 				}
 
@@ -927,7 +956,7 @@ int main()
 					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 0;
 					if(print35 == 1){
 						//clear();
-						serial_print("END OF CYCLE");
+						serial_print_string("END OF CYCLE");
 						print35 = 0;
 					}
 				}
@@ -943,7 +972,7 @@ int main()
 
 		else if(!is_digital_input_high(IO_D1) && is_digital_input_high(IO_D2)){
 			lcd_goto_xy(7,0);
-			serial_print("BOTH B");
+			serial_print_string("BOTH B");
 			fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			while(state != DONER)
 			{
@@ -956,10 +985,10 @@ int main()
 				
 				if(state != INIT && printVar){
 					lcd_goto_xy(6,1);
-					serial_print("       ");
+					serial_print_string("       ");
 					lcd_goto_xy(0,1);
-					serial_print("STATE ");
-					serial_print(state);
+					serial_print_string("STATE ");
+					serial_print_int(state);
 					printVar = false;
 				}
 
@@ -1028,7 +1057,7 @@ int main()
 					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 0;
 					if(print35 == 1){
 						//clear();
-						serial_print("END OF CYCLE");
+						serial_print_string("END OF CYCLE");
 						print35 = 0;
 					}
 				}
@@ -1043,7 +1072,7 @@ int main()
 
 		else if(is_digital_input_high(IO_D1) && is_digital_input_high(IO_D2)){
 			lcd_goto_xy(7,0);
-			serial_print("DEBUG");
+			serial_print_string("DEBUG");
 			fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			while(state != DONER)
 			{
@@ -1056,10 +1085,10 @@ int main()
 				
 				if(state != INIT && printVar){
 					lcd_goto_xy(6,1);
-					serial_print("     ");
+					serial_print_string("     ");
 					lcd_goto_xy(0,1);
-					serial_print("STATE ");
-					serial_print(state);
+					serial_print_string("STATE ");
+					serial_print_int(state);
 					printVar = false;
 				}
 
@@ -1139,7 +1168,7 @@ int main()
 					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 0;
 					if(print35 == 1){
 						//clear();
-						serial_print("END OF CYCLE");
+						serial_print_string("END OF CYCLE");
 						print35 = 0;
 					}
 				}
@@ -1165,13 +1194,19 @@ int main()
 		i2c_write(u_motorByte1.motorByte1);
 		i2c_stop();
 	}
-	serial_print("END");
+	serial_print_string("END");
 	}
 }
 
-void serial_print(char msg[]){
+void serial_print_string(char msg[]){
 	serial_send_blocking(USB_COMM, msg, strlen(msg));
 	serial_send_blocking(USB_COMM, "\r\n", 2);
+}
+
+void serial_print_int(int a){
+	char msg[5];
+	itoa(a, msg, 10);
+	serial_print_string(msg);
 }
 
 
@@ -1248,7 +1283,7 @@ void init_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMoto
 				u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
 				if(*pprint0 == 1){
 					lcd_goto_xy(0,1);
-					serial_print("PUSH TO START");
+					serial_print_string("PUSH TO START");
 					*pprint0 = 0;
 				}
 			}
@@ -1262,6 +1297,8 @@ void init_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMoto
 				u_outputByte0.bits_in_outputByte0.blowerPulse = 1;
 			}
 			*pplateLoadMotor = 1;
+			*pfixtureMotor = 0;
+			
 			u_motorByte0.bits_in_motorByte0.plateLoadMotorDir = 0;  //****** dir1 ******
 			u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 1;
 			u_outputByte0.bits_in_outputByte0.plateStop = 0;
