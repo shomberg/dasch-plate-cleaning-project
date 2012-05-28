@@ -1,6 +1,6 @@
 DASCH_Plate_Cleaner_Rev2.d DASCH_Plate_Cleaner_Rev2.o \
   DASCH_Plate_Cleaner_Rev2.o: .././DASCH_Plate_Cleaner_Rev2.c \
-  ..\..\..\DASCH_Plate_Cleaner_Rev2\./dasch.h \
+  .././dasch.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/orangutan.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanAnalog/OrangutanAnalog.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/io.h \
@@ -48,7 +48,7 @@ DASCH_Plate_Cleaner_Rev2.d DASCH_Plate_Cleaner_Rev2.o \
   c:/winavr-20100110/lib/gcc/../../avr/include/stdlib.h \
   c:\winavr-20100110\bin\../lib/gcc/avr/4.3.3/include/stdbool.h
 
-..\..\..\DASCH_Plate_Cleaner_Rev2\./dasch.h:
+.././dasch.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/pololu/orangutan.h:
 
