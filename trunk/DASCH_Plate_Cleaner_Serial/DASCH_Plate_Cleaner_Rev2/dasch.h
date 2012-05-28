@@ -78,8 +78,10 @@ enum run_states
 {
  	INIT = 0,	//Initialize fixture and prepare for cycle
 	LOAD, 		//Load plate sequence
+	LOADEXTRA,		//Moves more to accommodate for sensor placement
 	RAISEL1,		//Raise fixture lifts
 	FIXL,		//Move fixture onto lift
+	FIXLEXTRA,	//Moves more to accommodate for sensor placement
 	LOWERL1,	//Let lifts down
 	LOWERL2,	//Drive lifts down
 				
@@ -93,6 +95,7 @@ enum run_states
 	CLEAN1_3,	//Clean 2nd half of the plate with the first brush
 	B1STOP2,	//Lower brush, turn off motor, continue to next cleaning station
 				
+	MOVEC2,		//Move fixture to second cleaning station
 	B2SET,		//Set up brush 2 motor
 	B2START1,	//Start brush 2 motor and raise brush 2
 	CLEAN2_1,	//Clean 1st half of the plate with the second brush
@@ -134,7 +137,6 @@ union u_motorByte0_tag{
 	} bits_in_motorByte0;
 	char motorByte0;
 } u_motorByte0;
-
 
 union u_motorByte1_tag{
 	struct {
@@ -209,9 +211,9 @@ union u_inputByte1_tag{
 } u_inputByte1;
 
 //holds wait times for various actions in ms
-int pWait = 100;
-int  mWait = 100;
-int  kWait = 100;
+int pWait = 1000;
+int  mWait = 1000;
+int  kWait = 1000;
 
 //hold the length of the high and high-low periods for the various motors - this controls their speed
 int highLength1 = 1;
@@ -223,11 +225,13 @@ int totalStepLength1 = 8;
 int  totalStepLength2 = 8;
 int totalStepLength3 = 8;
 int  totalStepLength4 = 8;
-int  totalStepLength5 = 8
+int  totalStepLength5 = 8;
 
-int fixtureMotorHalfPlate = 1000;	//Number of steps of the fixture motor to move 1/2 plate length
-int fixtureMotorWholePlate = 2000;	//Number of steps of the fixture motor to move one plate length
+int fixtureMotorHalfPlate = 600;	//Number of steps of the fixture motor to move 1/2 plate length
+int fixtureMotorWholePlate = 1200;	//Number of steps of the fixture motor to move one plate length
 int plateLoadMotorLoadPlate = 2000;	//Number of steps of the plate load motor to load the plate
+int plateLoadExtra = 100;			//Number of steps of the plate load motor to move after sensor trigger
+int fixtureLiftExtra = 20;
 int fixtureMotorHomeFix = 2000;		//Number of steps of the fixture motor to home the fixture
 int fixtureMotorBrush1Step = 2000;	//Number of steps of the fixture motor to move to the first brush
 int fixtureMotorBrush2Step = 2000;	//Number of steps of the fixture motor to move to the second brush

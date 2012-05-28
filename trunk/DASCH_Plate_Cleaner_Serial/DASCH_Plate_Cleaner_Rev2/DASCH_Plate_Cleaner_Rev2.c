@@ -20,7 +20,7 @@ mid-run.
 
 */
 
-#include <dasch.h>
+#include "dasch.h"
 #include <pololu/orangutan.h>
 #include <i2cmaster.h>
 #include <stdlib.h>
@@ -142,7 +142,7 @@ int main()
 	highLength4 = 1;
 	highLength5 = 1;
 	totalStepLength1 = 2;
-	totalStepLength2 = 2;
+	totalStepLength2 = 8;
 	totalStepLength3 = 2;
 	totalStepLength4 = 2;
 	totalStepLength5 = 2;
@@ -914,7 +914,7 @@ int main()
 					printVar = true;
 				}
 
-				if(state == MOVEC1 && counter - counterRef > totalStepLength2*fixtureMotorBrush2StepWhole /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush1 == 0*/){
+				if(state == MOVEC1 && /*counter - counterRef > totalStepLength2*fixtureMotorBrush2StepWhole &&*/ u_inputByte0.bits_in_inputByte0.fixtureBrush1 == 0){
 					state = B2SET;
 					counterRef = counter;
 					printVar = true;
@@ -1303,6 +1303,14 @@ void init_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMoto
 			u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 1;
 			u_outputByte0.bits_in_outputByte0.plateStop = 0;
 			break;
+		case LOADEXTRA:
+			*pplateLoadMotor = 1;
+			*pfixtureMotor = 0;
+			
+			u_motorByte0.bits_in_motorByte0.plateLoadMotorDir = 0;  //****** dir1 ******
+			u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 1;
+			u_outputByte0.bits_in_outputByte0.plateStop = 0;
+			break;
 		case RAISEL1:
 			u_outputByte0.bits_in_outputByte0.blowerPulse = 1;
 			u_outputByte0.bits_in_outputByte0.lowerFixture = 1;
@@ -1313,6 +1321,10 @@ void init_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMoto
 			u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 0;
 			break;
 		case FIXL:
+			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ****** dir2 *******
+			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
+			break;
+		case FIXLEXTRA:
 			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ****** dir2 *******
 			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			break;
@@ -1341,8 +1353,9 @@ void brush1_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMo
 			break;
 		case B1SET:
 			*pfixtureMotor = 0;
+			*pbrush1Motor = 1;
 			u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 1;
-			u_motorByte0.bits_in_motorByte0.brush1MotorDir = 0;  // ******* dir3 *******
+			u_motorByte0.bits_in_motorByte0.brush1MotorDir = 1;  // ******* dir3 *******
 			break;
 		case B1START1:
 			*pbrush1Motor = 1;
@@ -1380,10 +1393,15 @@ void brush1_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMo
 
 void brush2_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMotor, int *pbrush1Motor, int *pbrush2Motor, int *ppaperTowelMotor){
 	switch(state){
+		case MOVEC2:
+			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
+			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
+			break;
 		case B2SET:
 			*pfixtureMotor = 0;
+			*pbrush2Motor = 1;
 			u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 1;
-			u_motorByte1.bits_in_motorByte1.brush2MotorDir = 0;  // ******* dir4 *******
+			u_motorByte1.bits_in_motorByte1.brush2MotorDir = 1;  // ******* dir4 *******
 			break;
 		case B2START1:
 			*pbrush2Motor = 1;
@@ -1401,7 +1419,7 @@ void brush2_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMo
 			u_outputByte0.bits_in_outputByte0.brush2Raise = 1;
 			break;
 		case CLEAN2_2:
-			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
+			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ******* dir2 *******
 			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			break;
 		case B2START2:
@@ -1522,27 +1540,30 @@ bool button_debounce(int counter, int *pstateButton)
 
 bool init_trans(int state, bool buttonTriggered, int counter, int counterRef){
 	return((state == INIT && buttonTriggered)||
-	(state == LOAD && counter - counterRef > totalStepLength1*plateLoadMotorLoadPlate/*&& u_inputByte0.bits_in_inputByte0.plate == 0*/)||
+	(state == LOAD && /*counter - counterRef > totalStepLength1*plateLoadMotorLoadPlate&&*/ u_inputByte0.bits_in_inputByte0.plate == 0)||
+	(state == LOADEXTRA && counter - counterRef > totalStepLength1*plateLoadExtra)||
 	(state == RAISEL1 && counter - counterRef > pWait)||
 	(state == FIXL && /*counter - counterRef > totalStepLength2*fixtureMotorHomeFix &&*/ u_inputByte0.bits_in_inputByte0.fixtureLift == 0)||
+	(state == FIXLEXTRA && counter - counterRef > totalStepLength2*fixtureLiftExtra)||
 	(state == LOWERL1 && /*counter - counterRef > 1000 &&*/ u_inputByte0.bits_in_inputByte0.fixturePlate == 0)||
 	(state == LOWERL2 && counter - counterRef > pWait));
 }
 
 bool firstB_trans(int state, int counter, int counterRef){
 	//Had references to counterRef14...not used in any transitions, though...unecessary?  replaced with counterRef - don't know how it will work
-	return((state == MOVEC1 && counter - counterRef > totalStepLength2*fixtureMotorBrush1Step /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush1 == 0*/)||
+	return((state == MOVEC1 && /*counter - counterRef > totalStepLength2*fixtureMotorBrush1Step &&*/ u_inputByte0.bits_in_inputByte0.fixtureBrush1 == 0)||
 	(state == B1SET && counter - counterRef > mWait)||
 	(state == B1START1 && counter - counterRef > pWait)||
 	(state == CLEAN1_1 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate)||
 	(state == B1STOP1 && counter - counterRef > pWait)||
-	(state == CLEAN1_2 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush1 == 0*/)||
+	(state == CLEAN1_2 && /*counter - counterRef > totalStepLength2*fixtureMotorHalfPlate &&*/ u_inputByte0.bits_in_inputByte0.fixtureBrush1 == 0)||
 	(state == B1START2 && counter - counterRef > pWait)||
 	(state == CLEAN1_3 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate));
 }
 
 bool secondB_trans(int state, int counter, int counterRef){
-	return((state == B2SET && counter - counterRef > mWait)||
+	return((state == MOVEC2 && /*counter - counterRef > totalStepLength2*fixtureMotorBrush2Step &&*/ u_inputByte0.bits_in_inputByte0.fixtureBrush2 == 0)||
+	(state == B2SET && counter - counterRef > mWait)||
 	(state == B2START1 && counter - counterRef > pWait)||
 	(state == CLEAN2_1 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate)||
 	(state == B2STOP1 && counter - counterRef > pWait)||
@@ -1550,7 +1571,7 @@ bool secondB_trans(int state, int counter, int counterRef){
 	(state == B2START2 && counter - counterRef > pWait)||
 	(state == CLEAN2_3 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate)||
 	(state == B2STOP2 && counter - counterRef > pWait)||
-	(state == MOVED1 && counter - counterRef > totalStepLength2*fixtureMotorDry1Step /*&& u_inputByte0.bits_in_inputByte0.fixtureDry1 == 0*/));
+	(state == MOVED1 && /*counter - counterRef > totalStepLength2*fixtureMotorDry1Step &&*/ u_inputByte0.bits_in_inputByte0.fixtureDry1 == 0));
 }
 
 bool dry_trans(int state, int counter, int counterRef, int counterRefFive){
