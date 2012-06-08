@@ -165,7 +165,7 @@ int main()
 	//clear();
 	serial_print_string("DASCH CLEANER 2c");
 	lcd_goto_xy(0,1);
-	serial_print_string("REV: 38");
+	serial_print_string("REV: 39");
 	delay_ms(2000);
 	
 	//clear();
@@ -1442,6 +1442,7 @@ void brush2_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMo
 			break;
 		//*************************************************
 		case MOVED1:
+			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;
 			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			break;
 	}
@@ -1449,38 +1450,37 @@ void brush2_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMo
 
 void dry_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMotor, int *pbrush1Motor, int *pbrush2Motor, int *ppaperTowelMotor){
 	switch(state){
-		case D1START:
-			*pfixtureMotor = 0;
-			u_outputByte1.bits_in_outputByte1.airKnife = 0;
+		case MOVED1EXTRA:
+			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;
+			*pfixtureMotor = 1;
 			break;
 		case DRY1:
-			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
+		u_outputByte1.bits_in_outputByte1.airKnife = 0;
+			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ******* dir2 *******
 			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			break;
 		case D1STOP:
 			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			u_outputByte1.bits_in_outputByte1.airKnife = 1;
-			break;
-		case D2START:
-			*pfixtureMotor = 0;
 			u_motorByte1.bits_in_motorByte1.paperTowelMotorHighPower = 1;
 			u_motorByte1.bits_in_motorByte1.paperTowelMotorDir = 0;
 			*ppaperTowelMotor = 1;
 			break;
-		case D2RAISE:
-			*ppaperTowelMotor = 1;
-			u_outputByte1.bits_in_outputByte1.ptRaise = 0;
-			break;
 		case DRY2:
+			u_outputByte1.bits_in_outputByte1.ptRaise = 0;
 			*ppaperTowelMotor = 1;
 			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			break;
 		case D2STOP:
 			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			*ppaperTowelMotor = 0;
-				u_motorByte1.bits_in_motorByte1.paperTowelMotorHighPower = 0;
+			u_motorByte1.bits_in_motorByte1.paperTowelMotorHighPower = 0;
 			u_outputByte1.bits_in_outputByte1.ptRaise = 1;
 			u_outputByte1.bits_in_outputByte1.ptLower = 0;
+			break;
+		case FIXL2EXTRA:
+			*pfixtureMotor = 1;
+			u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			break;
 		case RAISEL2:
 			*pfixtureMotor = 0;
@@ -1567,7 +1567,7 @@ bool secondB_trans(int state, int counter, int counterRef){
 	(state == B2START1 && counter - counterRef > pWait)||
 	(state == CLEAN2_1 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate)||
 	(state == B2STOP1 && counter - counterRef > pWait)||
-	(state == CLEAN2_2 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate /*&& u_inputByte0.bits_in_inputByte0.fixtureBrush2 == 0*/)||
+	(state == CLEAN2_2 && /*counter - counterRef > totalStepLength2*fixtureMotorHalfPlate &&*/ u_inputByte0.bits_in_inputByte0.fixtureBrush2 == 0)||
 	(state == B2START2 && counter - counterRef > pWait)||
 	(state == CLEAN2_3 && counter - counterRef > totalStepLength2*fixtureMotorHalfPlate)||
 	(state == B2STOP2 && counter - counterRef > pWait)||
@@ -1576,15 +1576,14 @@ bool secondB_trans(int state, int counter, int counterRef){
 
 bool dry_trans(int state, int counter, int counterRef, int counterRefFive){
 	//Had references to counterRef26, 30...not used in any transitions, though...unecessary?  replaced with counterRef - don't know how it will work
-	return((state == D1START && counter - counterRef > kWait)||
+	return((state == MOVED1EXTRA && counter - counterRef > fixtureMotorDry1Extra)||
 	(state == DRY1 && counter - counterRef > totalStepLength2*fixtureMotorWholePlate)||
 	(state == D1STOP && counter - counterRef > totalStepLength2*fixtureMotorDry2Step /*&& u_inputByte0.bits_in_inputByte0.fixtureDry2 == 0*/)||
-	(state == D2START && counter - counterRefFive > mWait)||
-	(state == D2RAISE && counter - counterRef > pWait)||
 	(state == DRY2 && counter - counterRef > totalStepLength2*fixtureMotorWholePlate)||
-	(state == D2STOP && counter - counterRef > totalStepLength2*fixtureMotorLoadBack /*&& u_inputByte0.bits_in_inputByte0.fixturePlate == 0*/)||
-	(state == RAISEL2 && counter - counterRef > 1000 /*&& u_inputByte0.bits_in_inputByte0.fixtureLift == 0*/)||
-	(state == FIXH && counter - counterRef > totalStepLength2*fixtureMotorHomeFix /*&& u_inputByte0.bits_in_inputByte0.fixtureHome == 0*/)||
+	(state == D2STOP && /*counter - counterRef > totalStepLength2*fixtureMotorLoadBack &&*/ u_inputByte0.bits_in_inputByte0.fixturePlate == 0)||
+	(state == FIXL2EXTRA && counter - counterRef > totalStepLength2*fixtureLift2Extra)||
+	(state == RAISEL2 && /*counter - counterRef > 1000 &&*/ u_inputByte0.bits_in_inputByte0.fixtureLift == 0)||
+	(state == FIXH && /*counter - counterRef > totalStepLength2*fixtureMotorHomeFix &&*/ u_inputByte0.bits_in_inputByte0.fixtureHome == 0)||
 	(state == LOWERL3 && counter - counterRef > pWait)||
 	(state == UNLOAD && counter - counterRef > totalStepLength1*plateLoadMotorLoadPlate));
 }
