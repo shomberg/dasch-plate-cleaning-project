@@ -106,14 +106,13 @@ enum run_states
 	B2STOP2,	//Lower brush, turn off motor
 				
 	MOVED1,		//Move fixture to first drying station
-	D1START,	//Activate air knife
+	MOVED1EXTRA,
 	DRY1,		//Move plate across air knife
 	D1STOP,		//Deactivate air knife, continue to next drying station
 				
-	D2START,	//Activate paper towel roller
-	D2RAISE,	//Raise paper towel roller
 	DRY2,		//Move plate across paper towel roller
 	D2STOP,		//Deactivate paper towel roller, lower paper towel roller, return to lift
+	FIXL2EXTRA,
 	RAISEL2,	//Raise lift, ?activate pressure in fixture?
 	FIXH,		//Home fixture
 	LOWERL3,	//Lower lift
@@ -236,7 +235,9 @@ int fixtureMotorHomeFix = 2000;		//Number of steps of the fixture motor to home 
 int fixtureMotorBrush1Step = 2000;	//Number of steps of the fixture motor to move to the first brush
 int fixtureMotorBrush2Step = 2000;	//Number of steps of the fixture motor to move to the second brush
 int fixtureMotorDry1Step = 2000;	//Number of steps of the fixture motor to move to the first dry station
+int fixtureMotorDry1Extra = 20;		//Number of steps of the fixture motor to move after sensor trigger
 int fixtureMotorDry2Step = 2000;	//Number of steps of the fixture motor to move to the second dry station
 int fixtureMotorLoadBack = 2000;	//Number of steps of the fixture motor to move back to the loading station
 int fixtureMotorDry1StepWhole = 2000;	//Number of steps of the fixture motor to move to the first drying station skipping a brush
 int fixtureMotorBrush2StepWhole = 2000;	//Number of steps of the fixture motor to move to the second brush skipping a brush
+int fixtureLift2Extra = 20;				//Number of steps of the fixture motor to move after sensor trigger
