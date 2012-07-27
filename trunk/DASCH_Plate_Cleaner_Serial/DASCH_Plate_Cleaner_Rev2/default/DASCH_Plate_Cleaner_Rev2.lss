@@ -70,7 +70,7 @@ Disassembly of section .text:
       88:	0c 94 91 00 	jmp	0x122	; 0x122 <__bad_interrupt>
       8c:	88 0a       	sbc	r8, r24
       8e:	a1 0a       	sbc	r10, r17
-      90:	be 0a       	sbc	r11, r30
+      90:	bc 0a       	sbc	r11, r28
       92:	d9 0a       	sbc	r13, r25
       94:	f8 0a       	sbc	r15, r24
       96:	14 0b       	sbc	r17, r20
@@ -2447,7 +2447,7 @@ int main()
     100e:	80 e0       	ldi	r24, 0x00	; 0
     1010:	61 e0       	ldi	r22, 0x01	; 1
     1012:	0e 94 a5 14 	call	0x294a	; 0x294a <lcd_goto_xy>
-	serial_print_string("REV: 39");
+	serial_print_string("REV: 40");
     1016:	82 e2       	ldi	r24, 0x22	; 34
     1018:	91 e0       	ldi	r25, 0x01	; 1
     101a:	0e 94 ab 06 	call	0xd56	; 0xd56 <serial_print_string>
@@ -3232,7 +3232,7 @@ int main()
 						if(printVar){
     1510:	99 20       	and	r9, r9
     1512:	21 f0       	breq	.+8      	; 0x151c <main+0x604>
-							serial_print_string("SENSOR 0");
+							serial_print_string("SENSOR 1");
     1514:	8b ea       	ldi	r24, 0xAB	; 171
     1516:	91 e0       	ldi	r25, 0x01	; 1
     1518:	0e 94 ab 06 	call	0xd56	; 0xd56 <serial_print_string>
@@ -3263,7 +3263,7 @@ int main()
 						if(printVar){
     1542:	99 20       	and	r9, r9
     1544:	21 f0       	breq	.+8      	; 0x154e <main+0x636>
-							serial_print_string("SENSOR 1");
+							serial_print_string("SENSOR 2");
     1546:	84 eb       	ldi	r24, 0xB4	; 180
     1548:	91 e0       	ldi	r25, 0x01	; 1
     154a:	0e 94 ab 06 	call	0xd56	; 0xd56 <serial_print_string>
@@ -3273,56 +3273,56 @@ int main()
     154e:	8f e0       	ldi	r24, 0x0F	; 15
     1550:	61 e0       	ldi	r22, 0x01	; 1
     1552:	0e 94 a5 14 	call	0x294a	; 0x294a <lcd_goto_xy>
-						if(lastVal !=u_inputByte0.bits_in_inputByte0.fixtureLift){
+						if(lastVal !=u_inputByte0.bits_in_inputByte0.fixtureHome){
     1556:	80 91 2e 04 	lds	r24, 0x042E
     155a:	86 95       	lsr	r24
-    155c:	86 95       	lsr	r24
-    155e:	81 70       	andi	r24, 0x01	; 1
-    1560:	90 e0       	ldi	r25, 0x00	; 0
-    1562:	6f 89       	ldd	r22, Y+23	; 0x17
-    1564:	78 8d       	ldd	r23, Y+24	; 0x18
-    1566:	68 17       	cp	r22, r24
-    1568:	79 07       	cpc	r23, r25
-    156a:	09 f4       	brne	.+2      	; 0x156e <main+0x656>
-    156c:	38 c2       	rjmp	.+1136   	; 0x19de <main+0xac6>
-							serial_print_int(u_inputByte0.bits_in_inputByte0.fixtureLift);
-    156e:	0e 94 6e 07 	call	0xedc	; 0xedc <serial_print_int>
-							lastVal = u_inputByte0.bits_in_inputByte0.fixtureLift;
-    1572:	80 91 2e 04 	lds	r24, 0x042E
-    1576:	86 95       	lsr	r24
-    1578:	86 95       	lsr	r24
-    157a:	93 c0       	rjmp	.+294    	; 0x16a2 <main+0x78a>
+    155c:	81 70       	andi	r24, 0x01	; 1
+    155e:	90 e0       	ldi	r25, 0x00	; 0
+    1560:	6f 89       	ldd	r22, Y+23	; 0x17
+    1562:	78 8d       	ldd	r23, Y+24	; 0x18
+    1564:	68 17       	cp	r22, r24
+    1566:	79 07       	cpc	r23, r25
+    1568:	09 f4       	brne	.+2      	; 0x156c <main+0x654>
+    156a:	39 c2       	rjmp	.+1138   	; 0x19de <main+0xac6>
+							serial_print_int(u_inputByte0.bits_in_inputByte0.fixtureHome);
+    156c:	0e 94 6e 07 	call	0xedc	; 0xedc <serial_print_int>
+							lastVal = u_inputByte0.bits_in_inputByte0.fixtureHome;
+    1570:	80 91 2e 04 	lds	r24, 0x042E
+    1574:	86 95       	lsr	r24
+    1576:	95 c0       	rjmp	.+298    	; 0x16a2 <main+0x78a>
 						}							
 						break;
 					case S2:
 						if(printVar){
-    157c:	99 20       	and	r9, r9
-    157e:	21 f0       	breq	.+8      	; 0x1588 <main+0x670>
-							serial_print_string("SENSOR 2");
-    1580:	8d eb       	ldi	r24, 0xBD	; 189
-    1582:	91 e0       	ldi	r25, 0x01	; 1
-    1584:	0e 94 ab 06 	call	0xd56	; 0xd56 <serial_print_string>
+    1578:	99 20       	and	r9, r9
+    157a:	21 f0       	breq	.+8      	; 0x1584 <main+0x66c>
+							serial_print_string("SENSOR 3");
+    157c:	8d eb       	ldi	r24, 0xBD	; 189
+    157e:	91 e0       	ldi	r25, 0x01	; 1
+    1580:	0e 94 ab 06 	call	0xd56	; 0xd56 <serial_print_string>
 							printVar = false;
 						}
 						lcd_goto_xy(15,1);
-    1588:	8f e0       	ldi	r24, 0x0F	; 15
-    158a:	61 e0       	ldi	r22, 0x01	; 1
-    158c:	0e 94 a5 14 	call	0x294a	; 0x294a <lcd_goto_xy>
-						if(lastVal !=u_inputByte0.bits_in_inputByte0.fixtureHome){
-    1590:	80 91 2e 04 	lds	r24, 0x042E
-    1594:	86 95       	lsr	r24
-    1596:	81 70       	andi	r24, 0x01	; 1
-    1598:	90 e0       	ldi	r25, 0x00	; 0
-    159a:	6f 89       	ldd	r22, Y+23	; 0x17
-    159c:	78 8d       	ldd	r23, Y+24	; 0x18
-    159e:	68 17       	cp	r22, r24
-    15a0:	79 07       	cpc	r23, r25
-    15a2:	09 f4       	brne	.+2      	; 0x15a6 <main+0x68e>
-    15a4:	1c c2       	rjmp	.+1080   	; 0x19de <main+0xac6>
-							serial_print_int(u_inputByte0.bits_in_inputByte0.fixtureHome);
-    15a6:	0e 94 6e 07 	call	0xedc	; 0xedc <serial_print_int>
-							lastVal = u_inputByte0.bits_in_inputByte0.fixtureHome;
-    15aa:	80 91 2e 04 	lds	r24, 0x042E
+    1584:	8f e0       	ldi	r24, 0x0F	; 15
+    1586:	61 e0       	ldi	r22, 0x01	; 1
+    1588:	0e 94 a5 14 	call	0x294a	; 0x294a <lcd_goto_xy>
+						if(lastVal !=u_inputByte0.bits_in_inputByte0.fixtureLift){
+    158c:	80 91 2e 04 	lds	r24, 0x042E
+    1590:	86 95       	lsr	r24
+    1592:	86 95       	lsr	r24
+    1594:	81 70       	andi	r24, 0x01	; 1
+    1596:	90 e0       	ldi	r25, 0x00	; 0
+    1598:	6f 89       	ldd	r22, Y+23	; 0x17
+    159a:	78 8d       	ldd	r23, Y+24	; 0x18
+    159c:	68 17       	cp	r22, r24
+    159e:	79 07       	cpc	r23, r25
+    15a0:	09 f4       	brne	.+2      	; 0x15a4 <main+0x68c>
+    15a2:	1d c2       	rjmp	.+1082   	; 0x19de <main+0xac6>
+							serial_print_int(u_inputByte0.bits_in_inputByte0.fixtureLift);
+    15a4:	0e 94 6e 07 	call	0xedc	; 0xedc <serial_print_int>
+							lastVal = u_inputByte0.bits_in_inputByte0.fixtureLift;
+    15a8:	80 91 2e 04 	lds	r24, 0x042E
+    15ac:	86 95       	lsr	r24
     15ae:	86 95       	lsr	r24
     15b0:	78 c0       	rjmp	.+240    	; 0x16a2 <main+0x78a>
 						}							
@@ -3331,7 +3331,7 @@ int main()
 						if(printVar){
     15b2:	99 20       	and	r9, r9
     15b4:	21 f0       	breq	.+8      	; 0x15be <main+0x6a6>
-							serial_print_string("SENSOR 3");
+							serial_print_string("SENSOR 4");
     15b6:	86 ec       	ldi	r24, 0xC6	; 198
     15b8:	91 e0       	ldi	r25, 0x01	; 1
     15ba:	0e 94 ab 06 	call	0xd56	; 0xd56 <serial_print_string>
@@ -3368,7 +3368,7 @@ int main()
 						if(printVar){
     15f0:	99 20       	and	r9, r9
     15f2:	21 f0       	breq	.+8      	; 0x15fc <main+0x6e4>
-							serial_print_string("SENSOR 4");
+							serial_print_string("SENSOR 5");
     15f4:	8f ec       	ldi	r24, 0xCF	; 207
     15f6:	91 e0       	ldi	r25, 0x01	; 1
     15f8:	0e 94 ab 06 	call	0xd56	; 0xd56 <serial_print_string>
@@ -3402,7 +3402,7 @@ int main()
 						if(printVar){
     1628:	99 20       	and	r9, r9
     162a:	21 f0       	breq	.+8      	; 0x1634 <main+0x71c>
-							serial_print_string("SENSOR 5");
+							serial_print_string("SENSOR 6");
     162c:	88 ed       	ldi	r24, 0xD8	; 216
     162e:	91 e0       	ldi	r25, 0x01	; 1
     1630:	0e 94 ab 06 	call	0xd56	; 0xd56 <serial_print_string>
@@ -3438,7 +3438,7 @@ int main()
 						if(printVar){
     1664:	99 20       	and	r9, r9
     1666:	21 f0       	breq	.+8      	; 0x1670 <main+0x758>
-							serial_print_string("SENSOR 6");
+							serial_print_string("SENSOR 7");
     1668:	81 ee       	ldi	r24, 0xE1	; 225
     166a:	91 e0       	ldi	r25, 0x01	; 1
     166c:	0e 94 ab 06 	call	0xd56	; 0xd56 <serial_print_string>
@@ -3477,7 +3477,7 @@ int main()
 						if(printVar){
     16a6:	99 20       	and	r9, r9
     16a8:	21 f0       	breq	.+8      	; 0x16b2 <main+0x79a>
-							serial_print_string("SENSOR 7");
+							serial_print_string("SENSOR 8");
     16aa:	8a ee       	ldi	r24, 0xEA	; 234
     16ac:	91 e0       	ldi	r25, 0x01	; 1
     16ae:	0e 94 ab 06 	call	0xd56	; 0xd56 <serial_print_string>
