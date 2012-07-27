@@ -165,7 +165,7 @@ int main()
 	//clear();
 	serial_print_string("DASCH CLEANER 2c");
 	lcd_goto_xy(0,1);
-	serial_print_string("REV: 39");
+	serial_print_string("REV: 40");
 	delay_ms(2000);
 	
 	//clear();
@@ -446,7 +446,7 @@ int main()
 				switch (state) {
 					case S0:
 						if(printVar){
-							serial_print_string("SENSOR 0");
+							serial_print_string("SENSOR 1");
 							printVar = false;
 						}
 						lcd_goto_xy(15,1);
@@ -457,17 +457,6 @@ int main()
 						break;
 					case S1:
 						if(printVar){
-							serial_print_string("SENSOR 1");
-							printVar = false;
-						}
-						lcd_goto_xy(15,1);
-						if(lastVal !=u_inputByte0.bits_in_inputByte0.fixtureLift){
-							serial_print_int(u_inputByte0.bits_in_inputByte0.fixtureLift);
-							lastVal = u_inputByte0.bits_in_inputByte0.fixtureLift;
-						}							
-						break;
-					case S2:
-						if(printVar){
 							serial_print_string("SENSOR 2");
 							printVar = false;
 						}
@@ -477,9 +466,20 @@ int main()
 							lastVal = u_inputByte0.bits_in_inputByte0.fixtureHome;
 						}							
 						break;
-					case S3:
+					case S2:
 						if(printVar){
 							serial_print_string("SENSOR 3");
+							printVar = false;
+						}
+						lcd_goto_xy(15,1);
+						if(lastVal !=u_inputByte0.bits_in_inputByte0.fixtureLift){
+							serial_print_int(u_inputByte0.bits_in_inputByte0.fixtureLift);
+							lastVal = u_inputByte0.bits_in_inputByte0.fixtureLift;
+						}							
+						break;
+					case S3:
+						if(printVar){
+							serial_print_string("SENSOR 4");
 							printVar = false;
 						}
 						lcd_goto_xy(15,1);
@@ -490,7 +490,7 @@ int main()
 						break;
 					case S4:
 						if(printVar){
-							serial_print_string("SENSOR 4");
+							serial_print_string("SENSOR 5");
 							printVar = false;
 						}
 						lcd_goto_xy(15,1);
@@ -501,7 +501,7 @@ int main()
 						break;
 					case S5:
 						if(printVar){
-							serial_print_string("SENSOR 5");
+							serial_print_string("SENSOR 6");
 							printVar = false;
 						}
 						lcd_goto_xy(15,1);
@@ -512,7 +512,7 @@ int main()
 						break;
 					case S6:
 						if(printVar){
-							serial_print_string("SENSOR 6");
+							serial_print_string("SENSOR 7");
 							printVar = false;
 						}
 						lcd_goto_xy(15,1);
@@ -523,7 +523,7 @@ int main()
 						break;
 					case S7:
 						if(printVar){
-							serial_print_string("SENSOR 7");
+							serial_print_string("SENSOR 8");
 							printVar = false;
 						}
 						lcd_goto_xy(15,1);
