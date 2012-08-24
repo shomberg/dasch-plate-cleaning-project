@@ -2528,7 +2528,7 @@ int main()
     10c6:	80 e0       	ldi	r24, 0x00	; 0
     10c8:	61 e0       	ldi	r22, 0x01	; 1
     10ca:	0e 94 3b 15 	call	0x2a76	; 0x2a76 <lcd_goto_xy>
-	serial_print_string("REV: 41");
+	serial_print_string("REV: 43");
     10ce:	82 e2       	ldi	r24, 0x22	; 34
     10d0:	91 e0       	ldi	r25, 0x01	; 1
     10d2:	0e 94 ba 06 	call	0xd74	; 0xd74 <serial_print_string>
