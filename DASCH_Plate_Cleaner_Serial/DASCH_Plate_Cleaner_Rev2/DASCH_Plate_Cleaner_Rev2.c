@@ -156,7 +156,7 @@ int main()
 	//clear();
 	serial_print_string("DASCH CLEANER 2c");
 	lcd_goto_xy(0,1);
-	serial_print_string("REV: 41");
+	serial_print_string("REV: 43");
 	delay_ms(2000);
 	
 	//clear();
