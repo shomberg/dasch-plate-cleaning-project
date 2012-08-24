@@ -99,26 +99,24 @@ enum run_states
 	MOVEC2,		//18 Move fixture to second cleaning station
 	B2SET1,		//19 Set up brush 2 motor, wet brush
 	B2START1,	//20 Start brush 2 motor and raise brush 2
-	CLEAN2_1,	//Clean 1st half of the plate with the second brush
-	B2STOP1,	//Lower brush, turn off motor
-	CLEAN2_2,	//Return to center of 2nd cleaning station
-	B2SET2,		//Set up brush 2 motor, wet brush
-	B2START2,	//Start brush 2 motor and raise brush 2
-	CLEAN2_3,	//Clean 2nd half of the plate with the second brush
-	B2STOP2,	//Lower brush, turn off motor
+	CLEAN2_1,	//21 Clean 1st half of the plate with the second brush
+	B2STOP1,	//22 Lower brush, turn off motor
+	CLEAN2_2,	//23 Return to center of 2nd cleaning station
+	B2SET2,		//24 Set up brush 2 motor, wet brush
+	B2START2,	//25 Start brush 2 motor and raise brush 2
+	CLEAN2_3,	//26 Clean 2nd half of the plate with the second brush
+	B2STOP2,	//27 Lower brush, turn off motor
 				
-	MOVED1,		//Move fixture to first drying station
-	MOVED1EXTRA,
-	DRY1,		//Move plate across air knife
-	D1STOP,		//Deactivate air knife, continue to next drying station
+	MOVED1,		//28 Move fixture to first drying station
+	MOVED1EXTRA,//29
+	DRY,		//30 Move plate across air knife and paper towel roller
 				
-	DRY2,		//Move plate across paper towel roller
-	D2STOP,		//Deactivate paper towel roller, lower paper towel roller, return to lift
-	FIXL2EXTRA,
-	RAISEL2,	//Raise lift, ?activate pressure in fixture?
-	FIXH,		//Home fixture
-	LOWERL3,	//Lower lift
-	UNLOAD,		//Return plate to loading area
+	DSTOP,		//33 Deactivate paper towel roller, lower paper towel roller, return to lift
+	FIXL2EXTRA, //34
+	RAISEL2,	//35 Raise lift, ?activate pressure in fixture?
+	FIXH,		//36 Start to home fixture
+	LOWERL3,	//37
+	UNLOAD,		//38 Return plate to loading area, finish homing fixture
 	END,		//End of cycle
 	DONER,		//Stop loop
 	WAIT		//In Debug Cycle, wait for button press
@@ -171,8 +169,8 @@ union u_outputByte0_tag{
 union u_outputByte1_tag{
 	struct {
 		unsigned int brush2Lower : 1;
-		unsigned int ptRaise : 1;
 		unsigned int ptLower : 1;
+		unsigned int ptRaise : 1;
 		unsigned int airKnife : 1;
 		unsigned int brush1Pump : 1;
 		unsigned int brush2Pump : 1;
@@ -227,20 +225,23 @@ int  totalStepLength2 = 2;        // this is also set in the main program
 int  totalStepLength3 = 2;
 int  totalStepLength4 = 2;
 int  totalStepLength5 = 2;
+
+int stepFactor = 4;					//Denominator for microstepping of the fixture motor
 // max number of steps allowed-should reach sensor first
 // needs to change if motor drivers micro-step settings change
-int fixtureMotorHalfPlate = 4800;	//Number of steps of the fixture motor to move 1/2 plate length
-int fixtureMotorWholePlate = 9600;	//Number of steps of the fixture motor to move one plate length
-int plateLoadMotorLoadPlate = 2000;	//Number of steps of the plate load motor to load the plate
-int plateLoadExtra = 120;			//Number of steps of the plate load motor to move after sensor trigger
-int fixtureLiftExtra = 180;
-int fixtureMotorHomeFix = 2000;		//Number of steps of the fixture motor to home the fixture
-int fixtureMotorBrush1Step = 2000;	//Number of steps of the fixture motor to move to the first brush
-int fixtureMotorBrush2Step = 2000;	//Number of steps of the fixture motor to move to the second brush
-int fixtureMotorDry1Step = 2000;	//Number of steps of the fixture motor to move to the first dry station
-int fixtureMotorDry1Extra = 180;		//Number of steps of the fixture motor to move after sensor trigger
-int fixtureMotorDry2Step = 2000;	//Number of steps of the fixture motor to move to the second dry station
-int fixtureMotorLoadBack = 2000;	//Number of steps of the fixture motor to move back to the loading station
-int fixtureMotorDry1StepWhole = 2000;	//Number of steps of the fixture motor to move to the first drying station skipping a brush
-int fixtureMotorBrush2StepWhole = 2000;	//Number of steps of the fixture motor to move to the second brush skipping a brush
-int fixtureLift2Extra = 180;				//Number of steps of the fixture motor to move after sensor trigger
+int fixtureMotorSmallHalfPlate = 610;	//Number of steps of the fixture motor to move 1/2 plate length
+int fixtureMotorBigHalfPlate = 640;
+int fixtureMotorDry = 1500;	//Number of steps of the fixture motor to dry the plate
+int plateLoadMotorLoadPlate = 700;	//Number of steps of the plate load motor to load the plate
+int plateLoadExtra = 15;			//Number of steps of the plate load motor to move after sensor trigger
+int fixtureLiftExtra = 22;
+//int fixtureMotorHomeFix = 2000;		//Number of steps of the fixture motor to home the fixture
+//int fixtureMotorBrush1Step = 2000;	//Number of steps of the fixture motor to move to the first brush
+//int fixtureMotorBrush2Step = 2000;	//Number of steps of the fixture motor to move to the second brush
+//int fixtureMotorDry1Step = 2000;	//Number of steps of the fixture motor to move to the first dry station
+int fixtureMotorDry1Extra = 22;		//Number of steps of the fixture motor to move after sensor trigger
+int fixtureMotorDry2Step = 1;	//Number of steps of the fixture motor to move to the second dry station
+//int fixtureMotorLoadBack = 2000;	//Number of steps of the fixture motor to move back to the loading station
+//int fixtureMotorDry1StepWhole = 1000;	//Number of steps of the fixture motor to move to the first drying station skipping a brush
+//int fixtureMotorBrush2StepWhole = 2000;	//Number of steps of the fixture motor to move to the second brush skipping a brush
+int fixtureLift2Extra = 13;				//Number of steps of the fixture motor to move after sensor trigger
