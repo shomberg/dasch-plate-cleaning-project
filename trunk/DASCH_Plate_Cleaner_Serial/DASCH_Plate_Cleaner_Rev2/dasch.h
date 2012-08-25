@@ -226,6 +226,8 @@ int  totalStepLength3 = 2;
 int  totalStepLength4 = 2;
 int  totalStepLength5 = 2;
 
+int delayTimeMicroSeconds = 500;	//length in microseconds of the delay between each execution of the program's loop
+
 int stepFactor = 4;					//Denominator for microstepping of the fixture motor
 // max number of steps allowed-should reach sensor first
 // needs to change if motor drivers micro-step settings change

@@ -156,7 +156,7 @@ int main()
 	//clear();
 	serial_print_string("DASCH CLEANER 2c");
 	lcd_goto_xy(0,1);
-	serial_print_string("REV: 43");
+	serial_print_string("REV: 44");
 	delay_ms(2000);
 	
 	//clear();
@@ -254,7 +254,7 @@ int main()
 			selection = is_digital_input_high(IO_D3);
 			buttonTriggered = button_debounce(counter, &stateButton);//, &counterRefPush, &counterRefRel, &stateButton);
 			serial_check(); counter++;
-			delay_ms(1);
+			delay_us(delayTimeMicroSeconds);
 		}
 		buttonTriggered = false;
 		counter = 0;
@@ -277,7 +277,7 @@ int main()
 			/*while(!buttonTriggered){
 				buttonTriggered = button_debounce(counter, &stateButton);//, &counterRefPush, &counterRefRel, &stateButton);
 				counter++;
-				delay_ms(1);
+				delay_us(delayTimeMicroSeconds);
 			}*/
 			buttonTriggered = false;
 			counter = 0;
@@ -765,7 +765,7 @@ int main()
 				motor_and_write(counter, counterRef, plateLoadMotor, fixtureMotor, brush1Motor, brush2Motor, paperTowelMotor);
 
 				serial_check(); counter++;
-				delay_ms(1);
+				delay_us(delayTimeMicroSeconds);
 			}
 		}
 		else{										//If switch is set to Run Mode
@@ -796,7 +796,7 @@ int main()
 			sel2 = is_digital_input_high(IO_D2);
 			buttonTriggered = button_debounce(counter, &stateButton);//, &counterRefPush, &counterRefRel, &stateButton);
 			counter++;
-			delay_ms(1);
+			delay_us(delayTimeMicroSeconds);
 		}
 		buttonTriggered = false;
 		counter = 0;
@@ -900,7 +900,7 @@ int main()
 				motor_and_write(counter, counterRef, plateLoadMotor, fixtureMotor, brush1Motor, brush2Motor, paperTowelMotor);
 
 				serial_check(); counter++;
-				delay_ms(1);
+				delay_us(delayTimeMicroSeconds);
    		 	}
 		}
 
@@ -988,7 +988,7 @@ int main()
 				motor_and_write(counter, counterRef, plateLoadMotor, fixtureMotor, brush1Motor, brush2Motor, paperTowelMotor);
 
 				serial_check(); counter++;
-				delay_ms(1);
+				delay_us(delayTimeMicroSeconds);
    		 	}
 		}
 
@@ -1087,7 +1087,7 @@ int main()
 				motor_and_write(counter, counterRef, plateLoadMotor, fixtureMotor, brush1Motor, brush2Motor, paperTowelMotor);
 
 				serial_check(); counter++;
-				delay_ms(1);
+				delay_us(delayTimeMicroSeconds);
    		 	}
 		}
 
@@ -1195,7 +1195,7 @@ int main()
 				motor_and_write(counter, counterRef, plateLoadMotor, fixtureMotor, brush1Motor, brush2Motor, paperTowelMotor);
 
 				serial_check(); counter++;
-				delay_ms(1);
+				delay_us(delayTimeMicroSeconds);
    		 	}
 		}
 
@@ -1547,7 +1547,7 @@ bool button_debounce(int counter, int *pstateButton)
 		*pstateButton = PRESSED;
 	}
 	if(*pstateButton == PRESSED){
-		if(counter - counterRefPush > 15){
+		if(counter - counterRefPush > 15*1000/delayTimeMicroSeconds){
 			if(!is_digital_input_high(IO_D0)){
 				counterRefRel = counter;
 				*pstateButton = RELEASED;
@@ -1562,7 +1562,7 @@ bool button_debounce(int counter, int *pstateButton)
 			*pstateButton = PRESSED;
 			counterRefPush = counter;
 		}
-		else if(counter - counterRefRel > 15){
+		else if(counter - counterRefRel > 15*1000/delayTimeMicroSeconds){
 			*pstateButton = NONE;
 			return true;
 		}
