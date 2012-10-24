@@ -4,13 +4,13 @@ http://hea_www.harvard.edu/DASCH/
 Runs on Orangutan SVP 1284p board
 
 The program runs the plate cleaning machine in one of two modes: Maintenance mode, in which
-the device's hardware can be checked for proper functionality, and Run mode, in whcih a
+the device's hardware can be checked for proper functionality, and Run mode, in which a
 plate can be cleaned in several ways.
 
 Maintenance mode is for troubleshooting.  In Maintenance mode there are 4 sub-modes.  The
 first tests all of the inputs, the second tests all of the outputs, the third tests all
 of the motors, and the fourth and final sub-mode tests all of the inputs, outputs, and
-motors before stopping.  The four-way switch can be changed durin operation to change sub-mode.
+motors before stopping.  The four-way switch can be changed during operation to change sub-mode.
 
 Run mode is for cleaning plates.  In Run mode, there are 3 sub-modes.  The first cleans a
 plate using only the first brush, the second cleans a plate using only the second brush,
@@ -18,15 +18,30 @@ and the third cleans a plate using both brushes.  A fourth to be added soon will
 while pausing between states to allow for troubleshooting.  Sub-modes cannot be changed in
 mid-run.
 
-*/
+Rev History
+44=>45  oct 9,2012
 
+initialize outputbyte1 from b255 ->15
+change brush(1-2)pumps from active low to active high. BS.
+
+Oct 12,2012
+Add state messages to output screen.  RT.
+
+
+**********************************************************************************************************/
 #include "dasch.h"
 #include <pololu/orangutan.h>
 #include <i2cmaster.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
-/*void * operator new(size_t size); 
+#define PROGRAM_NAME "DASCH CLEANER 2c"
+#define REVISION_NUMBER "REV:44"
+
+/*** Can this sections be removed? ***
+
+void * operator new(size_t size); 
 void operator delete(void * ptr); 
 
 void * operator new(size_t size) 
@@ -80,6 +95,8 @@ void serial_print_string(char msg[]);
 
 void serial_print_int(int a);
 
+void serial_print_string_noCRLF(char msg[]);
+
 int main()   
 {
     
@@ -91,15 +108,17 @@ int main()
 	int brush1Motor = 0;		//brush 1 motor
 	int brush2Motor = 0;		//brush 2 motor
 	int paperTowelMotor = 0; 	//paper towel roller motor
-	int state = 0;										//Holds program's current state
-	int counter = 0;									//Counts iteration of the loop for timing purposes
-	int last = 0;										//In Debug Cycle, holds program's most recent non-waiting state
+	int state = 0;				//Holds program's current state
+	int counter = 0;			//Counts iteration of the loop for timing purposes
+	int last = 0;				//In Debug Cycle, holds program's most recent non-waiting state
 	
-	int lastVal = -1;					//Holds last value for sensor
+	int lastVal = -1;			//Holds last value for sensor
 
 	//various reference points used by the program to tell how long since an event has occurred
 	//the ones with numbers correspond to run mode states, and Five refers to motor 5 (paper towel roller)
 	int counterRef = 0;
+	
+	int tmpCounter; //
 		
 	//hold whether or not statements have been printed yet (numbers refer to run mode states)
 	bool print0 = true;
@@ -113,16 +132,16 @@ int main()
 	bool switched = false;			//switched is false if the submode in maintenance mode wasn't just switched, true otherwise
 	
 	fixtureMotorSmallHalfPlate *= stepFactor;
-	fixtureMotorBigHalfPlate *= stepFactor;
-	fixtureMotorDry *= stepFactor;
-	plateLoadMotorLoadPlate *= stepFactor;
-	plateLoadExtra *= stepFactor;
-	fixtureLiftExtra *= stepFactor;
-	fixtureLift2Extra *= stepFactor;
-	fixtureMotorDry1Extra *= stepFactor;
-	fixtureMotorDry2Step *= stepFactor;
+	fixtureMotorBigHalfPlate   *= stepFactor;
+	fixtureMotorDry            *= stepFactor;
+	plateLoadMotorLoadPlate    *= stepFactor;
+	plateLoadExtra             *= stepFactor;
+	fixtureLiftExtra           *= stepFactor;
+	fixtureLift2Extra          *= stepFactor;
+	fixtureMotorDry1Extra      *= stepFactor;
+	fixtureMotorDry2Step       *= stepFactor;
     
-	while(1){						//Repeats the entire program indefinitely (runs maintenance or normal each time)
+	while(1){		//Repeats the entire program indefinitely (runs maintenance or normal each time)
 
 							//mx holds whether motor x should move: 0 = no, 1 = yes
 	plateLoadMotor = 0;		//plate load motor
@@ -130,9 +149,9 @@ int main()
 	brush1Motor = 0;		//brush 1 motor
 	brush2Motor = 0;		//brush 2 motor
 	paperTowelMotor = 0; 	//paper towel roller motor
-	state = 0;										//Holds program's current state
-	counter = 0;									//Counts iteration of the loop for timing purposes
-	last = 0;										//In Debug Cycle, holds program's most recent non-waiting state
+	state = 0;				//Holds program's current state
+	counter = 0;			//Counts iteration of the loop for timing purposes
+	last = 0;				//In Debug Cycle, holds program's most recent non-waiting state
 
 	//various reference points used by the program to tell how long since an event has occurred
 	//the ones with numbers correspond to run mode states, and Five refers to motor 5 (paper towel roller)
@@ -143,20 +162,21 @@ int main()
 	print35 = true;
 	
 	//initialize button variables
-	button = 1;				//button = 0 means it has been de-bounced, button = 1 means it hasn't
+	button = 1;						//button = 0 means it has been de-bounced, button = 1 means it hasn't
 	buttonTriggered = false;
-	stateButton = NONE;		//holds the state in the button subroutine where the program is currently
+	stateButton = NONE;				//holds the state in the button subroutine where the program is currently
+
 	u_motorByte0.motorByte0 = 0;  // initialize motorByte0
 	u_motorByte1.motorByte1 = 128;  // initialize motorByte1              **********1 or 128, depending on order**********
 	u_outputByte0.outputByte0 = 255;  // initialize outputByte0
-	u_outputByte1.outputByte1 = 255;  // initialize outputByte1
+	u_outputByte1.outputByte1 = 15;  // initialize outputByte1
 	u_inputByte0.inputByte0 = 0;  // initialize inputByte0
 	u_inputByte1.inputByte1 = 0;  // initialize inputByte1
 	
 	//clear();
-	serial_print_string("DASCH CLEANER 2c");
+	serial_print_string(PROGRAM_NAME);
 	lcd_goto_xy(0,1);
-	serial_print_string("REV: 44");
+	serial_print_string(REVISION_NUMBER);
 	delay_ms(2000);
 	
 	//clear();
@@ -169,29 +189,48 @@ int main()
     serial_print_string("INIT ");
 	
     ret1 = i2c_start(I2C1+I2C_WRITE);       // ret1 holds whether or not I2C1 started properly
+	// #define IC_START(ic)  i2c_start((ic)+I2C_WRITE)
+	// alternate format:
+	//       ret1 = IC_START( IC21 );
+	//       serial_print_string( (ret1)? "I2C1 DOWN": "I2C1 UP" );
+	//       i2c_stop();
+	// OR
+	//      ret1 = IC_START( IC22 ); 
+	//		serial_print_string( "I2C2 ");
+	//      serial_print_string( (ret1)? "DOWN":"UP" ); 
+	//		i2c_stop();
+	if (ret1) {
+		serial_print_string("I2C1 DOWN ");
+		}
+	else {
+		serial_print_string("I2C1 UP");
+		}	
 	i2c_stop();	
+	
 	ret2 = i2c_start(I2C2+I2C_WRITE);       // ret2 holds whether or not I2C2 started properly
+	
+	if (ret2){
+		
+		serial_print_string("I2C2 DOWN ");
+		}
+	else{
+		serial_print_string("I2C2 UP");
+		}		
 	i2c_stop();
 	ret3 = i2c_start(I2C3+I2C_WRITE);       // ret3 holds whether or not I2C3 started properly
-	i2c_stop();
-	
-	if (ret1)
-		serial_print_string("I2C1 DOWN ");
-	else
-		serial_print_string("I2C1 UP");
-	if (ret2)
-		serial_print_string("I2C2 DOWN ");
-	else
-		serial_print_string("I2C2 UP");
-	if (ret3)
+	if (ret3){
 		serial_print_string("I2C3 DOWN ");
-	else
+		}		
+	else{
 		serial_print_string("I2C3 UP");
+		}		
+	i2c_stop();
     
 	//clear();
 	serial_print_string("START ");
 	
-	if ( ret1 | ret2 | ret3 ) {			// Check if all three I2C devices responded properly
+	if ( ret1 | ret2 | ret3 ) {			
+		// Check if all three I2C devices responded properly
         /* failed to issue start condition(s), possibly no device found */
         
 		serial_print_string("I2C BAD ");
@@ -214,18 +253,19 @@ int main()
 		i2c_write(u_motorByte1.motorByte1);
 		i2c_stop();
 
+        i2c_start(I2C2+I2C_WRITE);       //moved above to make sure right outputs are available
+        i2c_write(0x2);
+        i2c_write(u_outputByte0.outputByte0);
+        i2c_write(u_outputByte1.outputByte1);
+        i2c_stop();
+
 		i2c_start(I2C2+I2C_WRITE);		//Configures I2C2 registers as outputs
 		i2c_write(0x6);
 		i2c_write(0x0);
 		i2c_write(0x0);
 		i2c_stop();
 
-		i2c_start(I2C2+I2C_WRITE);
-		i2c_write(0x2);
-		i2c_write(u_outputByte0.outputByte0);
-		i2c_write(u_outputByte1.outputByte1);
-		i2c_stop();
-
+		
 		//Registers default to input, so I2C3 is fine already
 
 		u_motorByte1.bits_in_motorByte1.enableAll = 0;	//Enables all motor drivers after startup
@@ -292,7 +332,7 @@ int main()
 				i2c_start(I2C3+I2C_READ);						// second start condition (read)
 				u_inputByte0.inputByte0 = i2c_readAck();				// read first byte and send Ack, requesting more
    		     	u_inputByte1.inputByte1 = i2c_readNak();				// read second byte and send stop condition
-  	 	     	i2c_stop();								// set stop conditon = release bus 		
+  	 	     	i2c_stop();								// set stop condition = release bus 		
 
 				//User presses button for each state transition
 				buttonTriggered = button_debounce(counter, &stateButton);//, &counterRefPush, &counterRefRel, &stateButton);
@@ -351,7 +391,7 @@ int main()
 					brush2Motor = 0;
 					paperTowelMotor = 0;
 					u_outputByte0.outputByte0 = 255;  // reset outputByte0
-					u_outputByte1.outputByte1 = 255;  // reset outputByte1
+					u_outputByte1.outputByte1 = 15;  // reset outputByte1
 					if(submode != MOTOR && submode != MULTI){
 						u_motorByte0.motorByte0 = 0;	  // reset motorByte0
 						u_motorByte1.motorByte1 = 0;	  // reset motorByte1
@@ -375,7 +415,7 @@ int main()
 							state = DONEM;
 						}
 					}
-					else if(state <= O11_OFF){		//if it's doing the outputs
+					else if(state <= O13_OFF){		//if it's doing the outputs
 						if(state % 2 == 0){			//current state is an 'on' state
 							lcd_goto_xy(13,1);
 							serial_print_string("OFF");
@@ -387,7 +427,7 @@ int main()
 						state ++;
 						counterRef = counter;
 						printVar = true;
-						if(state == O11_OFF + 1){	//accounts for end of maintenance mode after outputs
+						if(state == O13_OFF + 1){	//accounts for end of maintenance mode after outputs
 							//clear();
 							state = DONEM;
 						}
@@ -678,16 +718,36 @@ int main()
 					case O11_OFF:
 						u_outputByte1.bits_in_outputByte1.airKnife = 1;
 						break;
-					case M1_F:
+					case O12_ON:
+                        if(printVar){
+							serial_print_string("BRUSH1PUMP    ON ");
+							printVar = false;	
+						}	
+						u_outputByte1.bits_in_outputByte1.brush1Pump = 1;
+					break;	
+					case O12_OFF:
+						u_outputByte1.bits_in_outputByte1.brush1Pump = 0;
+					break;						
+					case O13_ON:
+                        if(printVar){
+							serial_print_string("BRUSH2PUMP    ON ");
+							printVar = false;	
+						}	
+						u_outputByte1.bits_in_outputByte1.brush2Pump = 1;
+					break;	
+					case O13_OFF:
+						u_outputByte1.bits_in_outputByte1.brush2Pump = 0;
+						break;								
+					case M1_F:		// M1_F:    /* ALERT is there a case missing??? */
 						if(printVar){
 							serial_print_string("LOADING    FRONT");
 							printVar = false;
 						}
-						u_motorByte0.bits_in_motorByte0.plateLoadMotorDir = 0;
+						u_motorByte0.bits_in_motorByte0.plateLoadMotorDir = 1;  // dir needs reversing on other side
 						plateLoadMotor =  1;
 						break;
 					case M1_B:
-						u_motorByte0.bits_in_motorByte0.plateLoadMotorDir = 1;
+						u_motorByte0.bits_in_motorByte0.plateLoadMotorDir = 0;
 						plateLoadMotor =  1;
 						break;
 					case M2_F:
@@ -790,7 +850,8 @@ int main()
 				else if(!is_digital_input_high(IO_D1) && is_digital_input_high(IO_D2))
 					serial_print_string("BOTH B");
 				else
-					serial_print_string("DEBUG");
+					serial_print_string("STEP");
+					state = 0;          /* added to reset state counter to zero*/
 			}
 			sel1 = is_digital_input_high(IO_D1);
 			sel2 = is_digital_input_high(IO_D2);
@@ -807,7 +868,7 @@ int main()
 
 		if(!is_digital_input_high(IO_D1) && !is_digital_input_high(IO_D2)){
 			lcd_goto_xy(7,0);
-			serial_print_string("FIRST B");
+			serial_print_string("FIRST B");    //start of first brush cycle
 			fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			while(state != DONER)
 			{
@@ -816,14 +877,19 @@ int main()
 				i2c_start(I2C3+I2C_READ);						// second start condition (read)
 				u_inputByte0.inputByte0 = i2c_readAck();				// read first byte and send Ack, requesting more
    		     	u_inputByte1.inputByte1 = i2c_readNak();				// read second byte and send stop condition
-  	 	     	i2c_stop();								// set stop conditon = release bus 		
+  	 	     	i2c_stop();								// set stop condition = release bus 		
 				
 				if(state != INIT && printVar){
 					lcd_goto_xy(6,1);
 					serial_print_string("     ");
 					lcd_goto_xy(0,1);
-					serial_print_string("STATE ");
+					serial_print_string_noCRLF("STATE: ");
 					serial_print_int(state);
+					serial_print_string_noCRLF("=> ");
+					serial_print_string(run_states_msg_list[state]);
+					serial_print_string(" ");
+					serial_print_string_noCRLF("Counter:");
+					serial_print_int(counter/stepFactor);      // want to print number of steps to reach here
 					printVar = false;
 				}
 
@@ -842,8 +908,10 @@ int main()
 
 				//First Brush
 				if(firstB_trans(state, counter, counterRef)){
+					//serial_print_string("firstB_trans: ");
+					//serial_print_int(counter);      // want to print number of steps to reach here
 					state ++;
-					if(state != B1STOP1 && state != CLEAN1_3)         // want to print number of steps to reach here
+					if(state != B1STOP1 && state != CLEAN1_3)
 						counterRef = counter;
 					printVar = true;
 				}
@@ -887,7 +955,7 @@ int main()
 				}
 				dry_action(state, counter, &plateLoadMotor, &fixtureMotor, &brush1Motor, &brush2Motor, &paperTowelMotor);
 				if(state == END){
-					plateLoadMotor = 0;
+					plateLoadMotor = 1;      // may need reversing on other side?
 					u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 0;
 					if(print35 == 1){
 						//clear();
@@ -901,8 +969,8 @@ int main()
 
 				serial_check(); counter++;
 				delay_us(delayTimeMicroSeconds);
-   		 	}
-		}
+   		 	}     // end of first brush while cycle
+		}   
 
 
 		else if(is_digital_input_high(IO_D1) && !is_digital_input_high(IO_D2)){
@@ -916,18 +984,21 @@ int main()
 				i2c_start(I2C3+I2C_READ);						// second start condition (read)
 				u_inputByte0.inputByte0 = i2c_readAck();				// read first byte and send Ack, requesting more
    		     	u_inputByte1.inputByte1 = i2c_readNak();				// read second byte and send stop condition
-  	 	     	i2c_stop();								// set stop conditon = release bus 		
+  	 	     	i2c_stop();								// set stop condition = release bus 		
 				
 				if(state != INIT && printVar){
 					lcd_goto_xy(6,1);
 					serial_print_string("     ");
 					lcd_goto_xy(0,1);
-					serial_print_string("STATE ");
+					serial_print_string_noCRLF("STATE: ");
 					serial_print_int(state);
+					serial_print_string_noCRLF("=> ");
+					serial_print_string(run_states_msg_list[state]);
+					serial_print_string(" ");
+
 					printVar = false;
 				}
 
-				
 				buttonTriggered = button_debounce(counter, &stateButton);//, &counterRefPush, &counterRefRel, &stateButton);
 
 				//state transitions
@@ -1004,14 +1075,18 @@ int main()
 				i2c_start(I2C3+I2C_READ);						// second start condition (read)
 				u_inputByte0.inputByte0 = i2c_readAck();				// read first byte and send Ack, requesting more
    		     	u_inputByte1.inputByte1 = i2c_readNak();				// read second byte and send stop condition
-  	 	     	i2c_stop();								// set stop conditon = release bus 		
+  	 	     	i2c_stop();								// set stop condition = release bus 		
 				
 				if(state != INIT && printVar){
 					lcd_goto_xy(6,1);
-					serial_print_string("       ");
+					serial_print_string("     ");
 					lcd_goto_xy(0,1);
-					serial_print_string("STATE ");
+					serial_print_string_noCRLF("STATE: ");
 					serial_print_int(state);
+					serial_print_string_noCRLF("=> ");
+					serial_print_string(run_states_msg_list[state]);
+					serial_print_string(" ");
+
 					printVar = false;
 				}
 
@@ -1093,7 +1168,7 @@ int main()
 
 		else if(is_digital_input_high(IO_D1) && is_digital_input_high(IO_D2)){
 			lcd_goto_xy(7,0);
-			serial_print_string("DEBUG");
+			serial_print_string("STEP");
 			fixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			while(state != DONER)
 			{
@@ -1102,14 +1177,18 @@ int main()
 				i2c_start(I2C3+I2C_READ);						// second start condition (read)
 				u_inputByte0.inputByte0 = i2c_readAck();				// read first byte and send Ack, requesting more
    		     	u_inputByte1.inputByte1 = i2c_readNak();				// read second byte and send stop condition
-  	 	     	i2c_stop();								// set stop conditon = release bus 		
+  	 	     	i2c_stop();								// set stop condition = release bus 		
 				
 				if(state != INIT && printVar){
 					lcd_goto_xy(6,1);
 					serial_print_string("     ");
 					lcd_goto_xy(0,1);
-					serial_print_string("STATE ");
+					serial_print_string_noCRLF("STATE: ");
 					serial_print_int(state);
+					serial_print_string_noCRLF("=> ");
+					serial_print_string(run_states_msg_list[state]);
+					serial_print_string(" ");
+
 					printVar = false;
 				}
 
@@ -1221,6 +1300,10 @@ void serial_print_string(char msg[]){
 	serial_send_blocking(USB_COMM, "\r\n", 2);
 }
 
+void serial_print_string_noCRLF(char msg[]){
+	serial_send_blocking(USB_COMM, msg, strlen(msg));
+}
+
 void serial_print_int(int a){
 	char msg[5];
 	itoa(a, msg, 10);
@@ -1275,12 +1358,12 @@ void motor_and_write(int counter, int counterRef, int plateLoadMotor, int fixtur
 	}
 
 	i2c_start(I2C1+I2C_WRITE);
-	i2c_write(0x2);									// write command byte
+	i2c_write(0x2);									// write command byte to motor chip
 	i2c_write(u_motorByte0.motorByte0);                       // write first byte of output
 	i2c_write(u_motorByte1.motorByte1);                       // write second byte of output
 	i2c_stop();                            // set stop condition = release bus
 
-	i2c_start(I2C2+I2C_WRITE);                // why the second write?
+	i2c_start(I2C2+I2C_WRITE);                // write to output chip
 	i2c_write(0x2);
 	i2c_write(u_outputByte0.outputByte0);
 	i2c_write(u_outputByte1.outputByte1);
@@ -1289,7 +1372,8 @@ void motor_and_write(int counter, int counterRef, int plateLoadMotor, int fixtur
 
 void init_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMotor, int *pbrush1Motor, int *pbrush2Motor, int *ppaperTowelMotor, bool *pprint0){
 	switch(state){
-		case INIT:
+		
+		case INIT:   // state 0
 			if(u_inputByte0.bits_in_inputByte0.fixtureHome == 1){
 				u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  //********* 0 is used as fixture backward ?cc?, 1 as forward ?c? **********
 				//u_outputByte0.bits_in_outputByte0.raiseFixture = 0;
@@ -1306,7 +1390,8 @@ void init_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMoto
 				}
 			}
 			break;
-		case LOAD:
+			
+		case LOAD:    //state 1
 			u_outputByte0.bits_in_outputByte0.ACPower = 0;
 			if((counter % 200) < 100){
 				u_outputByte0.bits_in_outputByte0.blowerPulse = 0;
@@ -1316,20 +1401,20 @@ void init_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMoto
 			}
 			*pplateLoadMotor = 1;
 			*pfixtureMotor = 0;
-			
-			u_motorByte0.bits_in_motorByte0.plateLoadMotorDir = 0;  //****** dir1 ******
+			u_motorByte0.bits_in_motorByte0.plateLoadMotorDir = 1;  //****** dir1 ******
 			u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 1;
 			u_outputByte0.bits_in_outputByte0.plateStop = 0;
 			break;
-		case LOADEXTRA:
+			
+		case LOADEXTRA:  // state 2
 			*pplateLoadMotor = 1;
 			*pfixtureMotor = 0;
-			
-			u_motorByte0.bits_in_motorByte0.plateLoadMotorDir = 0;  //****** dir1 ******
+			u_motorByte0.bits_in_motorByte0.plateLoadMotorDir = 1;  //****** dir1 ******
 			u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 1;
 			u_outputByte0.bits_in_outputByte0.plateStop = 0;
 			break;
-		case RAISEL1:
+			
+		case RAISEL1:    // state 3
 			u_outputByte0.bits_in_outputByte0.blowerPulse = 1;
 			u_outputByte0.bits_in_outputByte0.lowerFixture = 1;
 			u_outputByte0.bits_in_outputByte0.raiseFixture = 0;
@@ -1338,21 +1423,26 @@ void init_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMoto
 			u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 0;
 			break;
-		case FIXL:
+			
+		case FIXL:   // state 4
+			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ****** dir2 *******
+			*pfixtureMotor = 1; 
+			u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
+			break;
+			
+		case FIXLEXTRA:   // state 5
 			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ****** dir2 *******
 			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			break;
-		case FIXLEXTRA:
-			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ****** dir2 *******
-			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
-			break;
-		case LOWERL1:
+			
+		case LOWERL1:      // state 6
 			*pfixtureMotor = 0;
 			u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 0;
-			u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
+			u_outputByte0.bits_in_outputByte0.raiseFixture = 1;    // removes air to drop fixture
 			break;
-		case LOWERL2:
-			u_outputByte0.bits_in_outputByte0.lowerFixture = 0;
+			
+		case LOWERL2:     // state 7
+			u_outputByte0.bits_in_outputByte0.lowerFixture = 0;    // drives lifts down
 			u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			break;
 		//*********************************************
@@ -1361,121 +1451,172 @@ void init_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMoto
 
 void brush1_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMotor, int *pbrush1Motor, int *pbrush2Motor, int *ppaperTowelMotor){
 	switch(state){
-		case MOVEC1:
-			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ******* dir2 *******   
-			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
+		case MOVEC1:  //state 8   move to first cleaning stateion
+		
+			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // move fixture to brush1 center   
+			u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
+			*pfixtureMotor = 1;
 			break;
-		case B1SET1:
+			
+		case B1SET1:    //state 9
+		
+			*pfixtureMotor = 0;				//stop fixture
+			u_outputByte0.bits_in_outputByte0.brush1Raise = 1;		// turn off raise brush1(if on)
+			u_outputByte0.bits_in_outputByte0.brush1Lower = 0;		 //force brush low
+			u_outputByte1.bits_in_outputByte1.brush1Pump = 1;		//Pump on to wet brush
+			u_motorByte0.bits_in_motorByte0.brush1MotorDir = 1;		 // set brush 1 direction ccw (1)
+			u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 1; // set the brush motor current up
+			delayTimeMicroSeconds = 4000;   //  slow down the brush for wetting utputByte0.bits_in_outputByte0.brush1Lower = 1;
+			*pbrush1Motor = 1;										// turn on brush motor
+			break;
+			
+		case B1START1: //state 10
+		
+			u_outputByte1.bits_in_outputByte1.brush1Pump = 0;	 // turn off the pump
+			*pbrush1Motor = 0;								     // stop the brush motor	
+			delayTimeMicroSeconds = 800; // speed up brush and fixture
+			u_outputByte0.bits_in_outputByte0.brush1Lower = 1;   //release brush low
+			u_outputByte0.bits_in_outputByte0.brush1Raise = 0;    // raise the brush against the glass
+			u_motorByte0.bits_in_motorByte0.brush1MotorDir = 1;		 // set brush 1 direction cw (1)
+			break;
+			
+		case CLEAN1_1:    //state 11
+	
+			 //delayTimeMicroSeconds = 800; // speed up brush and fixture
+			 u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
+			 u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // fixture moves backward
+			*pbrush1Motor = 1;            //turn on the brush for cleaning
+			*pfixtureMotor = 1;			  //start fixture moving
+			break;
+			
+		case B1STOP1:      // state 12
+			*pfixtureMotor = 0;              // stop fixture
+		    //delayTimeMicroSeconds = 4000;   //  slow down the brush for wetting 
+			*pbrush1Motor = 0;              // stop	brush motor
+			u_outputByte0.bits_in_outputByte0.brush1Raise =1 ;       //turn off brush raise
+			u_outputByte0.bits_in_outputByte0.brush1Lower = 0;       //drive brush low
+			u_motorByte0.bits_in_motorByte0.brush1MotorDir = 1;		 // set brush 1 direction CW (1)
+			
+			break;
+		case CLEAN1_2:    //state 13
+		
+		    delayTimeMicroSeconds = 400; // speed up the brush
+			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // fixture moves to center of brush1
+			*pfixtureMotor = 1;
+			u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
+			break;
+			
+		case B1SET2:    //state 14
+		
 			*pfixtureMotor = 0;
 			*pbrush1Motor = 1;
-			//u_outputByte1.bits_in_outputByte1.brush1Pump = 0;	//Pump control
-			u_motorByte1.bits_in_motorByte1.brush1MotorHighPower = 1;
-			u_motorByte0.bits_in_motorByte0.brush1MotorDir = 1;  // ******* dir3 *******
+			
+			delayTimeMicroSeconds = 4000;   //  slow down the brush for wetting 
+			u_outputByte1.bits_in_outputByte1.brush1Pump = 1;	//pump on to wet brush
+		
 			break;
-		case B1START1:
-			*pbrush1Motor = 1;
-			//u_outputByte1.bits_in_outputByte1.brush1Pump = 1;	//Pump control
-			u_outputByte0.bits_in_outputByte0.brush1Lower = 1;
-			u_outputByte0.bits_in_outputByte0.brush1Raise = 0;
-			break;
-		case CLEAN1_1:
-			*pbrush1Motor = 1;
-			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
-			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
-			break;
-		case B1STOP1:
+		case B1START2:   //state 15
+		
 			*pfixtureMotor = 0;
+			u_outputByte1.bits_in_outputByte1.brush1Pump = 0;	//Pump off
+		    u_motorByte0.bits_in_motorByte0.brush1MotorDir = 0;  //brush1 dir CCW(1)
+			*pbrush1Motor = 1;            //turnup current on brush 1 motor
+			u_outputByte0.bits_in_outputByte0.brush1Lower = 1;  
+			//u_outputByte0.bits_in_outputByte0.brush1Raise = 0;  
+			break;
+			
+		case CLEAN1_3:    // state 16
+			delayTimeMicroSeconds = 800; // speed up the motors
+			*pbrush1Motor = 1;
+			*pfixtureMotor = 1;
+			u_outputByte0.bits_in_outputByte0.brush1Raise = 0;  // raise brush
+			u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
+			delayTimeMicroSeconds = 400; // speed up the motors
+			break;
+			
+		case B2STOP2:    //state  17
 			*pbrush1Motor = 0;
-			u_outputByte0.bits_in_outputByte0.brush1Lower = 0;   //add brush1 wet here?
-			u_outputByte0.bits_in_outputByte0.brush1Raise = 1;
-			break;
-		case CLEAN1_2:
-			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ******* dir2 *******
-			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
-			break;
-		case B1SET2:
 			*pfixtureMotor = 0;
-			*pbrush1Motor = 1;
-			//u_outputByte1.bits_in_outputByte1.brush1Pump = 0;	//Pump control
-			u_motorByte0.bits_in_motorByte0.brush1MotorDir = 0;  // ******* dir3 *******
-			break;
-		case B1START2:
-			*pfixtureMotor = 0;
-			u_motorByte0.bits_in_motorByte0.brush1MotorDir = 0;  // ******* dir3 *******
-			//u_outputByte1.bits_in_outputByte1.brush1Pump = 1;	//Pump control
-			*pbrush1Motor = 1;
-			u_outputByte0.bits_in_outputByte0.brush1Lower = 1;  //add brush1 wet here?
-			u_outputByte0.bits_in_outputByte0.brush1Raise = 0;
-			break;
-		case CLEAN1_3:
-			*pbrush1Motor = 1;
-			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
-			break;
+					u_outputByte0.bits_in_outputByte0.brush2Raise = 0; // turn off raise
+					u_outputByte1.bits_in_outputByte1.brush2Lower = 1;  // turn on lower
+					u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 0;  //idle brush motor
+					break;		
 	}
 }
 
 void brush2_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMotor, int *pbrush1Motor, int *pbrush2Motor, int *ppaperTowelMotor){
 	switch(state){
-		case MOVEC2:
+		
+		case MOVEC2:  // state 18
+			delayTimeMicroSeconds = 400; // speed up to move fixture
 			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 ******* change dir here?? and further??
 			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			break;
-		case B2SET1:
+			
+		case B2SET1:  //state 19
 			*pfixtureMotor = 0;
 			*pbrush2Motor = 1;
 			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;
-			//u_outputByte1.bits_in_outputByte1.brush2Pump = 0;	//Pump control
+			//u_outputByte1.bits_in_outputByte1.brush2Pump = 1;	//Pump control
 			u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 1;
 			u_motorByte1.bits_in_motorByte1.brush2MotorDir = 1;  // ******* dir4 ******* 
 			break;
-		case B2START1:
+			
+		case B2START1:   //state 20
 			*pbrush2Motor = 1;
-			//u_outputByte1.bits_in_outputByte1.brush2Pump = 1;	//Pump control
+			//u_outputByte1.bits_in_outputByte1.brush2Pump = 0;	//Pump control
 			u_outputByte1.bits_in_outputByte1.brush2Lower = 1;  // add brush2 wet here?
 			u_outputByte0.bits_in_outputByte0.brush2Raise = 0;
 			break;
-		case CLEAN2_1:
+			
+		case CLEAN2_1:   //state 21
 			*pbrush2Motor = 1;
 			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			break;
-		case B2STOP1:
+			
+		case B2STOP1:   //state 22
 			*pfixtureMotor = 0;
 			*pbrush2Motor = 0;
 			u_outputByte1.bits_in_outputByte1.brush2Lower = 0;  //add brush2 wet here??
 			u_outputByte0.bits_in_outputByte0.brush2Raise = 1;
 			break;
-		case CLEAN2_2:
+			
+		case CLEAN2_2:    // state 23
 			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ******* dir2 *******
 			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			break;
-		case B2SET2:
+			
+		case B2SET2:   // state 24
 			*pfixtureMotor = 0;
 			*pbrush2Motor = 1;
-			//u_outputByte1.bits_in_outputByte1.brush2Pump = 0;	//Pump control
+			//u_outputByte1.bits_in_outputByte1.brush2Pump = 1;	//Pump control
 			u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 1;
 			u_motorByte1.bits_in_motorByte1.brush2MotorDir = 0;  // ******* dir4 *******
 			break;
-		case B2START2:
+			
+		case B2START2:   //State 25
 			*pfixtureMotor = 0;
 			u_motorByte1.bits_in_motorByte1.brush2MotorDir = 0;  // ******* dir4 *******
-			//u_outputByte1.bits_in_outputByte1.brush2Pump = 1;	//Pump control
+			//u_outputByte1.bits_in_outputByte1.brush2Pump = 0;	//Pump control
 			*pbrush2Motor = 1;
 			u_outputByte1.bits_in_outputByte1.brush2Lower = 1;
 			u_outputByte0.bits_in_outputByte0.brush2Raise = 0;
 			break;
-		case CLEAN2_3:
+			
+		case CLEAN2_3:     // state 26
 			*pbrush2Motor = 1;
 			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			break;
-		case B2STOP2:
+			
+		case B2STOP2:    // state 27
 			*pbrush2Motor = 0;
 			*pfixtureMotor = 0;
 			u_outputByte1.bits_in_outputByte1.brush2Lower = 0;
 			u_outputByte0.bits_in_outputByte0.brush2Raise = 1;
 			u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 0;
 			break;
-		//*************************************************
-		case MOVED1:
+			
+		case MOVED1:    // state 28
 			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;
 			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			break;
@@ -1484,54 +1625,73 @@ void brush2_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMo
 
 void dry_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMotor, int *pbrush1Motor, int *pbrush2Motor, int *ppaperTowelMotor){
 	switch(state){
-		case MOVED1EXTRA:
+		
+		case MOVED1EXTRA:    //state 29  ?
 			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;
 			*pfixtureMotor = 1;
 			break;
-		case DRY:
-			u_outputByte1.bits_in_outputByte1.airKnife = 0;
+			
+		case DRY:    // state 30   stop running paper towel advance
+		
+			u_outputByte1.bits_in_outputByte1.airKnife = 0;   // turn on air to dry
 			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 *******
 			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			u_motorByte1.bits_in_motorByte1.paperTowelMotorHighPower = 1;
 			u_motorByte1.bits_in_motorByte1.paperTowelMotorDir = 0;
-			u_outputByte1.bits_in_outputByte1.ptRaise = 0;
-			*ppaperTowelMotor = 1;
+			u_outputByte1.bits_in_outputByte1.ptRaise = 0;   //raise the rollers
+			*ppaperTowelMotor = 1;   //start advancing the paper
 			break;
-		case DSTOP:
+			
+		case DSTOP:   // state 31 turn off drying --plate is past
+		
 			u_outputByte1.bits_in_outputByte1.airKnife = 1;
-			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
+			*pfixtureMotor = 1;
+			u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			*ppaperTowelMotor = 0;
 			u_motorByte1.bits_in_motorByte1.paperTowelMotorHighPower = 0;
 			u_outputByte1.bits_in_outputByte1.ptRaise = 1;
 			u_outputByte1.bits_in_outputByte1.ptLower = 0;
 			break;
-		case FIXL2EXTRA:
+			
+		case FIXL2EXTRA:  //state 32
+		
 			u_outputByte1.bits_in_outputByte1.ptLower = 1;
 			*pfixtureMotor = 1;
 			u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			break;
-		case RAISEL2:
+			
+		case RAISEL2:  //state 33   raise fixture lifts
+		
 			*pfixtureMotor = 0;
-			u_outputByte0.bits_in_outputByte0.raiseFixture = 0;
-			u_outputByte0.bits_in_outputByte0.lowerFixture = 1;
+			u_outputByte0.bits_in_outputByte0.lowerFixture = 1;   //make sure pistons are free
+			u_outputByte0.bits_in_outputByte0.raiseFixture = 0;    // raise fixture
+
 			break;
-		case FIXH:
+			
+		case FIXH:   // state 34  home fixture
+		
 			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;
-			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
+			u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			u_motorByte0.bits_in_motorByte0.plateLoadMotorHighPower = 1;
+			*pfixtureMotor = 1; 
 			break;
-		case LOWERL3:
-			u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
-			u_outputByte0.bits_in_outputByte0.lowerFixture = 0;
+			
+		case LOWERL3:   // state 35
+		
+			u_outputByte0.bits_in_outputByte0.raiseFixture = 1; // let pistons down again
+			u_outputByte0.bits_in_outputByte0.lowerFixture = 0;   //drive pistons down
+			
 			break;
-		case UNLOAD:
+			
+		case UNLOAD:     // state 36
+		
 			u_outputByte0.bits_in_outputByte0.raiseFixture = 1;
 			u_outputByte0.bits_in_outputByte0.lowerFixture = 0;
 			if(u_inputByte0.bits_in_inputByte0.fixtureHome == 0){
 				u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 0;
 				*pfixtureMotor = 0;
 			}
-			u_motorByte0.bits_in_motorByte0.plateLoadMotorDir = 1;
+			u_motorByte0.bits_in_motorByte0.plateLoadMotorDir = 0;
 			*pplateLoadMotor = 1;
 			break;
 	}
@@ -1609,13 +1769,13 @@ bool secondB_trans(int state, int counter, int counterRef){
 }
 
 bool dry_trans(int state, int counter, int counterRef){
-	//Had references to counterRef26, 30...not used in any transitions, though...unecessary?  replaced with counterRef - don't know how it will work
+	//Had references to counterRef26, 30...not used in any transitions, though...unnecessary?  replaced with counterRef - don't know how it will work
 	return((state == MOVED1EXTRA && counter - counterRef > fixtureMotorDry1Extra)||
 	(state == DRY && counter - counterRef > totalStepLength2*fixtureMotorDry)||
 	(state == DSTOP && /*counter - counterRef > totalStepLength2*fixtureMotorLoadBack &&*/ u_inputByte0.bits_in_inputByte0.fixturePlate == 0)||
 	(state == FIXL2EXTRA && counter - counterRef > totalStepLength2*fixtureLift2Extra)||
 	(state == RAISEL2 && /*counter - counterRef > 1000 &&*/ u_inputByte0.bits_in_inputByte0.fixtureLift == 0)||
 	(state == FIXH && counter - counterRef > 200)||
-	(state == LOWERL3 && counter - counterRef > 500)||
+	(state == LOWERL3 && counter - counterRef > 900)||
 	(state == UNLOAD && counter - counterRef > totalStepLength1*plateLoadMotorLoadPlate));
 }

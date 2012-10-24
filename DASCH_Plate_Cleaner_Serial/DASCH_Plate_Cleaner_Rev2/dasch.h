@@ -51,6 +51,10 @@ enum maintenance_states
 	O10_OFF,
 	O11_ON,
 	O11_OFF,
+	O12_ON,
+	O12_OFF,
+	O13_ON,
+	O13_OFF,
 	M1_F,		//Mx = motor x
 	M1_B,
 	M2_F,
@@ -78,13 +82,12 @@ enum run_states
 {
  	INIT = 0,	//0 Initialize fixture and prepare for cycle
 	LOAD, 		//1 Load plate sequence
-	LOADEXTRA,		//2 Moves more to accommodate for sensor placement
-	RAISEL1,		//3 Raise fixture lifts
+	LOADEXTRA,	//2 Moves more to accommodate for sensor placement
+	RAISEL1,	//3 Raise fixture lifts
 	FIXL,		//4 Move fixture onto lift
 	FIXLEXTRA,	//5 Moves more to accommodate for sensor placement
 	LOWERL1,	//6 Let lifts down
-	LOWERL2,	//7 Drive lifts down
-				
+	LOWERL2,	//7 Drive lifts down			
 	MOVEC1,		//8 Move fixture to first cleaning station
 	B1SET1,		//9 Set up brush 1 motor, wet brush
 	B1START1,	//10 Start brush 1 motor and raise brush 1
@@ -94,8 +97,7 @@ enum run_states
 	B1SET2,		//14 Set up brush 1 motor, wet brush
 	B1START2,	//15 Start brush 1 motor and raise brush 1
 	CLEAN1_3,	//16 Clean 2nd half of the plate with the first brush
-	B1STOP2,	//17 Lower brush, turn off motor, continue to next cleaning station
-				
+	B1STOP2,	//17 Lower brush, turn off motor, continue to next cleaning station			
 	MOVEC2,		//18 Move fixture to second cleaning station
 	B2SET1,		//19 Set up brush 2 motor, wet brush
 	B2START1,	//20 Start brush 2 motor and raise brush 2
@@ -105,21 +107,19 @@ enum run_states
 	B2SET2,		//24 Set up brush 2 motor, wet brush
 	B2START2,	//25 Start brush 2 motor and raise brush 2
 	CLEAN2_3,	//26 Clean 2nd half of the plate with the second brush
-	B2STOP2,	//27 Lower brush, turn off motor
-				
+	B2STOP2,	//27 Lower brush, turn off motor			
 	MOVED1,		//28 Move fixture to first drying station
 	MOVED1EXTRA,//29
-	DRY,		//30 Move plate across air knife and paper towel roller
-				
-	DSTOP,		//33 Deactivate paper towel roller, lower paper towel roller, return to lift
-	FIXL2EXTRA, //34
-	RAISEL2,	//35 Raise lift, ?activate pressure in fixture?
-	FIXH,		//36 Start to home fixture
-	LOWERL3,	//37
-	UNLOAD,		//38 Return plate to loading area, finish homing fixture
-	END,		//End of cycle
-	DONER,		//Stop loop
-	WAIT		//In Debug Cycle, wait for button press
+	DRY,		//30 Move plate across air knife and paper towel roller			
+	DSTOP,		//31 Deactivate paper towel roller, lower paper towel roller, return to lift
+	FIXL2EXTRA, //32
+	RAISEL2,	//33 Raise lift, ?activate pressure in fixture?
+	FIXH,		//34 Start to home fixture
+	LOWERL3,	//35 
+	UNLOAD,		//36 Return plate to loading area, finish homing fixture
+	END,		//37 End of cycle
+	DONER,		//38 Stop loop
+	WAIT		//39 In Debug Cycle, wait for button press
 };
 
 
@@ -172,7 +172,7 @@ union u_outputByte1_tag{
 		unsigned int ptLower : 1;
 		unsigned int ptRaise : 1;
 		unsigned int airKnife : 1;
-		unsigned int brush1Pump : 1;
+		unsigned int brush1Pump : 1;  //need to init these bits to zero
 		unsigned int brush2Pump : 1;
 		unsigned int oNull16 : 1;
 		unsigned int oNull17 : 1;
@@ -226,16 +226,16 @@ int  totalStepLength3 = 2;
 int  totalStepLength4 = 2;
 int  totalStepLength5 = 2;
 
-int delayTimeMicroSeconds = 500;	//length in microseconds of the delay between each execution of the program's loop
+int delayTimeMicroSeconds = 400;	//length in microseconds of the delay between each execution of the program's loop
 
-int stepFactor = 4;					//Denominator for microstepping of the fixture motor
+int stepFactor = 4;					//Denominator for micro stepping of the fixture motor
 // max number of steps allowed-should reach sensor first
 // needs to change if motor drivers micro-step settings change
-int fixtureMotorSmallHalfPlate = 610;	//Number of steps of the fixture motor to move 1/2 plate length
-int fixtureMotorBigHalfPlate = 640;
+int fixtureMotorSmallHalfPlate = 550;	//Number of steps of the fixture motor to move 1/2 plate length 610
+int fixtureMotorBigHalfPlate = 720; // 640
 int fixtureMotorDry = 1500;	//Number of steps of the fixture motor to dry the plate
 int plateLoadMotorLoadPlate = 700;	//Number of steps of the plate load motor to load the plate
-int plateLoadExtra = 15;			//Number of steps of the plate load motor to move after sensor trigger
+int plateLoadExtra = 50;			//Number of steps of the plate load motor to move after sensor trigger
 int fixtureLiftExtra = 22;
 //int fixtureMotorHomeFix = 2000;		//Number of steps of the fixture motor to home the fixture
 //int fixtureMotorBrush1Step = 2000;	//Number of steps of the fixture motor to move to the first brush
@@ -247,3 +247,49 @@ int fixtureMotorDry2Step = 1;	//Number of steps of the fixture motor to move to 
 //int fixtureMotorDry1StepWhole = 1000;	//Number of steps of the fixture motor to move to the first drying station skipping a brush
 //int fixtureMotorBrush2StepWhole = 2000;	//Number of steps of the fixture motor to move to the second brush skipping a brush
 int fixtureLift2Extra = 13;				//Number of steps of the fixture motor to move after sensor trigger
+
+const char *run_states_msg_list[] =
+{
+	"Initialize fixture and prepare for cycle", 			//INIT 		0
+	"Load plate sequence",								//LOAD, 	1
+	"Moves more to accommodate for sensor placement",	//LOADEXTRA,	2
+	"Raise fixture lifts",								//RAISEL1,	3
+	"Move fixture onto lift",							//FIXL,		4
+	"Moves more to accommodate for sensor placement",	//FIXLEXTRA,	5
+	"Let lifts down",									//LOWERL1,	6
+	"Drive lifts down",									//LOWERL2,	7
+	"Move fixture to first cleaning station",			//MOVEC1,	8
+	"Set up brush 1 motor, wet brush",					//B1SET1,	9
+	"Start brush 1 motor and raise brush 1",			//B1START1,	10
+	"Clean 1st half of the plate with the first brush",	//CLEAN1_1,	11
+	"Lower brush, turn off motor",						//B1STOP1,	12
+	"Return to center of 1st cleaning station",			//CLEAN1_2,	13
+	"Set up brush 1 motor, wet brush",					//B1SET2,	14
+	"Start brush 1 motor and raise brush 1",			//B1START2,	15
+	"Clean 2nd half of the plate with the first brush",	//CLEAN1_3,	16
+	"Lower brush, turn off motor, continue to next cleaning station",//B1STOP2,	17
+	"Move fixture to second cleaning station",			//MOVEC2,	18
+	"Set up brush 2 motor, wet brush",					//B2SET1,	19
+	"Start brush 2 motor and raise brush 2",			//B2START1,	20
+	"Clean 1st half of the plate with the second brush",//CLEAN2_1,	21
+	"Lower brush, turn off motor",						//B2STOP1,	22
+	"Return to center of 2nd cleaning station",			//CLEAN2_2,	23
+	"Set up brush 2 motor, wet brush",					//B2SET2,	24
+	"Start brush 2 motor and raise brush 2",			//B2START2,	25
+	"Clean 2nd half of the plate with the second brush",	//CLEAN2_3,	26
+	"Lower brush, turn off motor",						//B2STOP2,	27
+	"Move fixture to first drying station",				//MOVED1,	28
+	"Move fixture extra",								//MOVED1EXTRA,29
+	"Move plate across air knife and paper towel roller",	//DRY,		30
+	"Deactivate paper towel roller, lower paper towel roller, return to lift",	//DSTOP,	31
+	"FixL2 Extra",										//FIXL2EXTRA, 32
+	"Raise lift",										//RAISEL2,	33
+	"Start to home fixture",								//FIXH,		34
+	"Lower Lift3",										//LOWERL3,	35
+	"Return plate to loading area, finish homing fixture",	//UNLOAD,		36
+	"End of cycle",										//END,		37
+	"Stop loop",											//DONER,		38
+	"In Debug Cycle, wait for button press"				//WAIT		39
+};
+
+
