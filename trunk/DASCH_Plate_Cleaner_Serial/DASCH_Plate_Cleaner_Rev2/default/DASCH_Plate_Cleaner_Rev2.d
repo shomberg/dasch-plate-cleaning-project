@@ -46,7 +46,8 @@ DASCH_Plate_Cleaner_Rev2.d DASCH_Plate_Cleaner_Rev2.o \
   c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanSPIMaster/OrangutanSPIMaster.h \
   ..\..\..\DASCH_Plate_Cleaner_Rev2\i2cmaster/i2cmaster.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/stdlib.h \
-  c:\winavr-20100110\bin\../lib/gcc/avr/4.3.3/include/stdbool.h
+  c:\winavr-20100110\bin\../lib/gcc/avr/4.3.3/include/stdbool.h \
+  c:/winavr-20100110/lib/gcc/../../avr/include/string.h
 
 .././dasch.h:
 
@@ -141,3 +142,5 @@ c:/winavr-20100110/lib/gcc/../../avr/include/pololu/OrangutanSPIMaster/Orangutan
 c:/winavr-20100110/lib/gcc/../../avr/include/stdlib.h:
 
 c:\winavr-20100110\bin\../lib/gcc/avr/4.3.3/include/stdbool.h:
+
+c:/winavr-20100110/lib/gcc/../../avr/include/string.h:
