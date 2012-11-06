@@ -37,7 +37,7 @@ Add state messages to output screen.  RT.
 #include <string.h>
 
 #define PROGRAM_NAME "DASCH CLEANER 2c"
-#define REVISION_NUMBER "REV:44"
+#define REVISION_NUMBER "REV:46"
 
 /*** Can this sections be removed? ***
 
@@ -1549,24 +1549,30 @@ void brush2_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMo
 		
 		case MOVEC2:  // state 18
 			delayTimeMicroSeconds = 400; // speed up to move fixture
-			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // ******* dir2 ******* change dir here?? and further??
-			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
+			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // set fixture motor to go forward
+			*pfixtureMotor = 1; 
+			u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			break;
 			
 		case B2SET1:  //state 19
-			*pfixtureMotor = 0;
+			*pfixtureMotor = 0;  // turn off fixture motor
 			*pbrush2Motor = 1;
-			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;
-			//u_outputByte1.bits_in_outputByte1.brush2Pump = 1;	//Pump control
+			u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 0; //turn current down on fixture motor
+			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;   //set fixture motor to go backward
+			u_outputByte0.bits_in_outputByte0.brush2Raise = 1;   //make sure raise is off
+			u_outputByte1.bits_in_outputByte1.brush2Lower = 0;  // drive down brush to wet
+			u_outputByte1.bits_in_outputByte1.brush2Pump = 1;	//turn pump2 on
 			u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 1;
-			u_motorByte1.bits_in_motorByte1.brush2MotorDir = 1;  // ******* dir4 ******* 
+			u_motorByte1.bits_in_motorByte1.brush2MotorDir = 0;  // direction for wetting brush 2
 			break;
 			
 		case B2START1:   //state 20
-			*pbrush2Motor = 1;
-			//u_outputByte1.bits_in_outputByte1.brush2Pump = 0;	//Pump control
-			u_outputByte1.bits_in_outputByte1.brush2Lower = 1;  // add brush2 wet here?
-			u_outputByte0.bits_in_outputByte0.brush2Raise = 0;
+			*pbrush2Motor = 0;      // turn off brush2
+			*pfixtureMotor = 1;     // turn on fixture motor
+			u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;  //set power up
+			u_outputByte1.bits_in_outputByte1.brush2Pump = 0;	//turn off brush2 pump
+			u_outputByte1.bits_in_outputByte1.brush2Lower = 1;  // release brush 2 lower
+			u_outputByte0.bits_in_outputByte0.brush2Raise = 0;  // raise brush 2 to clean
 			break;
 			
 		case CLEAN2_1:   //state 21
@@ -1577,27 +1583,27 @@ void brush2_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMo
 		case B2STOP1:   //state 22
 			*pfixtureMotor = 0;
 			*pbrush2Motor = 0;
-			u_outputByte1.bits_in_outputByte1.brush2Lower = 0;  //add brush2 wet here??
-			u_outputByte0.bits_in_outputByte0.brush2Raise = 1;
+			u_outputByte1.bits_in_outputByte1.brush2Lower = 0;  //drive brush low
+			u_outputByte0.bits_in_outputByte0.brush2Raise = 1;  //release brush raise
 			break;
 			
 		case CLEAN2_2:    // state 23
-			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // ******* dir2 *******
+			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // fixture direction to forward
 			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			break;
 			
 		case B2SET2:   // state 24
 			*pfixtureMotor = 0;
 			*pbrush2Motor = 1;
-			//u_outputByte1.bits_in_outputByte1.brush2Pump = 1;	//Pump control
+			u_outputByte1.bits_in_outputByte1.brush2Pump = 1;	//turn pump2 on
 			u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 1;
-			u_motorByte1.bits_in_motorByte1.brush2MotorDir = 0;  // ******* dir4 *******
+			u_motorByte1.bits_in_motorByte1.brush2MotorDir = 0;  //brush direction for wetting
 			break;
 			
 		case B2START2:   //State 25
 			*pfixtureMotor = 0;
-			u_motorByte1.bits_in_motorByte1.brush2MotorDir = 0;  // ******* dir4 *******
-			//u_outputByte1.bits_in_outputByte1.brush2Pump = 0;	//Pump control
+			u_motorByte1.bits_in_motorByte1.brush2MotorDir = 0;  // brush direction for forward cleaning
+			u_outputByte1.bits_in_outputByte1.brush2Pump = 0;	//turn pump2 on
 			*pbrush2Motor = 1;
 			u_outputByte1.bits_in_outputByte1.brush2Lower = 1;
 			u_outputByte0.bits_in_outputByte0.brush2Raise = 0;
