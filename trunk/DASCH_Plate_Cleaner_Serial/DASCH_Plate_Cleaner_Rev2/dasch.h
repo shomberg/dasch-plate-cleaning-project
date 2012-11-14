@@ -123,8 +123,8 @@ enum run_states
 };
 
 
-union u_motorByte0_tag{
-	struct {
+union u_motorByte0_tag{                         
+	struct {                                   
 		unsigned int plateLoadMotorStep : 1;
 		unsigned int plateLoadMotorDir : 1;
 		unsigned int plateLoadMotorHighPower : 1;
@@ -137,7 +137,7 @@ union u_motorByte0_tag{
 	char motorByte0;
 } u_motorByte0;
 
-union u_motorByte1_tag{
+union u_motorByte1_tag{                            
 	struct {
 		unsigned int brush1MotorHighPower : 1;
 		unsigned int brush2MotorStep : 1;
@@ -161,6 +161,7 @@ union u_outputByte0_tag{
 		unsigned int brush1Raise : 1;
 		unsigned int brush1Lower : 1;
 		unsigned int brush2Raise : 1;
+		unsigned int brush2Lower : 1;
 	} bits_in_outputByte0;
 	char outputByte0;
 } u_outputByte0;
@@ -172,7 +173,7 @@ union u_outputByte1_tag{
 		unsigned int ptLower : 1;
 		unsigned int ptRaise : 1;
 		unsigned int airKnife : 1;
-		unsigned int brush1Pump : 1;  //need to init these bits to zero
+		unsigned int brush1Pump : 1;  //need to init pump bits to zero
 		unsigned int brush2Pump : 1;
 		unsigned int oNull16 : 1;
 		unsigned int oNull17 : 1;
@@ -189,7 +190,7 @@ union u_inputByte0_tag{
 		unsigned int fixtureBrush1 : 1;
 		unsigned int fixtureBrush2 : 1;
 		unsigned int fixtureDry1 : 1;
-		unsigned int fixtureDry2 : 1;
+		unsigned int fixtureDry2 : 1; // not used
 	} bits_in_inputByte0;
 	char inputByte0;
 } u_inputByte0;
@@ -210,9 +211,9 @@ union u_inputByte1_tag{
 } u_inputByte1;
 
 //holds wait times for various actions in ms
-int pWait = 1000;
-int  mWait = 1000;
-int  kWait = 1000;
+int  pWait =500;
+int  mWait =1000;
+int  kWait =50;   // apparently not used--put into 
 
 //hold the length of the high and high-low periods for the various motors - this controls their speed
 int highLength1 = 1;
@@ -226,7 +227,7 @@ int  totalStepLength3 = 2;
 int  totalStepLength4 = 2;
 int  totalStepLength5 = 2;
 
-int delayTimeMicroSeconds = 400;	//length in microseconds of the delay between each execution of the program's loop
+int delayTimeMicroSeconds = 250;	//length in microseconds of the delay between each execution of the program's loop
 
 int stepFactor = 4;					//Denominator for micro stepping of the fixture motor
 // max number of steps allowed-should reach sensor first
@@ -250,12 +251,12 @@ int fixtureLift2Extra = 13;				//Number of steps of the fixture motor to move af
 
 const char *run_states_msg_list[] =
 {
-	"Initialize fixture and prepare for cycle", 			//INIT 		0
-	"Load plate sequence",								//LOAD, 	1
-	"Moves more to accommodate for sensor placement",	//LOADEXTRA,	2
-	"Raise fixture lifts",								//RAISEL1,	3
+	"Initialize fixture and prepare for cycle", 		//INIT 		0
+	"Load plate sequence",								//LOAD		1
+	"Moves more to accommodate for sensor placement",	//LOADEXTRA 2
+	"Raise fixture lifts",								//RAISEL1	3
 	"Move fixture onto lift",							//FIXL,		4
-	"Moves more to accommodate for sensor placement",	//FIXLEXTRA,	5
+	"Moves more to accommodate for sensor placement",	//FIXLEXTRA	5
 	"Let lifts down",									//LOWERL1,	6
 	"Drive lifts down",									//LOWERL2,	7
 	"Move fixture to first cleaning station",			//MOVEC1,	8
@@ -267,7 +268,7 @@ const char *run_states_msg_list[] =
 	"Set up brush 1 motor, wet brush",					//B1SET2,	14
 	"Start brush 1 motor and raise brush 1",			//B1START2,	15
 	"Clean 2nd half of the plate with the first brush",	//CLEAN1_3,	16
-	"Lower brush, turn off motor, continue to next cleaning station",//B1STOP2,	17
+	"Lower brush,motor off, move on",                   //B1STOP2,	17
 	"Move fixture to second cleaning station",			//MOVEC2,	18
 	"Set up brush 2 motor, wet brush",					//B2SET1,	19
 	"Start brush 2 motor and raise brush 2",			//B2START1,	20
@@ -276,19 +277,19 @@ const char *run_states_msg_list[] =
 	"Return to center of 2nd cleaning station",			//CLEAN2_2,	23
 	"Set up brush 2 motor, wet brush",					//B2SET2,	24
 	"Start brush 2 motor and raise brush 2",			//B2START2,	25
-	"Clean 2nd half of the plate with the second brush",	//CLEAN2_3,	26
+	"Clean 2nd half with second brush",					//CLEAN2_3,	26
 	"Lower brush, turn off motor",						//B2STOP2,	27
 	"Move fixture to first drying station",				//MOVED1,	28
-	"Move fixture extra",								//MOVED1EXTRA,29
-	"Move plate across air knife and paper towel roller",	//DRY,		30
-	"Deactivate paper towel roller, lower paper towel roller, return to lift",	//DSTOP,	31
-	"FixL2 Extra",										//FIXL2EXTRA, 32
+	"Move fixture extra",								//MOVED1EXT 29
+	"Move plate back air knife and paper towel roller",	//DRY,		30
+	"Deactivate and lower paper towelreturn to lift",	//DSTOP,	31
+	"FixL2 Extra",										//FIXL2EXT  32
 	"Raise lift",										//RAISEL2,	33
-	"Start to home fixture",								//FIXH,		34
+	"Start to home fixture",							//FIXH,		34
 	"Lower Lift3",										//LOWERL3,	35
-	"Return plate to loading area, finish homing fixture",	//UNLOAD,		36
+	"Return plate , finish homing fixture",				//UNLOAD,	36
 	"End of cycle",										//END,		37
-	"Stop loop",											//DONER,		38
+	"Stop loop",										//DONER,	38
 	"In Debug Cycle, wait for button press"				//WAIT		39
 };
 

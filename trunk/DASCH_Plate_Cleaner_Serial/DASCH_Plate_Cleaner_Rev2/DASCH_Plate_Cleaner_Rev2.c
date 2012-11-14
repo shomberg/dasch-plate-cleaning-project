@@ -27,6 +27,8 @@ change brush(1-2)pumps from active low to active high. BS.
 Oct 12,2012
 Add state messages to output screen.  RT.
 
+Nov 14.2012  many edits for clarity of code in states
+
 
 **********************************************************************************************************/
 #include "dasch.h"
@@ -37,7 +39,7 @@ Add state messages to output screen.  RT.
 #include <string.h>
 
 #define PROGRAM_NAME "DASCH CLEANER 2c"
-#define REVISION_NUMBER "REV:46"
+#define REVISION_NUMBER "REV:47"
 
 /*** Can this sections be removed? ***
 
@@ -908,7 +910,7 @@ int main()
 
 				//First Brush
 				if(firstB_trans(state, counter, counterRef)){
-					//serial_print_string("firstB_trans: ");
+					serial_print_string("firstB_trans: ");
 					//serial_print_int(counter);      // want to print number of steps to reach here
 					state ++;
 					if(state != B1STOP1 && state != CLEAN1_3)
@@ -1211,7 +1213,7 @@ int main()
 						counterRef = counter;
 					printVar = true;
 				}
-				if(state == B1STOP2 && counter - counterRef > pWait){
+				if(state == B1STOP2 && counter - counterRef > kWait){
 					state = WAIT;
 					counterRef = counter;
 					printVar = true;
@@ -1456,6 +1458,7 @@ void brush1_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMo
 			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // move fixture to brush1 center   
 			u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			*pfixtureMotor = 1;
+			*pplateLoadMotor = 0;
 			break;
 			
 		case B1SET1:    //state 9
@@ -1474,33 +1477,33 @@ void brush1_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMo
 		
 			u_outputByte1.bits_in_outputByte1.brush1Pump = 0;	 // turn off the pump
 			*pbrush1Motor = 0;								     // stop the brush motor	
-			delayTimeMicroSeconds = 800; // speed up brush and fixture
+			delayTimeMicroSeconds =250; // speed up brush and fixture
 			u_outputByte0.bits_in_outputByte0.brush1Lower = 1;   //release brush low
 			u_outputByte0.bits_in_outputByte0.brush1Raise = 0;    // raise the brush against the glass
 			u_motorByte0.bits_in_motorByte0.brush1MotorDir = 1;		 // set brush 1 direction cw (1)
+			highLength2 = 5;
+			totalStepLength2 = 10;
 			break;
 			
 		case CLEAN1_1:    //state 11
-	
-			 //delayTimeMicroSeconds = 800; // speed up brush and fixture
 			 u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			 u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // fixture moves backward
 			*pbrush1Motor = 1;            //turn on the brush for cleaning
 			*pfixtureMotor = 1;			  //start fixture moving
+
 			break;
 			
 		case B1STOP1:      // state 12
 			*pfixtureMotor = 0;              // stop fixture
-		    //delayTimeMicroSeconds = 4000;   //  slow down the brush for wetting 
 			*pbrush1Motor = 0;              // stop	brush motor
 			u_outputByte0.bits_in_outputByte0.brush1Raise =1 ;       //turn off brush raise
 			u_outputByte0.bits_in_outputByte0.brush1Lower = 0;       //drive brush low
 			u_motorByte0.bits_in_motorByte0.brush1MotorDir = 1;		 // set brush 1 direction CW (1)
+			highLength2 = 1;
+			totalStepLength2 = 2;
 			
 			break;
 		case CLEAN1_2:    //state 13
-		
-		    delayTimeMicroSeconds = 400; // speed up the brush
 			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // fixture moves to center of brush1
 			*pfixtureMotor = 1;
 			u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
@@ -1513,33 +1516,43 @@ void brush1_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMo
 			
 			delayTimeMicroSeconds = 4000;   //  slow down the brush for wetting 
 			u_outputByte1.bits_in_outputByte1.brush1Pump = 1;	//pump on to wet brush
+			u_outputByte0.bits_in_outputByte0.brush1Lower = 1; 
 		
 			break;
 		case B1START2:   //state 15
-		
+			highLength2 = 5;
+			totalStepLength2 = 10;
+			delayTimeMicroSeconds = 250; // speed up the motors
 			*pfixtureMotor = 0;
+			*pbrush1Motor = 1;            //turnup current on brush 1 motor
 			u_outputByte1.bits_in_outputByte1.brush1Pump = 0;	//Pump off
 		    u_motorByte0.bits_in_motorByte0.brush1MotorDir = 0;  //brush1 dir CCW(1)
-			*pbrush1Motor = 1;            //turnup current on brush 1 motor
 			u_outputByte0.bits_in_outputByte0.brush1Lower = 1;  
 			//u_outputByte0.bits_in_outputByte0.brush1Raise = 0;  
+
 			break;
 			
 		case CLEAN1_3:    // state 16
-			delayTimeMicroSeconds = 800; // speed up the motors
+			highLength2 = 5;
+			totalStepLength2 = 10;
 			*pbrush1Motor = 1;
 			*pfixtureMotor = 1;
 			u_outputByte0.bits_in_outputByte0.brush1Raise = 0;  // raise brush
 			u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
-			delayTimeMicroSeconds = 400; // speed up the motors
+			
+
 			break;
 			
-		case B2STOP2:    //state  17
+		case B1STOP2:    //state  17
+			highLength2 = 1;
+			totalStepLength2 = 2;
 			*pbrush1Motor = 0;
 			*pfixtureMotor = 0;
+			*pplateLoadMotor = 0;
 					u_outputByte0.bits_in_outputByte0.brush2Raise = 0; // turn off raise
 					u_outputByte1.bits_in_outputByte1.brush2Lower = 1;  // turn on lower
 					u_motorByte1.bits_in_motorByte1.brush2MotorHighPower = 0;  //idle brush motor
+
 					break;		
 	}
 }
@@ -1548,7 +1561,7 @@ void brush2_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMo
 	switch(state){
 		
 		case MOVEC2:  // state 18
-			delayTimeMicroSeconds = 400; // speed up to move fixture
+			delayTimeMicroSeconds = 250; // speed up to move fixture
 			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;  // set fixture motor to go forward
 			*pfixtureMotor = 1; 
 			u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
@@ -1557,6 +1570,7 @@ void brush2_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMo
 		case B2SET1:  //state 19
 			*pfixtureMotor = 0;  // turn off fixture motor
 			*pbrush2Motor = 1;
+			delayTimeMicroSeconds = 4000; //slow down to wet brush
 			u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 0; //turn current down on fixture motor
 			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 0;   //set fixture motor to go backward
 			u_outputByte0.bits_in_outputByte0.brush2Raise = 1;   //make sure raise is off
@@ -1573,9 +1587,11 @@ void brush2_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMo
 			u_outputByte1.bits_in_outputByte1.brush2Pump = 0;	//turn off brush2 pump
 			u_outputByte1.bits_in_outputByte1.brush2Lower = 1;  // release brush 2 lower
 			u_outputByte0.bits_in_outputByte0.brush2Raise = 0;  // raise brush 2 to clean
+			delayTimeMicroSeconds =250; // speed up to move fixture
 			break;
 			
 		case CLEAN2_1:   //state 21
+			delayTimeMicroSeconds = 250; // speed up to move fixture
 			*pbrush2Motor = 1;
 			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			break;
@@ -1588,6 +1604,7 @@ void brush2_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMo
 			break;
 			
 		case CLEAN2_2:    // state 23
+			delayTimeMicroSeconds = 250; // speed up to move fixture
 			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;  // fixture direction to forward
 			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			break;
@@ -1615,6 +1632,8 @@ void brush2_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMo
 			break;
 			
 		case B2STOP2:    // state 27
+			highLength2 = 1;
+			totalStepLength2 = 2;
 			*pbrush2Motor = 0;
 			*pfixtureMotor = 0;
 			u_outputByte1.bits_in_outputByte1.brush2Lower = 0;
@@ -1623,8 +1642,11 @@ void brush2_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMo
 			break;
 			
 		case MOVED1:    // state 28
+			highLength2 = 1;
+			totalStepLength2 = 2;
+			*pfixtureMotor = 1;
 			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;
-			*pfixtureMotor = 1; u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
+			u_motorByte0.bits_in_motorByte0.fixtureMotorHighPower = 1;
 			break;
 	}
 }
@@ -1633,6 +1655,8 @@ void dry_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMotor
 	switch(state){
 		
 		case MOVED1EXTRA:    //state 29  ?
+			highLength2 = 1;
+			totalStepLength2 = 2;
 			u_motorByte0.bits_in_motorByte0.fixtureMotorDir = 1;
 			*pfixtureMotor = 1;
 			break;
@@ -1757,7 +1781,8 @@ bool firstB_trans(int state, int counter, int counterRef){
 	(state == CLEAN1_2 && /*counter - counterRef > totalStepLength2*fixtureMotorHalfPlate &&*/ u_inputByte0.bits_in_inputByte0.fixtureBrush1 == 0)||
 	(state == B1SET2 && counter - counterRef > mWait)||
 	(state == B1START2 && counter - counterRef > pWait)||
-	(state == CLEAN1_3 && counter - counterRef > totalStepLength2*fixtureMotorBigHalfPlate));
+	(state == CLEAN1_3 && counter - counterRef > totalStepLength2*fixtureMotorBigHalfPlate||
+	(state == B1STOP2 && counter - counterRef > pWait)));
 }
 
 bool secondB_trans(int state, int counter, int counterRef){
@@ -1771,7 +1796,8 @@ bool secondB_trans(int state, int counter, int counterRef){
 	(state == B2START2 && counter - counterRef > pWait)||
 	(state == CLEAN2_3 && counter - counterRef > totalStepLength2*fixtureMotorSmallHalfPlate)||
 	(state == B2STOP2 && counter - counterRef > pWait)||
-	(state == MOVED1 && /*counter - counterRef > totalStepLength2*fixtureMotorDry1Step &&*/ u_inputByte0.bits_in_inputByte0.fixtureDry1 == 0));
+	(state == MOVED1 && /*counter - counterRef > totalStepLength2*fixtureMotorDry1Step &&*/ 
+	u_inputByte0.bits_in_inputByte0.fixtureDry1 == 0));
 }
 
 bool dry_trans(int state, int counter, int counterRef){
