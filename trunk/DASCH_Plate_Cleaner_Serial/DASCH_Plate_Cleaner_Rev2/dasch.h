@@ -211,9 +211,9 @@ union u_inputByte1_tag{
 } u_inputByte1;
 
 //holds wait times for various actions in ms
-int  pWait =500;
+int  pWait =1000;
 int  mWait =1000;
-int  kWait =50;   // apparently not used--put into 
+int  kWait =1000;   // apparently not used--put into 
 
 //hold the length of the high and high-low periods for the various motors - this controls their speed
 int highLength1 = 1;
