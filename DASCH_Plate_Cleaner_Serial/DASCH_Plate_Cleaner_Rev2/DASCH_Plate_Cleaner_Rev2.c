@@ -93,7 +93,7 @@ void brush2_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMo
 
 void dry_action(int state, int counter, int *pplateLoadMotor, int *pfixtureMotor, int *pbrush1Motor, int *pbrush2Motor, int *ppaperTowelMotor);
 
-void serial_print_string(char msg[]);
+void serial_print_string(char *);
 
 void serial_print_int(int a);
 
@@ -888,7 +888,7 @@ int main()
 					serial_print_string_noCRLF("STATE: ");
 					serial_print_int(state);
 					serial_print_string_noCRLF("=> ");
-					serial_print_string(run_states_msg_list[state]);
+					serial_print_string((char *)run_states_msg_list[state]);
 					serial_print_string(" ");
 					serial_print_string_noCRLF("Counter:");
 					serial_print_int(counter/stepFactor);      // want to print number of steps to reach here
@@ -923,6 +923,8 @@ int main()
 					counterRef = counter;
 					printVar = true;
 				}
+
+				 
 				if(state == MOVED1 /*&& counter - counterRef > totalStepLength2*fixtureMotorDry1StepWhole*/ && u_inputByte0.bits_in_inputByte0.fixtureDry1 == 0){
 					state ++;
 					counterRef = counter;
@@ -972,7 +974,8 @@ int main()
 				serial_check(); counter++;
 				delay_us(delayTimeMicroSeconds);
    		 	}     // end of first brush while cycle
-		}   
+			}				
+					   
 
 
 		else if(is_digital_input_high(IO_D1) && !is_digital_input_high(IO_D2)){
@@ -995,7 +998,7 @@ int main()
 					serial_print_string_noCRLF("STATE: ");
 					serial_print_int(state);
 					serial_print_string_noCRLF("=> ");
-					serial_print_string(run_states_msg_list[state]);
+					serial_print_string((char *)run_states_msg_list[state]);
 					serial_print_string(" ");
 
 					printVar = false;
@@ -1086,7 +1089,7 @@ int main()
 					serial_print_string_noCRLF("STATE: ");
 					serial_print_int(state);
 					serial_print_string_noCRLF("=> ");
-					serial_print_string(run_states_msg_list[state]);
+					serial_print_string((char *)run_states_msg_list[state]);
 					serial_print_string(" ");
 
 					printVar = false;
@@ -1188,7 +1191,7 @@ int main()
 					serial_print_string_noCRLF("STATE: ");
 					serial_print_int(state);
 					serial_print_string_noCRLF("=> ");
-					serial_print_string(run_states_msg_list[state]);
+					serial_print_string((char *)run_states_msg_list[state]);
 					serial_print_string(" ");
 
 					printVar = false;
@@ -1213,7 +1216,7 @@ int main()
 						counterRef = counter;
 					printVar = true;
 				}
-				if(state == B1STOP2 && counter - counterRef > kWait){
+				if(state == B1STOP2 && counter - counterRef > mWait){
 					state = WAIT;
 					counterRef = counter;
 					printVar = true;
@@ -1297,7 +1300,7 @@ int main()
 	}
 }
 
-void serial_print_string(char msg[]){
+void serial_print_string(char *msg){
 	serial_send_blocking(USB_COMM, msg, strlen(msg));
 	serial_send_blocking(USB_COMM, "\r\n", 2);
 }
@@ -1307,7 +1310,7 @@ void serial_print_string_noCRLF(char msg[]){
 }
 
 void serial_print_int(int a){
-	char msg[5];
+	char msg[10];
 	itoa(a, msg, 10);
 	serial_print_string(msg);
 }
@@ -1778,11 +1781,11 @@ bool firstB_trans(int state, int counter, int counterRef){
 	(state == B1START1 && counter - counterRef > pWait)||
 	(state == CLEAN1_1 && counter - counterRef > totalStepLength2*fixtureMotorSmallHalfPlate)||
 	(state == B1STOP1 && counter - counterRef > pWait)||
-	(state == CLEAN1_2 && /*counter - counterRef > totalStepLength2*fixtureMotorHalfPlate &&*/ u_inputByte0.bits_in_inputByte0.fixtureBrush1 == 0)||
+	(state == CLEAN1_2 && u_inputByte0.bits_in_inputByte0.fixtureBrush1 == 0)||
 	(state == B1SET2 && counter - counterRef > mWait)||
 	(state == B1START2 && counter - counterRef > pWait)||
-	(state == CLEAN1_3 && counter - counterRef > totalStepLength2*fixtureMotorBigHalfPlate||
-	(state == B1STOP2 && counter - counterRef > pWait)));
+	(state == CLEAN1_3 && counter - counterRef > totalStepLength2*fixtureMotorBigHalfPlate)||
+	(state == B1STOP2 && counter - counterRef > pWait));
 }
 
 bool secondB_trans(int state, int counter, int counterRef){
